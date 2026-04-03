@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.codymak.com)",
+      "Bash(curl -s https://www.codymak.com/)",
+      "Bash(curl -s https://cdn.prod.website-files.com/621d599167888eca269d0f5e/css/codys-portfolio-6a0d44.webflow.shared.59d558c0c.css)",
+      "Bash(sed -n '/^\\\\.dropdown-toggle-3/,/^}/p' /home/elenaqian/styles.css)",
+      "Bash(sed -n '/^\\\\.dropdown-3/,/^}/p' /home/elenaqian/styles.css)",
+      "Read(//tmp/**)",
+      "Bash(curl -s \"https://www.codymak.com/\")",
+      "Bash(python3)",
+      "Bash(curl -s -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36\" \"https://www.codymak.com/\")",
+      "Bash(curl -s -H \"User-Agent: Mozilla/5.0\" \"https://www.codymak.com/\")"
+    ]
+  }
+}

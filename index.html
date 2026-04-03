@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elena Qian — Product Designer</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet"/>
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════
+       LOADER
+  ═══════════════════════════════ -->
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="loader-cat">🐱</div>
+      <div class="loader-text">loading<span class="dots">...</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       NAV
+  ═══════════════════════════════ -->
+  <nav id="nav">
+    <div class="nav-pill">
+      <a href="#work"      class="nav-link active">Work</a>
+      <a href="about.html" class="nav-link">About</a>
+      <a href="resume.pdf" class="nav-link" target="_blank">Resume</a>
+    </div>
+  </nav>
+
+  <!-- Bear follower -->
+  <div class="bear-follower" aria-hidden="true">🐾</div>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ═══════════════════════════════ -->
+  <section class="hero">
+
+    <div class="hero-content">
+      <h1 class="hero-greeting">hi,</h1>
+      <h1 class="hero-name">i'm <span class="hero-name-accent">elena</span> .</h1>
+      <p class="hero-pronunciation"># ee-lay-nuh or /ɛˈleɪnə/</p>
+      <p class="hero-sub">
+        <strong>product designer</strong> in the <strong>bay area</strong> focused on making ai<br>
+        products feel human 
+      </p>
+    </div>
+
+    <!-- Cat + star illustration -->
+    <div class="hero-illustration" aria-hidden="true">
+
+      <!-- Cat (deepest layer, most movement) -->
+      <div class="illus-parallax cat-parallax" data-depth="0.3">
+        <img id="catImg" src="images/cat.png" alt="" class="cat-idle" />
+      </div>
+
+      <!-- Small outline star — upper left -->
+      <div class="illus-parallax star-parallax star-a" data-depth="0.5">
+        <svg class="sparkle sparkle--sm star-idle star-idle--a" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
+                stroke="url(#sg1)" stroke-width="1.5" fill="none"/>
+          <defs>
+            <linearGradient id="sg1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#60a5fa"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Large filled star — lower right -->
+      <div class="illus-parallax star-parallax star-b" data-depth="0.65">
+        <svg class="sparkle sparkle--lg star-idle star-idle--b" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 0 Q34 26 60 30 Q34 34 30 60 Q26 34 0 30 Q26 26 30 0Z"
+                fill="url(#sg2)"/>
+          <defs>
+            <linearGradient id="sg2" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#1d4ed8"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <!-- Medium filled star — beside large star -->
+      <div class="illus-parallax star-parallax star-c" data-depth="0.55">
+        <svg class="sparkle sparkle--md star-idle star-idle--c" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 0 Q25 19 44 22 Q25 25 22 44 Q19 25 0 22 Q19 19 22 0Z"
+                fill="url(#sg3)"/>
+          <defs>
+            <linearGradient id="sg3" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#1e40af"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Story link (bottom-right, like Cody's) -->
+    <a href="#work" class="hero-story-link">
+      journey through my work
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M7 17L17 7M17 7H7M17 7v10"/>
+      </svg>
+    </a>
+
+  </section>
+
+  <!-- ═══════════════════════════════
+       TICKER MARQUEE
+  ═══════════════════════════════ -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Product Designer</span><span class="star">🫧</span>
+      <span>UX Researcher</span><span class="star">🫧</span>
+      <span>Interaction Design</span><span class="star">🫧</span>
+      <span>Design Systems</span><span class="star">🫧</span>
+      <span>Cat Enthusiast</span><span class="star">🫧</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       FEATURED WORK
+  ═══════════════════════════════ -->
+  <section class="work" id="work">
+
+    <!--
+      HOW TO ADD PROJECT IMAGES:
+      1. Put your screenshot in the images/ folder, e.g. images/project1.png
+      2. Replace the <div class="project-img-placeholder"> with:
+         <img src="images/project1.png" alt="Project Name" class="project-img" />
+    -->
+
+    <a href="#" class="project-card">
+      <div class="project-info">
+        <h2 class="project-title">crossfill</h2>
+        <p class="project-desc">
+          a platform that analyzes search and ai visibility data, identifies optimization opportunities, and guides clients through improving their content.
+        </p>
+        <span class="project-tag">associate product designer · 2025-2026</span>
+      </div>
+      <div class="project-img-wrap">
+        <div class="project-img-placeholder"><span>🐱</span><small>Add your screenshot here</small></div>
+      </div>
+    </a>
+
+    <a href="#" class="project-card">
+      <div class="project-info">
+        <h2 class="project-title">Project Two</h2>
+        <p class="project-desc">
+          Redesigning a complex workflow into something simple, delightful,
+          and accessible to all users across every device.
+        </p>
+        <span class="project-tag">Product Design · 2024</span>
+      </div>
+      <div class="project-img-wrap">
+        <div class="project-img-placeholder"><span>🐈</span><small>Add your screenshot here</small></div>
+      </div>
+    </a>
+
+    <a href="#" class="project-card">
+      <div class="project-info">
+        <h2 class="project-title">Project Three</h2>
+        <p class="project-desc">
+          Building a scalable design system from scratch — tokens, components,
+          and documentation for a fast-growing team.
+        </p>
+        <span class="project-tag">Design Systems · 2023</span>
+      </div>
+      <div class="project-img-wrap">
+        <div class="project-img-placeholder"><span>🐈‍⬛</span><small>Add your screenshot here</small></div>
+      </div>
+    </a>
+
+  </section>
+
+  <!-- ═══════════════════════════════
+       OLDIES
+  ═══════════════════════════════ -->
+  <section class="oldies">
+    <h3 class="oldies-label">Oldies, but Goodies 🐾</h3>
+    <div class="oldies-grid">
+
+      <a href="#" class="oldie-card">
+        <div class="oldie-img-wrap">
+          <div class="oldie-placeholder">🐱</div>
+        </div>
+        <div class="oldie-info">
+          <span class="oldie-year">2023</span>
+          <h3 class="oldie-title">Case Study A</h3>
+          <p class="oldie-desc">Mobile-first onboarding redesign focused on reducing drop-off and increasing user activation.</p>
+        </div>
+      </a>
+
+      <a href="#" class="oldie-card">
+        <div class="oldie-img-wrap">
+          <div class="oldie-placeholder">🐈</div>
+        </div>
+        <div class="oldie-info">
+          <span class="oldie-year">2023</span>
+          <h3 class="oldie-title">Case Study B</h3>
+          <p class="oldie-desc">Reimagining a legacy dashboard to improve data clarity and reduce cognitive load for power users.</p>
+        </div>
+      </a>
+
+      <a href="#" class="oldie-card">
+        <div class="oldie-img-wrap">
+          <div class="oldie-placeholder">🐈‍⬛</div>
+        </div>
+        <div class="oldie-info">
+          <span class="oldie-year">2022</span>
+          <h3 class="oldie-title">Case Study C</h3>
+          <p class="oldie-desc">A passion project exploring inclusive design patterns for neurodiverse users.</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       EXPERIENCE
+  ═══════════════════════════════ -->
+  <section class="experience" id="experience">
+    <h2 class="section-title">Experience</h2>
+    <div class="exp-list">
+
+      <a href="#" class="exp-item">
+        <div class="exp-text">
+          <span class="exp-role">Product Designer @ [Your Company]</span>
+          <span class="exp-date">2024 – Present</span>
+        </div>
+        <div class="exp-img-wrap">
+          <div class="exp-placeholder">🐾</div>
+        </div>
+      </a>
+
+      <a href="#" class="exp-item">
+        <div class="exp-text">
+          <span class="exp-role">UX Design Intern @ [Company]</span>
+          <span class="exp-date">Summer 2024</span>
+        </div>
+        <div class="exp-img-wrap">
+          <div class="exp-placeholder">🐱</div>
+        </div>
+      </a>
+
+      <a href="#" class="exp-item">
+        <div class="exp-text">
+          <span class="exp-role">Freelance Designer</span>
+          <span class="exp-date">2022 – 2024</span>
+        </div>
+        <div class="exp-img-wrap">
+          <div class="exp-placeholder">🐈</div>
+        </div>
+      </a>
+
+      <a href="#" class="exp-item">
+        <div class="exp-text">
+          <span class="exp-role">B.S. Design @ [Your University]</span>
+          <span class="exp-date">2020 – 2024</span>
+        </div>
+        <div class="exp-img-wrap">
+          <div class="exp-placeholder">🎓</div>
+        </div>
+      </a>
+
+    </div>
+    <a href="resume.pdf" class="btn-resume" target="_blank">View Resume</a>
+  </section>
+
+  <!-- ═══════════════════════════════
+       FOOTER
+  ═══════════════════════════════ -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-logo">EQ</div>
+      <h2 class="footer-heading">A Product Design Odyssey</h2>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-contact">
+      <p class="footer-email">
+        <a href="mailto:hello@elenaqian.com">hello@elenaqian.com</a>
+      </p>
+      <div class="footer-links">
+        <a href="https://linkedin.com/in/elenaqian" target="_blank">LinkedIn</a>
+        <a href="resume.pdf" target="_blank">Resume</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>@2025 Elena Qian 🐾</span>
+      <span class="footer-star">✦</span>
+    </div>
+  </footer>
+
+</body>
+</html>
