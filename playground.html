@@ -253,6 +253,9 @@
   </div>
 
   <script>
+    const canvas = document.getElementById('pg-canvas');
+    const world  = document.getElementById('pg-world');
+
     function togglePhoto(el) {
       document.querySelectorAll('.pg-photo.expanded').forEach(function(other) {
         if (other !== el) other.classList.remove('expanded');
@@ -268,9 +271,6 @@
         });
       }
     });
-
-    const canvas = document.getElementById('pg-canvas');
-    const world  = document.getElementById('pg-world');
 
     let ox = -160, oy = -60, scale = 1;
     const MIN_SCALE = 0.3, MAX_SCALE = 3;
