@@ -263,7 +263,7 @@ body.loaded #loader {
 
 .cat-idle {
   width:     clamp(480px, 62vw, 780px);
-  display:   block;
+  display:   none;
   opacity:          0;
   transform-origin: center bottom;
 }
@@ -988,7 +988,7 @@ footer {
 
   /* Hero */
   .hero {
-    padding:    100px 20px 60px;
+    padding:    100px 20px 24px;
     min-height: 100svh;
   }
   .hero-greeting,
