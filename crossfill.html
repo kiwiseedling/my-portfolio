@@ -130,9 +130,15 @@
     .gate-hint {
       font-family: 'Montserrat', system-ui, sans-serif;
       font-size: 0.68rem;
-      color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.65);
       margin-top: 24px;
       letter-spacing: 0.04em;
+      line-height: 1.7;
+    }
+    .gate-hint-sub {
+      font-size: 0.6rem;
+      font-style: italic;
+      color: rgba(255,255,255,0.42);
     }
   </style>
 </head>
@@ -197,11 +203,11 @@
       <div class="gate-eyebrow">case study</div>
       <h1 class="gate-title">crossfill</h1>
       <div class="gate-input-wrap" id="gateWrap">
-        <input class="gate-input" id="gateInput" type="password" placeholder="enter passcode" autocomplete="off" spellcheck="false"/>
+        <input class="gate-input" id="gateInput" type="text" placeholder="enter passcode" autocomplete="off" spellcheck="false"/>
         <button class="gate-submit" onclick="checkGate()">enter →</button>
       </div>
       <div class="gate-error" id="gateError"></div>
-      <div class="gate-hint">password on resume for </div>
+      <div class="gate-hint">this case study is private. enter the password to continue.<br><em class="gate-hint-sub">hint: its my favorite drink</em></div>
     </div>
   </div>
 
@@ -273,6 +279,7 @@
        HERO
   ══════════════════════════════ -->
   <section class="cs-hero" id="hero">
+    <canvas id="cfNet" aria-hidden="true"></canvas>
     <img src="images/crossfill.png" alt="" class="cs-hero__img" aria-hidden="true" />
 
     <div class="cs-hero__eyebrow">
@@ -369,9 +376,9 @@
   <!-- ══════════════════════════════
        OBJECTIVE
   ══════════════════════════════ -->
-  <div class="cs-section--full cs-section--dark cs-section--parallax" id="objective" style="overflow:visible;border-bottom:none">
-    <img src="images/dashsketch.png" alt="" class="cs-parallax-bg" aria-hidden="true" id="objectiveBg" style="top:5%;width:90%;max-width:980px;opacity:0.07;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 60%,rgba(0,0,0,0));mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 60%,rgba(0,0,0,0))" />
-    <section class="cs-section" style="position:relative;z-index:1">
+  <div class="cs-section--full cs-section--dark" id="objective" style="border-bottom:none">
+    <img src="images/dashsketch.png" alt="" class="cs-parallax-bg" aria-hidden="true" style="width:90%;max-width:980px;opacity:0.07;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 60%,rgba(0,0,0,0));mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 60%,rgba(0,0,0,0))" />
+    <section class="cs-section" style="position:relative;z-index:1;padding-top:56px">
       <div class="cs-section-label">objective</div>
       <div class="cs-cols">
         <div>
@@ -413,7 +420,7 @@
        UNDERSTANDING EXISTING SYSTEM
   ══════════════════════════════ -->
   <div class="cs-section--full cs-section--dark" id="existing" style="border-top:none">
-    <section class="cs-section">
+    <section class="cs-section" style="padding-top:56px">
       <div class="cs-section-label">understanding the existing system</div>
       <h2 class="cs-section-title">mapping what we actually had</h2>
       <p class="cs-body" style="max-width:720px">before designing solutions, i audited the current product and the external tools teams were using alongside it. the goal was to understand where each tool started and stopped. i started by sitting in on customer success calls and mapping the process step by step.</p>
@@ -1688,23 +1695,6 @@
       });
     });
 
-    // Parallax background for objective section
-    const objectiveBg = document.getElementById('objectiveBg');
-    const objectiveSection = document.getElementById('objective');
-    if (objectiveBg && objectiveSection) {
-      function rafParallax() {
-        const rect = objectiveSection.getBoundingClientRect();
-        const sectionH = rect.height;
-        const imgH = objectiveBg.offsetHeight;
-        // progress 0 = section top at viewport top, 1 = section bottom at viewport bottom
-        const progress = Math.min(1, Math.max(0, -rect.top / (sectionH - window.innerHeight)));
-        const maxTravel = sectionH - imgH;
-        const offset = Math.max(0, maxTravel) * progress;
-        objectiveBg.style.transform = `translateX(-50%) translateY(${offset}px)`;
-        requestAnimationFrame(rafParallax);
-      }
-      requestAnimationFrame(rafParallax);
-    }
   </script>
 
   <script>
@@ -1722,6 +1712,442 @@
       },{threshold:0.4});
       obs.observe(wrap);
     })();
+  </script>
+
+  <!-- ══════════════════════════════
+       TECH ANIMATIONS
+  ══════════════════════════════ -->
+  <style>
+    /* ── Data-stream canvas behind hero ── */
+    #cfNet {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.75;
+    }
+
+    /* ── Typewriter cursor ── */
+    .cf-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 0.9em;
+      background: rgba(236,48,77,0.75);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: cfBlink 1s step-end infinite;
+    }
+    @keyframes cfBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ── Stat glow burst ── */
+    @keyframes cfStatBurst {
+      0%   { text-shadow: 0 0 24px rgba(236,48,77,0.9), 0 0 48px rgba(149,4,96,0.55); }
+      100% { text-shadow: none; }
+    }
+    .cf-burst { animation: cfStatBurst 0.6s ease forwards; }
+
+    /* ── Card mouse-follow glow ── */
+    .cs-card { position: relative; overflow: hidden; }
+    .cs-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at var(--cfx, 50%) var(--cfy, 50%),
+        rgba(149,4,96,0.14) 0%,
+        transparent 65%
+      );
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .cs-card:hover::before { opacity: 1; }
+
+    /* ── Animated gradient flow on scroll progress bar ── */
+    #csProgress {
+      background: linear-gradient(
+        90deg,
+        rgba(149,4,96,0.9) 0%,
+        rgba(236,48,77,0.9) 40%,
+        rgba(255,120,150,0.8) 70%,
+        rgba(149,4,96,0.9) 100%
+      ) !important;
+      background-size: 200% 100% !important;
+      animation: cfFlow 2.2s linear infinite;
+    }
+    @keyframes cfFlow {
+      from { background-position: 0% 0%; }
+      to   { background-position: -200% 0%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #cfNet, .cf-cursor, .cf-burst { display: none !important; }
+      #csProgress { animation: none !important; }
+    }
+  </style>
+
+  <script>
+  (function () {
+
+    /* ══════════════════════════════════════════════
+       1. DATA-STREAM CANVAS
+       Horizontal rail lines across the hero.
+       Glowing "data packets" travel along each rail.
+       Distinct from organic particles — looks like
+       a live pipeline / telemetry feed.
+    ══════════════════════════════════════════════ */
+    const canvas = document.getElementById('cfNet');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, rails = [];
+
+    const COLORS = [
+      [149,  4, 96],
+      [236, 48, 77],
+      [255,120,150],
+      [180, 30,120],
+      [210, 60,100],
+    ];
+
+    function resize() {
+      const hero = canvas.parentElement;
+      W = canvas.width  = hero.offsetWidth;
+      H = canvas.height = hero.offsetHeight;
+      buildRails();
+    }
+
+    function buildRails() {
+      const count = Math.floor(H / 38); // one rail every ~38px
+      rails = Array.from({ length: count }, (_, i) => {
+        const y = (i + 0.5) * (H / count) + (Math.random() - 0.5) * 10;
+        return {
+          y,
+          packets: Array.from({ length: Math.floor(1 + Math.random() * 2) }, () =>
+            makePacket(y)
+          ),
+        };
+      });
+    }
+
+    function makePacket(y) {
+      const col = COLORS[Math.floor(Math.random() * COLORS.length)];
+      return {
+        x:     Math.random() * W,
+        y,
+        spd:   0.12 + Math.random() * 0.18,   // px / frame
+        len:   28 + Math.random() * 55,       // trail length
+        col,
+        alpha: 0.35 + Math.random() * 0.35,
+      };
+    }
+
+    function drawStream() {
+      ctx.clearRect(0, 0, W, H);
+
+      for (const rail of rails) {
+        // Rail line — very faint
+        ctx.strokeStyle = `rgba(149,4,96,0.07)`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, rail.y);
+        ctx.lineTo(W, rail.y);
+        ctx.stroke();
+
+        for (const p of rail.packets) {
+          // Advance
+          p.x += p.spd;
+          if (p.x - p.len > W) p.x = -p.len;
+
+          // Trail gradient
+          const grd = ctx.createLinearGradient(p.x - p.len, 0, p.x, 0);
+          const [r,g,b] = p.col;
+          grd.addColorStop(0, `rgba(${r},${g},${b},0)`);
+          grd.addColorStop(0.6, `rgba(${r},${g},${b},${p.alpha * 0.4})`);
+          grd.addColorStop(1, `rgba(${r},${g},${b},${p.alpha})`);
+
+          ctx.strokeStyle = grd;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(p.x - p.len, p.y);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+
+          // Leading dot
+          const dotGrd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 5);
+          dotGrd.addColorStop(0, `rgba(${r},${g},${b},${p.alpha + 0.2})`);
+          dotGrd.addColorStop(1, `rgba(${r},${g},${b},0)`);
+          ctx.fillStyle = dotGrd;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      requestAnimationFrame(drawStream);
+    }
+
+    resize();
+    drawStream();
+    window.addEventListener('resize', resize);
+
+
+    /* ══════════════════════════════════════════════
+       2. TYPEWRITER ON TAGLINE
+    ══════════════════════════════════════════════ */
+    function startTypewriter() {
+      const el = document.querySelector('.cs-hero__tagline');
+      if (!el || el.dataset.typed) return;
+      el.dataset.typed = '1';
+      const text = el.textContent.trim();
+      el.textContent = '';
+      const cursor = document.createElement('span');
+      cursor.className = 'cf-cursor';
+      el.appendChild(cursor);
+      let i = 0;
+      (function type() {
+        if (i < text.length) {
+          cursor.before(document.createTextNode(text[i++]));
+          setTimeout(type, 26 + Math.random() * 16);
+        } else {
+          setTimeout(() => {
+            cursor.style.transition = 'opacity 0.5s';
+            cursor.style.opacity = '0';
+            setTimeout(() => cursor.remove(), 500);
+          }, 2200);
+        }
+      }());
+    }
+
+    const gate = document.getElementById('gate');
+    if (!gate || gate.classList.contains('unlocked')) {
+      setTimeout(startTypewriter, 500);
+    } else {
+      const gateObs = new MutationObserver(() => {
+        if (gate.classList.contains('unlocked')) {
+          setTimeout(startTypewriter, 700);
+          gateObs.disconnect();
+        }
+      });
+      gateObs.observe(gate, { attributes: true, attributeFilter: ['class'] });
+    }
+
+
+    /* ══════════════════════════════════════════════
+       3. STAT COUNTERS
+    ══════════════════════════════════════════════ */
+    document.querySelectorAll('.cs-stat__num').forEach(el => {
+      const original = el.textContent.trim();
+      const num = parseInt(original.replace(/[^0-9]/g, ''), 10);
+      if (isNaN(num) || num === 0) return;
+      const prefix = original.match(/^[^0-9]*/)?.[0] || '';
+      const suffix = original.match(/[^0-9]+$/)?.[0] || '';
+      let fired = false;
+      const obs = new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting || fired) return;
+        fired = true; obs.disconnect();
+        const dur = 1100;
+        (function step(ts, start) {
+          if (!start) start = ts;
+          const t = Math.min((ts - start) / dur, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = prefix + Math.round(eased * num) + suffix;
+          if (t < 1) requestAnimationFrame(ts2 => step(ts2, start));
+          else { el.textContent = original; el.classList.add('cf-burst'); }
+        }(performance.now(), null));
+      }, { threshold: 0.7 });
+      obs.observe(el);
+    });
+
+
+    /* ══════════════════════════════════════════════
+       4. CARD MOUSE-FOLLOW GLOW
+    ══════════════════════════════════════════════ */
+    document.querySelectorAll('.cs-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--cfx', ((e.clientX - rect.left) / rect.width  * 100) + '%');
+        card.style.setProperty('--cfy', ((e.clientY - rect.top)  / rect.height * 100) + '%');
+      });
+    });
+
+  }());
+  </script>
+
+  <!-- ══════════════════════════════
+       SCROLL ANIMATIONS
+  ══════════════════════════════ -->
+  <style>
+
+    /* ── Animated dark-section background blobs ── */
+    .cf-dark-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .cf-dark-bg::before,
+    .cf-dark-bg::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+    }
+    /* blob A — upper left, magenta */
+    .cf-dark-bg::before {
+      width: 50%; height: 60%;
+      top: -10%; left: -8%;
+      background: radial-gradient(circle, rgba(149,4,96,0.18) 0%, transparent 70%);
+      animation: cfBlobA 16s ease-in-out infinite;
+    }
+    /* blob B — lower right, crimson */
+    .cf-dark-bg::after {
+      width: 45%; height: 55%;
+      bottom: -12%; right: -6%;
+      background: radial-gradient(circle, rgba(236,48,77,0.12) 0%, transparent 70%);
+      animation: cfBlobB 20s ease-in-out infinite;
+    }
+    @keyframes cfBlobA {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(6%, 8%) scale(1.08); }
+      66%      { transform: translate(-4%, -5%) scale(0.94); }
+    }
+    @keyframes cfBlobB {
+      0%,100% { transform: translate(0,0) scale(1); }
+      40%      { transform: translate(-8%, -6%) scale(1.1); }
+      70%      { transform: translate(5%, 4%) scale(0.96); }
+    }
+
+    /* Subtle variant for non-dark (light bg) sections */
+    .cf-dark-bg--subtle::before { opacity: 0.28; }
+    .cf-dark-bg--subtle::after  { opacity: 0.22; }
+
+    /* Ensure section children stack above bg */
+    .cf-dark-wrap { position: relative; }
+    .cf-dark-wrap > *:not(.cf-dark-bg):not(.cs-parallax-bg) { position: relative; z-index: 1; }
+    .cs-parallax-bg { position: absolute !important; }
+
+    /* ── Callout glow on entrance ── */
+    @keyframes cfCalloutPulse {
+      0%   { border-left-color: rgba(249,196,212,0.15); box-shadow: none; }
+      35%  { border-left-color: rgba(236,48,77,0.7);
+             box-shadow: -4px 0 32px rgba(149,4,96,0.25), 0 0 60px rgba(149,4,96,0.08); }
+      100% { border-left-color: rgba(249,196,212,0.5); box-shadow: none; }
+    }
+    .cs-callout.cf-glow { animation: cfCalloutPulse 2s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+    /* ── Divider: line grows from center ── */
+    .cs-divider {
+      position: relative;
+      overflow: visible;
+    }
+    .cf-divider-line {
+      position: absolute;
+      top: 0; left: 50%;
+      height: 1px;
+      width: 0;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(149,4,96,0.55),
+        rgba(236,48,77,0.45),
+        rgba(149,4,96,0.55),
+        transparent
+      );
+      transition: width 1.4s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none;
+    }
+    .cf-divider-line.cf-in { width: 65%; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cf-dark-bg::before, .cf-dark-bg::after { animation: none !important; }
+      .cs-callout.cf-glow { animation: none !important; }
+      .cf-divider-line { width: 65% !important; transition: none !important; }
+    }
+  </style>
+
+  <script>
+  (function () {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    /* ── 1. ANIMATED BACKGROUNDS — dark wrappers + all inner sections ── */
+    // Dark section outer wrappers
+    document.querySelectorAll('.cs-section--dark').forEach(section => {
+      section.classList.add('cf-dark-wrap');
+      const bg = document.createElement('div');
+      bg.className = 'cf-dark-bg';
+      section.insertBefore(bg, section.firstChild);
+    });
+    // Non-dark content sections (Problem, CS Insights, V0, Native Editor…)
+    document.querySelectorAll('section.cs-section').forEach(section => {
+      // Skip if already inside a dark wrapper that got a blob
+      if (section.closest('.cs-section--dark')) return;
+      section.classList.add('cf-dark-wrap');
+      const bg = document.createElement('div');
+      bg.className = 'cf-dark-bg cf-dark-bg--subtle';
+      section.insertBefore(bg, section.firstChild);
+    });
+
+
+    /* ── 2. DIVIDER GLOW LINES ── */
+    document.querySelectorAll('.cs-divider').forEach(div => {
+      const line = document.createElement('div');
+      line.className = 'cf-divider-line';
+      div.appendChild(line);
+    });
+
+
+    /* ── 3. OBSERVERS ── */
+    function startObservers() {
+      // Callout glow observer
+      const calloutObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('cf-glow');
+          calloutObs.unobserve(entry.target);
+        });
+      }, { threshold: 0.3 });
+      document.querySelectorAll('.cs-callout').forEach(el => calloutObs.observe(el));
+
+      // Divider observer
+      const divObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.querySelector('.cf-divider-line')?.classList.add('cf-in');
+          divObs.unobserve(entry.target);
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('.cs-divider').forEach(el => divObs.observe(el));
+    }
+
+
+    /* ── 4. INIT — wait for gate if needed ── */
+    const gate = document.getElementById('gate');
+    function init() {
+      startObservers();
+    }
+
+    if (!gate || gate.classList.contains('unlocked')) {
+      init();
+    } else {
+      const gObs = new MutationObserver(() => {
+        if (gate.classList.contains('unlocked')) {
+          gObs.disconnect();
+          // Brief delay so gate fade completes
+          setTimeout(init, 400);
+        }
+      });
+      gObs.observe(gate, { attributes: true, attributeFilter: ['class'] });
+    }
+
+  }());
   </script>
 </body>
 </html>

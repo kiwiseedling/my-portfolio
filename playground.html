@@ -34,8 +34,8 @@
       content: '';
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-      background-size: 36px 36px;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.18) 1.5px, transparent 1.5px);
+      background-size: 32px 32px;
       pointer-events: none;
     }
 
@@ -51,7 +51,7 @@
       font-family: var(--sans);
       font-size: 0.72rem;
       letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.75);
+      color: rgba(255,192,203,0.75);
       pointer-events: none;
       display: flex;
       align-items: center;
@@ -60,7 +60,7 @@
     .pg-hint__dot {
       width: 5px; height: 5px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.6);
+      background: rgba(255,192,203,0.6);
     }
 
     /* capsule */
@@ -121,6 +121,34 @@
     .pg-capsule--pink:hover { border-color: rgba(249,196,212,0.35); }
     .pg-capsule--pink .pg-capsule__tag::before { background: var(--accent); }
 
+    /* link inside capsule */
+    .pg-capsule__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 14px;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 5px 14px;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      cursor: pointer;
+    }
+    .pg-capsule__link:hover {
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.28);
+      background: rgba(255,255,255,0.04);
+    }
+    .pg-capsule__link--primary {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.8);
+    }
+
     /* floating label */
     .pg-label {
       position: absolute;
@@ -135,19 +163,17 @@
     /* ── Gallery photos ── */
     .pg-photo {
       position: absolute;
-      width: 90px;
-      height: 90px;
+      width: 150px;
+      /* no fixed height — image shows at natural aspect ratio */
       cursor: pointer;
       z-index: 5;
-      transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1),
-                  height 0.4s cubic-bezier(0.34,1.56,0.64,1),
-                  box-shadow 0.3s ease,
-                  z-index 0s;
+      transition: transform 0.15s cubic-bezier(0.34,1.8,0.64,1),
+                  box-shadow 0.15s ease;
     }
     .pg-photo img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;          /* full image, no crop */
+      object-fit: unset;
       display: block;
       border-radius: 4px;
       border: 1px solid rgba(255,255,255,0.1);
@@ -155,19 +181,14 @@
     }
     .pg-photo:hover {
       z-index: 20;
-      transform: scale(1.35) !important;
-      transition: transform 0.15s cubic-bezier(0.34,1.8,0.64,1),
-                  box-shadow 0.15s ease,
-                  width 0.4s cubic-bezier(0.34,1.56,0.64,1),
-                  height 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      transform: scale(1.12) !important;
     }
     .pg-photo:hover img {
       border-color: rgba(255,255,255,0.3);
       box-shadow: 0 8px 32px rgba(0,0,0,0.6);
     }
     .pg-photo.expanded {
-      width: 220px;
-      height: 220px;
+      width: 300px;
       z-index: 30;
       box-shadow: 0 20px 60px rgba(0,0,0,0.8);
     }
@@ -190,25 +211,71 @@
 
   <div class="pg-hint">
     <div class="pg-hint__dot"></div>
-    drag to explore · scroll to zoom
+    scroll to move
     <div class="pg-hint__dot"></div>
   </div>
 
   <div id="pg-canvas">
     <div id="pg-world">
 
-      <!-- ── Capsule 1 — Safety Compliance Concierge ── -->
-      <div class="pg-label" style="top:72px;left:280px">ai + apps</div>
-      <div class="pg-capsule pg-capsule--md pg-capsule--blue" style="top:110px;left:280px">
-        <div class="pg-capsule__tag">app · coming soon</div>
-        <div class="pg-capsule__title">safety compliance concierge</div>
-        <div class="pg-capsule__desc">an ai-powered concierge that guides teams through safety compliance — surfacing the right requirements, at the right time.</div>
+      <!-- ── Capsule 2 — PTW Website Redesign ── -->
+      <div class="pg-label" style="top:500px;left:270px">capsule #2: website redesign</div>
+      <div class="pg-capsule pg-capsule--md" style="top:538px;left:270px">
+        <div class="pg-capsule__tag">capsule #2 · web · branding</div>
+        <div class="pg-capsule__title">ptw website redesign</div>
+        <div class="pg-capsule__desc">a project with ptw, a houston based oil and gas manufacturing company to help revamp the site. also helped with marketing materials.</div>
+        <a href="https://ptwellheadusa.com/" target="_blank" rel="noopener" class="pg-capsule__link pg-capsule__link--primary">view work →</a>
       </div>
 
-      <!-- ── Capsule 2 — Gallery ── -->
-      <div class="pg-label" style="top:72px;left:1060px">gallery</div>
+      <!-- ── PTW photos — below capsule 2 ── -->
+      <div class="pg-photo" style="top:790px;left:180px;transform:rotate(-5deg)" onclick="togglePhoto(this)">
+        <img src="images/ptw1.png" alt="PTW before" />
+      </div>
+      <div class="pg-photo" style="top:805px;left:355px;transform:rotate(3deg)" onclick="togglePhoto(this)">
+        <img src="images/ptw2.png" alt="PTW marketing" />
+      </div>
+      <div class="pg-photo" style="top:785px;left:545px;transform:rotate(-3deg)" onclick="togglePhoto(this)">
+        <img src="images/ptw3.png" alt="PTW marketing" />
+      </div>
+      <div class="pg-photo" style="top:910px;left:185px;transform:rotate(6deg)" onclick="togglePhoto(this)">
+        <img src="images/ptw4.jpg" alt="PTW graphic" />
+      </div>
+      <div class="pg-photo" style="top:920px;left:480px;transform:rotate(-7deg)" onclick="togglePhoto(this)">
+        <img src="images/ptw5.JPG" alt="PTW metaverse" />
+      </div>
+      <!-- "entering the metaverse" annotation — to the right of ptw5.JPG -->
+      <div style="position:absolute;top:948px;left:646px;display:flex;align-items:center;gap:7px;pointer-events:none;z-index:6">
+        <!-- left-pointing arrow -->
+        <svg width="32" height="10" viewBox="0 0 32 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="32" y1="5" x2="8" y2="5" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+          <polyline points="14,1 7,5 14,9" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1" stroke-linejoin="round"/>
+        </svg>
+        <span style="font-family:var(--sans);font-size:0.6rem;letter-spacing:0.1em;color:rgba(255,255,255,0.5);white-space:nowrap">entering the metaverse</span>
+      </div>
+
+      <!-- ── Capsule 3 — Pet Health App ── -->
+      <div class="pg-label" style="top:-120px;left:560px">capsule #3: pawcare</div>
+      <div class="pg-capsule pg-capsule--blue" style="top:-82px;left:560px;width:340px">
+        <!-- header row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="pg-capsule__tag" style="margin-bottom:0">capsule #3 · personal project · lovable · claude code</div>
+          <span style="font-family:var(--sans);font-size:0.58rem;letter-spacing:0.1em;color:rgba(99,102,241,0.9);background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.28);border-radius:999px;padding:3px 10px;white-space:nowrap;flex-shrink:0">building</span>
+        </div>
+        <div class="pg-capsule__title">pawcare</div>
+        <div class="pg-capsule__desc">a mobile app that keeps your pet's insurance and health info in one place — snap a photo to run an AI symptom check, get an instant diagnosis card, and find nearby hospitals filtered by your coverage, with a seamless path to talk to a real vet when you need one.</div>
+        <!-- video preview -->
+        <div style="margin-top:16px;border-radius:10px;overflow:hidden;border:1px solid rgba(99,102,241,0.18);background:rgba(0,0,0,0.3)">
+          <video src="videos/pawcare.mp4" muted autoplay loop playsinline
+            style="width:108%;display:block;max-height:220px;object-fit:cover;border-radius:10px"></video>
+        </div>
+        <!-- open prototype button -->
+        <a href="https://pet-pal-vet-find.lovable.app/" target="_blank" rel="noopener" class="pg-capsule__link" style="margin-top:12px;display:inline-flex">open prototype ↗</a>
+      </div>
+
+      <!-- ── Capsule 1 — Gallery ── -->
+      <div class="pg-label" style="top:72px;left:1060px">capsule #1: gallery</div>
       <div class="pg-capsule pg-capsule--sm pg-capsule--pink" style="top:590px;left:1080px;z-index:6">
-        <div class="pg-capsule__tag">gallery</div>
+        <div class="pg-capsule__tag">capsule #1 · personal</div>
         <div class="pg-capsule__title">gallery</div>
         <div class="pg-capsule__desc">i spend my time rewatching shows with a sketchbook</div>
       </div>
@@ -221,7 +288,7 @@
         <img src="images/s1.jpg" alt="" />
       </div>
       <div class="pg-photo" style="top:400px;left:1080px;transform:rotate(3deg)" onclick="togglePhoto(this)">
-        <img src="images/s2.jpg" alt="" />
+        <img src="images/s9.PNG" alt="" />
       </div>
       <div class="pg-photo" style="top:415px;left:1250px;transform:rotate(-4deg)" onclick="togglePhoto(this)">
         <img src="images/s3.jpg" alt="" />
@@ -246,7 +313,7 @@
         <img src="images/s8.jpg" alt="" />
       </div>
       <div class="pg-photo" style="top:795px;left:1340px;transform:rotate(-3deg)" onclick="togglePhoto(this)">
-        <img src="images/s9.PNG" alt="" />
+        <img src="images/s2.jpg" alt="" />
       </div>
 
     </div>

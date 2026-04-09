@@ -51,12 +51,17 @@
   ═══════════════════════════════ -->
   <section class="hero">
 
+    <!-- sketch behind the name, anchored to hero -->
+    <img src="images/sketch.png" alt="" class="hero-sketch" aria-hidden="true" />
+
     <!-- top-left greeting -->
     <h1 class="hero-greeting">hi!</h1>
 
     <!-- centered name + pronunciation -->
     <div class="hero-center">
-      <h1 class="hero-name">i'm <span class="hero-name-accent">elena</span></h1>
+      <div class="hero-name-wrap">
+        <h1 class="hero-name">i'm <span class="hero-name-accent">elena</span></h1>
+      </div>
       <p class="hero-pronunciation"># ee-lay-nuh or /ɛˈleɪnə/</p>
     </div>
 
@@ -88,43 +93,8 @@
         </svg>
       </div>
 
-      <!-- Large filled star — lower right -->
-      <div class="illus-parallax star-parallax star-b" data-depth="0.65">
-        <svg class="sparkle sparkle--lg star-idle star-idle--b" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M30 0 Q34 26 60 30 Q34 34 30 60 Q26 34 0 30 Q26 26 30 0Z"
-                fill="url(#sg2)"/>
-          <defs>
-            <linearGradient id="sg2" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#6366f1"/>
-              <stop offset="100%" stop-color="#1d4ed8"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-
-      <!-- Medium filled star — beside large star -->
-      <div class="illus-parallax star-parallax star-c" data-depth="0.55">
-        <svg class="sparkle sparkle--md star-idle star-idle--c" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22 0 Q25 19 44 22 Q25 25 22 44 Q19 25 0 22 Q19 19 22 0Z"
-                fill="url(#sg3)"/>
-          <defs>
-            <linearGradient id="sg3" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#3b82f6"/>
-              <stop offset="100%" stop-color="#1e40af"/>
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
 
     </div>
-
-    <!-- Story link (bottom-right, like Cody's) -->
-    <a href="#work" class="hero-story-link" onclick="event.preventDefault();document.getElementById('work').scrollIntoView({behavior:'smooth'})">
-      case studies and designs
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 5v14M5 13l7 6 7-6"/>
-      </svg>
-    </a>
 
   </section>
 
@@ -159,6 +129,13 @@
     </div>
   </div>
 
+  <!-- Label after marquee -->
+  <p class="work-label">case studies and designs
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 5v14M5 13l7 6 7-6"/>
+    </svg>
+  </p>
+
   <!-- ═══════════════════════════════
        FEATURED WORK
   ═══════════════════════════════ -->
@@ -175,11 +152,13 @@
           <span class="project-year">2025–2026</span>
         </div>
         <h2 class="project-title">crossfill</h2>
-        <div class="project-pills">
-          <span class="project-pill">product strategy</span>
-          <span class="project-pill">interaction design</span>
+        <div class="project-swap">
+          <div class="project-pills">
+            <span class="project-pill">product strategy</span>
+            <span class="project-pill">interaction design</span>
+          </div>
+          <p class="project-desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</p>
         </div>
-        <p class="project-desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</p>
       </div>
     </a>
 
@@ -193,11 +172,13 @@
           <span class="project-year">2024</span>
         </div>
         <h2 class="project-title">greek clean</h2>
-        <div class="project-pills">
-          <span class="project-pill">user research</span>
-          <span class="project-pill">service design</span>
+        <div class="project-swap">
+          <div class="project-pills">
+            <span class="project-pill">user research</span>
+            <span class="project-pill">service design</span>
+          </div>
+          <p class="project-desc">designing a simple way to manage campus waste more responsibly</p>
         </div>
-        <p class="project-desc">designing a simple way to manage campus waste more responsibly</p>
       </div>
     </a>
 
@@ -211,11 +192,13 @@
           <span class="project-year">2024</span>
         </div>
         <h2 class="project-title">plantment</h2>
-        <div class="project-pills">
-          <span class="project-pill">usability testing</span>
-          <span class="project-pill">gamification</span>
+        <div class="project-swap">
+          <div class="project-pills">
+            <span class="project-pill">usability testing</span>
+            <span class="project-pill">gamification</span>
+          </div>
+          <p class="project-desc">a gamified ai-assisted plant care platform — webkinz inspired</p>
         </div>
-        <p class="project-desc">a gamified ai-assisted plant care platform — webkinz inspired</p>
       </div>
     </a>
 

@@ -174,7 +174,7 @@
 .cs-hero__tagline {
   font-family:   var(--serif);
   font-style:    italic;
-  font-size:     clamp(1rem, 2vw, 1.45rem);
+  font-size:     clamp(0.78rem, 1.4vw, 1rem);
   color:         var(--text-soft);
   max-width:     600px;
   line-height:   1.55;
@@ -226,7 +226,7 @@
   border-top:    1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
-.cs-section--dark .cs-section { padding: 88px 80px; }
+.cs-section--dark .cs-section { padding: 32px 80px; }
 
 .cs-section-label {
   display:        flex;
