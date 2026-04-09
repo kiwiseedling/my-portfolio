@@ -17,7 +17,10 @@
       "Bash(node -e \"const {createCanvas, loadImage} = require\\('canvas'\\); console.log\\('canvas ok'\\)\")",
       "Bash(node -e \"const jimp = require\\('jimp'\\); console.log\\('jimp ok'\\)\")",
       "Bash(npm install:*)",
-      "WebFetch(domain:elenaqianportfolio.framer.website)"
+      "WebFetch(domain:elenaqianportfolio.framer.website)",
+      "Bash(python3 -c \"import pdfminer\")",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -)"
     ]
   }
 }

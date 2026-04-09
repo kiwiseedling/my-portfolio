@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume — Elena Qian</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"/>
+  <style>
+
+    /* ── Page layout ── */
+    .resume-page {
+      min-height: 100vh;
+      padding: 140px 52px 100px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* ── Hero row ── */
+    .resume-hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 56px;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .resume-eyebrow {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 14px;
+    }
+
+    .resume-title {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--text);
+    }
+
+    /* ── Buttons ── */
+    .resume-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .resume-btn {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 11px 24px;
+      border-radius: 999px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: color 0.25s;
+    }
+
+    /* ghost — outline button */
+    .resume-btn--ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .resume-btn--ghost:hover {
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.25);
+    }
+    .resume-btn--ghost .btn-arrow {
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+    .resume-btn--ghost:hover .btn-arrow {
+      transform: translate(3px, -3px);
+    }
+
+    /* download — filled, white bg, black text */
+    .resume-btn--download {
+      background: #f0ede8;
+      color: #0a0a0a;
+      border: 1px solid #f0ede8;
+      font-weight: 600;
+    }
+    .resume-btn--download::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--accent);
+      transform: translateY(100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 999px;
+    }
+    .resume-btn--download:hover::before { transform: translateY(0); }
+    .resume-btn--download span { position: relative; z-index: 1; }
+    .resume-btn--download .btn-arrow {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      transition: transform 0.25s ease;
+    }
+    .resume-btn--download:hover .btn-arrow { transform: translateY(3px); }
+
+    /* ── Viewer ── */
+    .resume-viewer-wrap {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+    }
+
+    /* collapsed tab bar */
+    .resume-viewer-tab {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .resume-viewer-tab:hover { background: rgba(255,255,255,0.03); }
+
+    .resume-viewer-tab__label {
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .resume-viewer-tab__chevron {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.25);
+      transition: transform 0.3s ease;
+    }
+    .resume-viewer-tab__chevron.open { transform: rotate(180deg); }
+
+    .resume-viewer-body {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.45s cubic-bezier(0.4,0,0.2,1);
+    }
+    .resume-viewer-body.open { height: 78vh; }
+
+    .resume-viewer-body iframe {
+      width: 100%;
+      height: 78vh;
+      border: none;
+      display: block;
+    }
+
+    /* ── Read more section ── */
+    .resume-readmore {
+      margin-top: 72px;
+    }
+    .resume-readmore__eyebrow {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 8px;
+    }
+    .resume-readmore__heading {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
+    .resume-readmore__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .resume-rm-card {
+      display: block;
+      text-decoration: none;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      overflow: hidden;
+      transition: border-color 0.25s, background 0.25s, transform 0.3s;
+    }
+    .resume-rm-card:hover {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      transform: translateY(-4px);
+    }
+    .resume-rm-card__img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      background: #111116;
+      padding: 20px 12px;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .resume-rm-card__body {
+      padding: 20px 22px 22px;
+    }
+    .resume-rm-card__tag {
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.28);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .resume-rm-card__title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .resume-rm-card__desc {
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.38);
+    }
+    .resume-rm-card__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 14px;
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.3);
+      transition: color 0.2s;
+    }
+    .resume-rm-card:hover .resume-rm-card__link { color: var(--text); }
+
+    /* ── Sketch cat ── */
+    .resume-sketch {
+      display:          block;
+      margin:           56px auto 0;
+      width:            clamp(180px, 24vw, 300px);
+      height:           auto;
+      transform-origin: center center;
+      pointer-events:   none;
+      animation:        sketchGlow 10s ease-in-out infinite;
+      opacity:          1;
+      transition:       opacity 1.1s ease;
+    }
+    .resume-sketch.hidden {
+      opacity: 0;
+    }
+    @keyframes sketchGlow {
+      0%, 100% { filter: drop-shadow(0 20px 28px rgba(0,0,0,0.5)); }
+      50%       { filter: drop-shadow(0 6px  14px rgba(0,0,0,0.2)); }
+    }
+
+    @media (max-width: 640px) {
+      .resume-page { padding: 110px 24px 72px; }
+      .resume-viewer-body.open { height: 70vh; }
+      .resume-viewer-body iframe { height: 70vh; }
+      .resume-hero { align-items: flex-start; flex-direction: column; gap: 24px; }
+      .resume-readmore__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <div class="nav-pill">
+      <a href="index.html" class="nav-link">home</a>
+      <a href="playground.html" class="nav-link">playground</a>
+      <a href="resume.html" class="nav-link active">resume</a>
+    </div>
+  </nav>
+
+  <main class="resume-page">
+
+    <div class="resume-hero">
+      <div>
+        <div class="resume-eyebrow">product designer</div>
+        <h1 class="resume-title">resume</h1>
+      </div>
+      <div class="resume-actions">
+        <a href="images/Elena Qians Resume .pdf" target="_blank" class="resume-btn resume-btn--ghost">
+          view full screen <span class="btn-arrow">↗</span>
+        </a>
+        <a href="images/Elena Qians Resume .pdf" download="Elena Qians Resume .pdf" class="resume-btn resume-btn--download">
+          <span>download</span><span class="btn-arrow">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="resume-viewer-wrap">
+      <div class="resume-viewer-tab" id="viewerTab" onclick="toggleViewer()">
+        <span class="resume-viewer-tab__label">elena qians resume.pdf</span>
+        <span class="resume-viewer-tab__chevron" id="viewerChevron">▾</span>
+      </div>
+      <div class="resume-viewer-body" id="viewerBody">
+        <iframe src="images/Elena Qians Resume .pdf" title="Elena Qian Resume"></iframe>
+      </div>
+    </div>
+
+    <img src="images/sketch.png" alt="" class="resume-sketch" id="resumeSketch" aria-hidden="true">
+
+    <!-- ── Read more section ── -->
+    <div class="resume-readmore">
+      <div class="resume-readmore__eyebrow">case studies</div>
+      <h2 class="resume-readmore__heading">ai</h2>
+      <div class="resume-readmore__grid">
+
+        <a href="crossfill.html" class="resume-rm-card">
+          <img src="images/crossfill.png" alt="Crossfill" class="resume-rm-card__img" />
+          <div class="resume-rm-card__body">
+            <span class="resume-rm-card__tag">associate product designer · 2025–2026</span>
+            <div class="resume-rm-card__title">crossfill</div>
+            <div class="resume-rm-card__desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</div>
+            <div class="resume-rm-card__link">view case study ↗</div>
+          </div>
+        </a>
+
+        <a href="#" class="resume-rm-card">
+          <img src="images/plantment.png" alt="Plantment" class="resume-rm-card__img" />
+          <div class="resume-rm-card__body">
+            <span class="resume-rm-card__tag">design systems · 2023</span>
+            <div class="resume-rm-card__title">plantment</div>
+            <div class="resume-rm-card__desc">a gamified ai-assisted plant care platform — webkinz inspired</div>
+            <div class="resume-rm-card__link">view case study ↗</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- ── Sustainability section ── -->
+    <div class="resume-readmore" style="margin-top: 56px;">
+      <div class="resume-readmore__eyebrow">case studies</div>
+      <h2 class="resume-readmore__heading">sustainability</h2>
+      <div class="resume-readmore__grid" style="grid-template-columns: 1fr;">
+
+        <a href="greekclean.html" class="resume-rm-card" style="max-width: 480px;">
+          <img src="images/greekclean.png" alt="Greek Clean" class="resume-rm-card__img" />
+          <div class="resume-rm-card__body">
+            <span class="resume-rm-card__tag">product design · 2024</span>
+            <div class="resume-rm-card__title">greek clean</div>
+            <div class="resume-rm-card__desc">designing a simple way to manage campus waste more responsibly</div>
+            <div class="resume-rm-card__link">view case study ↗</div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <img src="images/coloredcat.png" alt="" class="footer-cat-bg" aria-hidden="true">
+    <div class="footer-top">
+      <h2 class="footer-heading">hi again! lets grab boba</h2>
+    </div>
+    <div class="footer-contact">
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/elena-qian1/" target="_blank">linkedin</a>
+        <a href="resume.html">resume</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>@2026 elena qian 🐾</span>
+      <span class="footer-star">✦</span>
+    </div>
+  </footer>
+
+  <script>
+    function toggleViewer() {
+      const body    = document.getElementById('viewerBody');
+      const chevron = document.getElementById('viewerChevron');
+      const sketch  = document.getElementById('resumeSketch');
+      const isOpen  = body.classList.contains('open');
+      body.classList.toggle('open', !isOpen);
+      chevron.classList.toggle('open', !isOpen);
+      // hide when opening, slowly reveal when closing
+      sketch.classList.toggle('hidden', !isOpen);
+    }
+  </script>
+
+  <script>
+    (function () {
+      var el = document.getElementById('resumeSketch');
+      if (!el) return;
+
+      var angle = 0;
+      var t = 0;
+      var scrolling = false;
+      var scrollTimer = null;
+
+      window.addEventListener('scroll', function () {
+        scrolling = true;
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(function () { scrolling = false; }, 1400);
+      }, { passive: true });
+
+      function shortDelta(from, to) {
+        return ((((to - from) % 360) + 540) % 360) - 180;
+      }
+
+      function tick() {
+        t += 0.002;
+
+        var targetAngle = scrolling
+          ? 270                        // point straight down while scrolling
+          : Math.sin(t) * 10;          // gentle float wobble when idle
+
+        angle += shortDelta(angle, targetAngle) * 0.008;
+        el.style.transform = 'rotate(' + angle + 'deg)';
+        requestAnimationFrame(tick);
+      }
+
+      tick();
+    })();
+  </script>
+
+</body>
+</html>

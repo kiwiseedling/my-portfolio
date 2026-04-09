@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Playground — Elena Qian</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"/>
+  <style>
+
+    html, body { height: 100%; overflow: hidden; }
+
+    #pg-canvas {
+      position: fixed;
+      inset: 0;
+      cursor: grab;
+      overflow: hidden;
+      background: var(--bg);
+      user-select: none;
+    }
+    #pg-canvas.dragging { cursor: grabbing; }
+
+    #pg-world {
+      position: absolute;
+      width: 3600px;
+      height: 2800px;
+      top: 0; left: 0;
+      will-change: transform;
+      transform-origin: 0 0;
+    }
+
+    /* dot grid */
+    #pg-canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    #nav { z-index: 100; }
+
+    /* hint */
+    .pg-hint {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.75);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pg-hint__dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+    }
+
+    /* capsule */
+    .pg-capsule {
+      position: absolute;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px 28px 24px;
+      cursor: default;
+      transition: border-color 0.25s, background 0.25s, transform 0.25s;
+      will-change: transform;
+    }
+    .pg-capsule:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.16);
+      transform: translateY(-4px);
+      z-index: 10;
+    }
+    .pg-capsule__tag {
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pg-capsule__tag::before {
+      content: '';
+      display: inline-block;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+    .pg-capsule__title {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+    .pg-capsule__desc {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      line-height: 1.65;
+      color: rgba(255,255,255,0.4);
+      max-width: 280px;
+    }
+    .pg-capsule--sm  { width: 280px; }
+    .pg-capsule--md  { width: 360px; }
+    .pg-capsule--blue  { border-color: rgba(99,102,241,0.18); }
+    .pg-capsule--blue:hover  { border-color: rgba(99,102,241,0.35); }
+    .pg-capsule--blue .pg-capsule__tag::before { background: #6366f1; }
+    .pg-capsule--pink { border-color: rgba(249,196,212,0.18); }
+    .pg-capsule--pink:hover { border-color: rgba(249,196,212,0.35); }
+    .pg-capsule--pink .pg-capsule__tag::before { background: var(--accent); }
+
+    /* floating label */
+    .pg-label {
+      position: absolute;
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.12);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ── Gallery photos ── */
+    .pg-photo {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      cursor: pointer;
+      z-index: 5;
+      transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                  height 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 0.3s ease,
+                  z-index 0s;
+    }
+    .pg-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: border-color 0.3s;
+    }
+    .pg-photo:hover {
+      z-index: 20;
+      transform: scale(1.35) !important;
+      transition: transform 0.15s cubic-bezier(0.34,1.8,0.64,1),
+                  box-shadow 0.15s ease,
+                  width 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                  height 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .pg-photo:hover img {
+      border-color: rgba(255,255,255,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    .pg-photo.expanded {
+      width: 220px;
+      height: 220px;
+      z-index: 30;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    }
+    .pg-photo.expanded img {
+      border-color: rgba(255,255,255,0.3);
+      border-radius: 6px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav id="nav">
+    <div class="nav-pill">
+      <a href="index.html" class="nav-link">home</a>
+      <a href="playground.html" class="nav-link active">playground</a>
+      <a href="resume.html" class="nav-link">resume</a>
+    </div>
+  </nav>
+
+  <div class="pg-hint">
+    <div class="pg-hint__dot"></div>
+    drag to explore · scroll to zoom
+    <div class="pg-hint__dot"></div>
+  </div>
+
+  <div id="pg-canvas">
+    <div id="pg-world">
+
+      <!-- ── Capsule 1 — Safety Compliance Concierge ── -->
+      <div class="pg-label" style="top:72px;left:280px">ai + apps</div>
+      <div class="pg-capsule pg-capsule--md pg-capsule--blue" style="top:110px;left:280px">
+        <div class="pg-capsule__tag">app · coming soon</div>
+        <div class="pg-capsule__title">safety compliance concierge</div>
+        <div class="pg-capsule__desc">an ai-powered concierge that guides teams through safety compliance — surfacing the right requirements, at the right time.</div>
+      </div>
+
+      <!-- ── Capsule 2 — Gallery ── -->
+      <div class="pg-label" style="top:72px;left:1060px">gallery</div>
+      <div class="pg-capsule pg-capsule--sm pg-capsule--pink" style="top:590px;left:1080px;z-index:6">
+        <div class="pg-capsule__tag">gallery · coming soon</div>
+        <div class="pg-capsule__title">gallery</div>
+        <div class="pg-capsule__desc">i spend my time rewatching shows with a sketchbook</div>
+      </div>
+
+      <!-- ── Gallery photos scattered around the capsule ── -->
+      <!-- capsule center ~top:640 left:1220 -->
+
+      <!-- top arc -->
+      <div class="pg-photo" style="top:420px;left:920px;transform:rotate(-7deg)" onclick="togglePhoto(this)">
+        <img src="images/s1.jpg" alt="" />
+      </div>
+      <div class="pg-photo" style="top:400px;left:1080px;transform:rotate(3deg)" onclick="togglePhoto(this)">
+        <img src="images/s2.jpg" alt="" />
+      </div>
+      <div class="pg-photo" style="top:415px;left:1250px;transform:rotate(-4deg)" onclick="togglePhoto(this)">
+        <img src="images/s3.jpg" alt="" />
+      </div>
+      <div class="pg-photo" style="top:430px;left:1420px;transform:rotate(8deg)" onclick="togglePhoto(this)">
+        <img src="images/s4.jpg" alt="" />
+      </div>
+
+      <!-- sides -->
+      <div class="pg-photo" style="top:600px;left:880px;transform:rotate(5deg)" onclick="togglePhoto(this)">
+        <img src="images/s5.JPG" alt="" />
+      </div>
+      <div class="pg-photo" style="top:605px;left:1420px;transform:rotate(-6deg)" onclick="togglePhoto(this)">
+        <img src="images/s6.PNG" alt="" />
+      </div>
+
+      <!-- bottom arc -->
+      <div class="pg-photo" style="top:800px;left:960px;transform:rotate(-9deg)" onclick="togglePhoto(this)">
+        <img src="images/s7.jpg" alt="" />
+      </div>
+      <div class="pg-photo" style="top:810px;left:1140px;transform:rotate(4deg)" onclick="togglePhoto(this)">
+        <img src="images/s8.jpg" alt="" />
+      </div>
+      <div class="pg-photo" style="top:795px;left:1340px;transform:rotate(-3deg)" onclick="togglePhoto(this)">
+        <img src="images/s9.PNG" alt="" />
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function togglePhoto(el) {
+      document.querySelectorAll('.pg-photo.expanded').forEach(function(other) {
+        if (other !== el) other.classList.remove('expanded');
+      });
+      el.classList.toggle('expanded');
+    }
+
+    // click outside any photo collapses all
+    canvas.addEventListener('click', function(e) {
+      if (!e.target.closest('.pg-photo')) {
+        document.querySelectorAll('.pg-photo.expanded').forEach(function(p) {
+          p.classList.remove('expanded');
+        });
+      }
+    });
+
+    const canvas = document.getElementById('pg-canvas');
+    const world  = document.getElementById('pg-world');
+
+    let ox = -160, oy = -60, scale = 1;
+    const MIN_SCALE = 0.3, MAX_SCALE = 3;
+    let dragging = false, startX = 0, startY = 0, startOX = 0, startOY = 0;
+    let didDrag = false;
+
+    function applyTransform() {
+      world.style.transform = `translate(${ox}px, ${oy}px) scale(${scale})`;
+    }
+    applyTransform();
+
+    canvas.addEventListener('mousedown', e => {
+      if (e.target.closest('a, button')) return;
+      dragging = true;
+      didDrag = false;
+      canvas.classList.add('dragging');
+      startX = e.clientX; startY = e.clientY;
+      startOX = ox; startOY = oy;
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) didDrag = true;
+      ox = startOX + dx;
+      oy = startOY + dy;
+      clampPan();
+      applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      dragging = false;
+      canvas.classList.remove('dragging');
+    });
+
+    /* wheel: pinch (ctrlKey) or mouse scroll wheel (deltaMode 1/2) = zoom
+             2-finger trackpad scroll (deltaMode 0, no ctrlKey) = pan     */
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      const isZoom = e.ctrlKey || e.deltaMode > 0;
+      if (isZoom) {
+        const factor   = e.deltaY < 0 ? 1.08 : 0.93;
+        const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * factor));
+        const wx = (e.clientX - ox) / scale;
+        const wy = (e.clientY - oy) / scale;
+        scale = newScale;
+        ox = e.clientX - wx * scale;
+        oy = e.clientY - wy * scale;
+      } else {
+        // 2-finger trackpad scroll → pan
+        ox -= e.deltaX;
+        oy -= e.deltaY;
+      }
+      clampPan();
+      applyTransform();
+    }, { passive: false });
+
+    function clampPan() {
+      const sw = world.offsetWidth  * scale;
+      const sh = world.offsetHeight * scale;
+      ox = Math.min(200, Math.max(-(sw - window.innerWidth  + 200), ox));
+      oy = Math.min(200, Math.max(-(sh - window.innerHeight + 200), oy));
+    }
+
+    /* touch pan + 2-finger pinch zoom */
+    let tSX = 0, tSY = 0, tOX = 0, tOY = 0;
+    let pinchDist0 = null, pinchScale0 = 1, pinchOX0 = 0, pinchOY0 = 0;
+
+    function touchDist(a, b) {
+      const dx = a.clientX - b.clientX, dy = a.clientY - b.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+    function touchMid(a, b) {
+      return { x: (a.clientX + b.clientX) / 2, y: (a.clientY + b.clientY) / 2 };
+    }
+
+    canvas.addEventListener('touchstart', e => {
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        tSX = t.clientX; tSY = t.clientY; tOX = ox; tOY = oy;
+        pinchDist0 = null;
+      } else if (e.touches.length === 2) {
+        pinchDist0  = touchDist(e.touches[0], e.touches[1]);
+        pinchScale0 = scale;
+        pinchOX0    = ox;
+        pinchOY0    = oy;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      if (e.touches.length === 1 && pinchDist0 === null) {
+        const t = e.touches[0];
+        ox = tOX + (t.clientX - tSX);
+        oy = tOY + (t.clientY - tSY);
+      } else if (e.touches.length === 2 && pinchDist0 !== null) {
+        const dist   = touchDist(e.touches[0], e.touches[1]);
+        const mid    = touchMid(e.touches[0], e.touches[1]);
+        const factor = dist / pinchDist0;
+        const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, pinchScale0 * factor));
+
+        // zoom centred on pinch midpoint
+        const wx = (mid.x - pinchOX0) / pinchScale0;
+        const wy = (mid.y - pinchOY0) / pinchScale0;
+        scale = newScale;
+        ox = mid.x - wx * scale;
+        oy = mid.y - wy * scale;
+      }
+      clampPan();
+      applyTransform();
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', e => {
+      if (e.touches.length < 2) pinchDist0 = null;
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        tSX = t.clientX; tSY = t.clientY; tOX = ox; tOY = oy;
+      }
+    }, { passive: true });
+  </script>
+
+</body>
+</html>

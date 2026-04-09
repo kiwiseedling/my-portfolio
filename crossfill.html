@@ -7,15 +7,238 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/case-study.css" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Password gate ── */
+    #gate {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #gate.unlocked {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Stars */
+    .gate-star {
+      position: absolute;
+      pointer-events: none;
+    }
+    .gate-star--a { top: 14%; left: 12%; }
+    .gate-star--b { top: 22%; right: 10%; }
+    .gate-star--c { bottom: 18%; left: 18%; }
+    .gate-star--d { bottom: 26%; right: 14%; }
+    .gate-star--e { top: 52%; left: 5%; }
+
+    /* Gate card */
+    .gate-card {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .gate-eyebrow {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 8px;
+    }
+    .gate-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: -0.02em;
+      color: #f0ede8;
+      margin-bottom: 32px;
+      line-height: 1.1;
+    }
+    .gate-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      padding: 4px 4px 4px 22px;
+      transition: border-color 0.2s;
+      width: 300px;
+      max-width: 100%;
+    }
+    .gate-input-wrap:focus-within {
+      border-color: rgba(99,102,241,0.5);
+    }
+    .gate-input-wrap.error {
+      border-color: rgba(239,68,68,0.5);
+      animation: gateShake 0.35s ease;
+    }
+    @keyframes gateShake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-5px); }
+      80%      { transform: translateX(5px); }
+    }
+    .gate-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 0.82rem;
+      color: #f0ede8;
+      letter-spacing: 0.04em;
+      padding: 8px 0;
+    }
+    .gate-input::placeholder { color: rgba(255,255,255,0.2); }
+    .gate-submit {
+      background: #f0ede8;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 999px;
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 9px 20px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .gate-submit:hover { background: #f9c4d4; transform: scale(1.03); }
+    .gate-error {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 0.72rem;
+      color: rgba(239,100,100,0.8);
+      margin-top: 12px;
+      min-height: 18px;
+      letter-spacing: 0.03em;
+    }
+    .gate-hint {
+      font-family: 'Montserrat', system-ui, sans-serif;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.18);
+      margin-top: 24px;
+      letter-spacing: 0.04em;
+    }
+  </style>
 </head>
 <body class="loaded cs-page">
+
+  <!-- ══════════════════════════════
+       PASSWORD GATE
+  ══════════════════════════════ -->
+  <div id="gate">
+
+    <!-- Stars -->
+    <div class="gate-star gate-star--a">
+      <svg class="sparkle sparkle--sm star-idle star-idle--a" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
+              stroke="url(#gs1)" stroke-width="1.5" fill="none"/>
+        <defs><linearGradient id="gs1" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient></defs>
+      </svg>
+    </div>
+    <div class="gate-star gate-star--b">
+      <svg class="sparkle sparkle--lg star-idle star-idle--b" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M30 0 Q34 26 60 30 Q34 34 30 60 Q26 34 0 30 Q26 26 30 0Z" fill="url(#gs2)"/>
+        <defs><linearGradient id="gs2" x1="0" y1="0" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="100%" stop-color="#1d4ed8"/>
+        </linearGradient></defs>
+      </svg>
+    </div>
+    <div class="gate-star gate-star--c">
+      <svg class="sparkle sparkle--md star-idle star-idle--c" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 0 Q25 19 44 22 Q25 25 22 44 Q19 25 0 22 Q19 19 22 0Z" fill="url(#gs3)"/>
+        <defs><linearGradient id="gs3" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#818cf8"/>
+          <stop offset="100%" stop-color="#3b82f6"/>
+        </linearGradient></defs>
+      </svg>
+    </div>
+    <div class="gate-star gate-star--d">
+      <svg class="sparkle sparkle--sm star-idle star-idle--a" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z" fill="url(#gs4)"/>
+        <defs><linearGradient id="gs4" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#6366f1"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient></defs>
+      </svg>
+    </div>
+    <div class="gate-star gate-star--e">
+      <svg class="sparkle sparkle--md star-idle star-idle--b" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 0 Q25 19 44 22 Q25 25 22 44 Q19 25 0 22 Q19 19 22 0Z"
+              stroke="url(#gs5)" stroke-width="1.5" fill="none"/>
+        <defs><linearGradient id="gs5" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#38bdf8"/>
+        </linearGradient></defs>
+      </svg>
+    </div>
+
+    <!-- Card -->
+    <div class="gate-card">
+      <div class="gate-eyebrow">case study</div>
+      <h1 class="gate-title">crossfill</h1>
+      <div class="gate-input-wrap" id="gateWrap">
+        <input class="gate-input" id="gateInput" type="password" placeholder="enter passcode" autocomplete="off" spellcheck="false"/>
+        <button class="gate-submit" onclick="checkGate()">enter →</button>
+      </div>
+      <div class="gate-error" id="gateError"></div>
+      <div class="gate-hint">protected case study · passcode required</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      if (sessionStorage.getItem('cf_unlocked') === '1') {
+        document.getElementById('gate').classList.add('unlocked');
+      }
+    })();
+    function checkGate() {
+      const val = document.getElementById('gateInput').value.trim().toLowerCase();
+      const wrap = document.getElementById('gateWrap');
+      const err  = document.getElementById('gateError');
+      if (val === 'iloveboba') {
+        sessionStorage.setItem('cf_unlocked', '1');
+        document.getElementById('gate').classList.add('unlocked');
+        err.textContent = '';
+      } else {
+        err.textContent = 'incorrect passcode — try again';
+        wrap.classList.remove('error');
+        void wrap.offsetWidth;
+        wrap.classList.add('error');
+        document.getElementById('gateInput').value = '';
+        setTimeout(() => wrap.classList.remove('error'), 400);
+      }
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkGate();
+    });
+  </script>
 
   <!-- ── Nav ── -->
   <nav id="nav">
     <div class="nav-pill">
       <a href="index.html" class="nav-link">home</a>
-      <a href="about.html" class="nav-link">about</a>
-      <a href="resume.pdf" class="nav-link" target="_blank">resume</a>
+      <a href="playground.html" class="nav-link">playground</a>
+      <a href="resume.html" class="nav-link">resume</a>
     </div>
   </nav>
 
@@ -34,18 +257,15 @@
   <nav class="cs-scroll-nav" id="csScrollNav">
     <a href="#hero"            class="cs-scroll-nav__item active" data-label="intro">       <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">intro</span></a>
     <a href="#overview"        class="cs-scroll-nav__item"        data-label="overview">    <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">overview</span></a>
-    <a href="#intro-section"   class="cs-scroll-nav__item"        data-label="introduction"><span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">introduction</span></a>
-    <a href="#team"            class="cs-scroll-nav__item"        data-label="team">        <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">team</span></a>
+<a href="#team"            class="cs-scroll-nav__item"        data-label="team">        <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">team</span></a>
     <a href="#problem"         class="cs-scroll-nav__item"        data-label="problem">     <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">problem</span></a>
     <a href="#objective"       class="cs-scroll-nav__item"        data-label="objective">   <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">objective</span></a>
-    <a href="#kickoff"         class="cs-scroll-nav__item"        data-label="kickoff">     <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">kickoff</span></a>
     <a href="#existing"        class="cs-scroll-nav__item"        data-label="existing system"><span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">existing system</span></a>
-    <a href="#discovery"       class="cs-scroll-nav__item"        data-label="discovery">   <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">discovery</span></a>
-    <a href="#audit"           class="cs-scroll-nav__item"        data-label="audit">       <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">audit</span></a>
     <a href="#cs-insights"     class="cs-scroll-nav__item"        data-label="cs insights"> <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">cs insights</span></a>
     <a href="#engineering"     class="cs-scroll-nav__item"        data-label="engineering"> <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">engineering</span></a>
     <a href="#v0"              class="cs-scroll-nav__item"        data-label="v0">          <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">v0</span></a>
     <a href="#v1"              class="cs-scroll-nav__item"        data-label="v1">          <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">v1</span></a>
+    <a href="#native-editor"   class="cs-scroll-nav__item"        data-label="post-mvp">    <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">post-mvp</span></a>
     <a href="#next-steps"      class="cs-scroll-nav__item"        data-label="next steps">  <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">next steps</span></a>
   </nav>
 
@@ -65,6 +285,11 @@
 
     <h1 class="cs-hero__title">crossfill</h1>
     <p class="cs-hero__tagline">shipped a dashboard that replaces fragmented manual workflows</p>
+    <div class="cs-stats cs-hero__stats-row">
+      <div class="cs-stat"><span class="cs-stat__num">4+</span><span class="cs-stat__label">tools replaced</span></div>
+      <div class="cs-stat"><span class="cs-stat__num">~1mo</span><span class="cs-stat__label">mvp → v1</span></div>
+      <div class="cs-stat"><span class="cs-stat__num">3</span><span class="cs-stat__label">features shipped</span></div>
+    </div>
 
     <div class="cs-meta">
       <div class="cs-meta__item">
@@ -94,35 +319,10 @@
     <div class="cs-cols">
       <div>
         <h2 class="cs-section-title">an end-to-end ai visibility platform</h2>
-        <p class="cs-body">crossfill helps brands understand their presence in ai search and improve visibility across ai-generated answers. as ai reshapes how users discover information, brands need new tools to track and act on ai visibility — not just traditional seo metrics.</p>
-      </div>
-      <div class="cs-stats">
-        <div class="cs-stat"><span class="cs-stat__num">4+</span><span class="cs-stat__label">tools replaced</span></div>
-        <div class="cs-stat"><span class="cs-stat__num">~1mo</span><span class="cs-stat__label">v0 → v1</span></div>
-        <div class="cs-stat"><span class="cs-stat__num">3</span><span class="cs-stat__label">features shipped</span></div>
-      </div>
-    </div>
-  </section>
-
-  <div class="cs-divider"></div>
-
-  <!-- ══════════════════════════════
-       INTRODUCTION
-  ══════════════════════════════ -->
-  <section class="cs-section" id="intro-section">
-    <div class="cs-section-label">introduction</div>
-    <div class="cs-cols">
-      <div>
-        <h2 class="cs-section-title">what is crossfill?</h2>
         <p class="cs-body">crossfill is a b2b saas platform that gives brands visibility into how they appear in ai-generated search results — and tools to improve that presence. as llms like chatgpt, perplexity, and google's ai overviews increasingly answer questions directly, traditional seo metrics no longer tell the whole story.</p>
-        <p class="cs-body">i joined the team as an associate product designer, leading the internal admin experience — the set of tools that let our team manage client workflows, track optimization tasks, and ship recommendations at scale.</p>
       </div>
-      <div class="cs-img-wrap" style="margin:0">
-        <div class="cs-img-placeholder">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <span>crossfill — product overview</span>
-        </div>
-        <div class="cs-img-caption">crossfill platform — ai visibility dashboard</div>
+      <div class="cs-img-wrap cs-img-wrap--video" style="margin:0">
+        <video src="videos/crossfill.mp4" autoplay loop muted playsinline></video>
       </div>
     </div>
   </section>
@@ -137,20 +337,20 @@
       <div class="cs-section-label">team</div>
       <h2 class="cs-section-title">who i worked with</h2>
       <div class="cs-cols--3">
-        <div class="cs-card">
-          <span class="cs-card__icon">🎨</span>
+        <div class="cs-card cs-card--bare">
+          <span class="cs-card__num">01</span>
           <div class="cs-card__title">design</div>
-          <div class="cs-card__body">lead product designer owned the overall dashboard experience. i led the internal admin feature end-to-end.</div>
+          <div class="cs-card__body">partnered with the lead product designer to design the overall dashboard experience. i led the internal admin feature end-to-end.</div>
         </div>
-        <div class="cs-card">
-          <span class="cs-card__icon">⚙️</span>
+        <div class="cs-card cs-card--bare" style="padding-top:60px">
+          <span class="cs-card__num">02</span>
           <div class="cs-card__title">engineering</div>
-          <div class="cs-card__body">responsible for implementation and deployment. worked closely with me to scope what was feasible within each sprint.</div>
+          <div class="cs-card__body">responsible for backend deployment. worked closely with them to scope what was feasible within each sprint.</div>
         </div>
-        <div class="cs-card">
-          <span class="cs-card__icon">🤝</span>
+        <div class="cs-card cs-card--bare" style="padding-top:60px">
+          <span class="cs-card__num">03</span>
           <div class="cs-card__title">customer success</div>
-          <div class="cs-card__body">provided direct client workflow insights and helped identify where the biggest friction points were in the real-world process.</div>
+          <div class="cs-card__body">drawing on prior experience working within the customer success team, i helped uncover user workflow insights and key friction points.</div>
         </div>
       </div>
     </section>
@@ -163,7 +363,7 @@
     <div class="cs-section-label">problem we had to solve</div>
     <h2 class="cs-section-title">the optimization workflow lived outside the product</h2>
     <div class="cs-callout">
-      <p>"teams were coordinating through slack, tracking in spreadsheets, storing drafts in google drive, and reviewing in docs. none of it connected. none of it scaled."</p>
+      <p>teams were coordinating through slack, tracking in spreadsheets, storing drafts in google drive, and reviewing in docs. none of it connected and was not scalable</p>
     </div>
     <p class="cs-body">the core problem wasn't a ui problem — it was a process problem that needed a product solution. the optimization workflow was fragmented across multiple disconnected tools, creating unreliable tracking, duplicate work, human error, and slower publishing velocity.</p>
 
@@ -196,137 +396,357 @@
   <!-- ══════════════════════════════
        OBJECTIVE
   ══════════════════════════════ -->
-  <div class="cs-section--full cs-section--dark" id="objective">
-    <section class="cs-section">
+  <div class="cs-section--full cs-section--dark cs-section--parallax" id="objective" style="overflow:visible;border-bottom:none">
+    <img src="images/dashsketch.png" alt="" class="cs-parallax-bg" aria-hidden="true" id="objectiveBg" style="top:5%;width:90%;max-width:980px;opacity:0.07;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 60%,rgba(0,0,0,0));mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 60%,rgba(0,0,0,0))" />
+    <section class="cs-section" style="position:relative;z-index:1">
       <div class="cs-section-label">objective</div>
       <div class="cs-cols">
         <div>
           <h2 class="cs-section-title">design a dashboard that lets teams take action directly in the product</h2>
           <p class="cs-body">the goal was to move the full optimization cycle — from recommendation to approval to publishing — inside crossfill. no slack threads. no spreadsheets. no leaving the product to review a google doc.</p>
         </div>
-        <div class="cs-callout" style="margin:0">
-          <p>"design a dashboard experience that supports the end-to-end optimization workflow and allows teams to take action directly in the product."</p>
+        <div class="cs-objective-statement">
+          <div class="cs-obj-icon">
+            <!-- Lightbulb SVG -->
+            <svg class="cs-obj-icon__bulb" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.4-1.2 4.5-3 5.7V17a1 1 0 0 1-1 1H10a1 1 0 0 1-1-1v-2.3C7.2 13.5 6 11.4 6 9a6 6 0 0 1 6-6z"/>
+              <line x1="12" y1="3" x2="12" y2="1" stroke-dasharray="2 1"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke-dasharray="2 1"/>
+              <line x1="5.64" y1="5.64" x2="4.22" y2="4.22" stroke-dasharray="2 1"/>
+            </svg>
+            <!-- Laptop SVG -->
+            <svg class="cs-obj-icon__laptop" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="14" rx="2"/>
+              <path d="M2 18h20"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="18" x2="12" y2="21"/>
+              <!-- screen lines suggesting UI -->
+              <line x1="6" y1="8" x2="12" y2="8" stroke-width="0.8" opacity="0.6"/>
+              <line x1="6" y1="11" x2="18" y2="11" stroke-width="0.8" opacity="0.4"/>
+              <line x1="6" y1="14" x2="15" y2="14" stroke-width="0.8" opacity="0.4"/>
+            </svg>
+            <!-- Arrow between -->
+            <svg class="cs-obj-icon__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M14 7l5 5-5 5"/>
+            </svg>
+          </div>
+          <p class="cs-objective-statement__text">design a dashboard experience that supports the end-to-end optimization workflow and allows teams to take action directly in the product.</p>
         </div>
       </div>
     </section>
   </div>
-
-  <!-- ══════════════════════════════
-       KICKOFF
-  ══════════════════════════════ -->
-  <section class="cs-section" id="kickoff">
-    <div class="cs-section-label">kickoff</div>
-    <div class="cs-cols">
-      <div>
-        <h2 class="cs-section-title">how we started</h2>
-        <p class="cs-body">before any sketching, i needed to understand what was actually happening — not what the intended workflow was, but what teams were doing in practice. i started by sitting in on customer success calls and mapping the real-world process step by step.</p>
-        <p class="cs-body">what became clear immediately was that the product as it stood handled data display well but had almost no support for action. it could tell you what to do — it couldn't help you do it.</p>
-      </div>
-      <div>
-        <div class="cs-img-wrap" style="margin:0">
-          <div class="cs-img-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 8V9m0 0L9 7"/></svg>
-            <span>workflow mapping — kickoff session</span>
-          </div>
-          <div class="cs-img-caption">initial workflow map — current state before any design</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="cs-divider"></div>
 
   <!-- ══════════════════════════════
        UNDERSTANDING EXISTING SYSTEM
   ══════════════════════════════ -->
-  <div class="cs-section--full cs-section--dark" id="existing">
+  <div class="cs-section--full cs-section--dark" id="existing" style="border-top:none">
     <section class="cs-section">
       <div class="cs-section-label">understanding the existing system</div>
       <h2 class="cs-section-title">mapping what we actually had</h2>
-      <p class="cs-body" style="max-width:720px">before designing solutions, i audited the current product and the external tools teams were using alongside it. the goal was to understand where each tool started and stopped — and where the gaps lived.</p>
+      <p class="cs-body" style="max-width:720px">before designing solutions, i audited the current product and the external tools teams were using alongside it. the goal was to understand where each tool started and stopped. i started by sitting in on customer success calls and mapping the process step by step.</p>
 
+      <!-- SVG 1: Existing workflow only -->
       <div class="cs-img-wrap">
-        <div class="cs-img-placeholder" style="aspect-ratio:21/9">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          <span>existing system audit — tool ecosystem map</span>
-        </div>
-        <div class="cs-img-caption">current tool ecosystem — slack, sheets, drive, docs mapped against the optimization workflow steps</div>
+        <svg viewBox="0 0 1300 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+          <defs>
+            <marker id="wf-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <polygon points="0,1 7,4 0,7" fill="rgba(255,255,255,0.2)"/>
+            </marker>
+          </defs>
+
+          <text x="50" y="32" fill="rgba(255,255,255,0.28)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5" letter-spacing="2.5">existing workflow — before redesign</text>
+
+          <!-- Node: Slack -->
+          <rect x="50" y="50" width="185" height="82" rx="9" fill="rgba(255,255,255,0.045)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <text x="142" y="84" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13.5" font-weight="500">slack</text>
+          <text x="142" y="106" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">internal comms &amp; alerts</text>
+
+          <!-- Arrow 1 -->
+          <line x1="235" y1="91" x2="308" y2="91" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#wf-arr)"/>
+          <rect x="236" y="100" width="73" height="14" rx="4" fill="rgba(236,48,77,0.13)"/>
+          <text x="272" y="110" text-anchor="middle" fill="rgba(236,48,77,0.8)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="8.5">no record</text>
+
+          <!-- Node: Spreadsheets -->
+          <rect x="315" y="50" width="185" height="82" rx="9" fill="rgba(255,255,255,0.045)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <text x="407" y="84" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13.5" font-weight="500">spreadsheets</text>
+          <text x="407" y="106" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">manual status tracking</text>
+
+          <!-- Arrow 2 -->
+          <line x1="500" y1="91" x2="573" y2="91" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#wf-arr)"/>
+          <rect x="498" y="100" width="77" height="14" rx="4" fill="rgba(236,48,77,0.13)"/>
+          <text x="536" y="110" text-anchor="middle" fill="rgba(236,48,77,0.8)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="8.5">manual entry</text>
+
+          <!-- Node: Google Drive -->
+          <rect x="580" y="50" width="185" height="82" rx="9" fill="rgba(255,255,255,0.045)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+          <text x="672" y="84" text-anchor="middle" fill="rgba(255,255,255,0.88)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13.5" font-weight="500">google drive</text>
+          <text x="672" y="106" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">content review &amp; approval</text>
+
+          <!-- Arrow 3 -->
+          <line x1="765" y1="91" x2="838" y2="91" stroke="rgba(255,255,255,0.16)" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#wf-arr)"/>
+          <rect x="763" y="100" width="77" height="14" rx="4" fill="rgba(236,48,77,0.13)"/>
+          <text x="801" y="110" text-anchor="middle" fill="rgba(236,48,77,0.8)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="8.5">context lost</text>
+
+          <!-- Node: Client Action -->
+          <rect x="845" y="50" width="185" height="82" rx="9" fill="rgba(236,48,77,0.05)" stroke="rgba(236,48,77,0.2)" stroke-width="1"/>
+          <text x="937" y="84" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13.5" font-weight="500">client action</text>
+          <text x="937" y="106" text-anchor="middle" fill="rgba(236,48,77,0.5)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">frequently missed</text>
+
+          <!-- Connectors to failure tags -->
+          <line x1="142" y1="132" x2="142" y2="154" stroke="rgba(236,48,77,0.18)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="490" y1="132" x2="490" y2="154" stroke="rgba(236,48,77,0.18)" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="890" y1="132" x2="890" y2="154" stroke="rgba(236,48,77,0.18)" stroke-width="1" stroke-dasharray="3,3"/>
+
+          <!-- Failure tags -->
+          <rect x="50" y="154" width="245" height="50" rx="7" fill="rgba(236,48,77,0.04)" stroke="rgba(236,48,77,0.11)" stroke-width="1"/>
+          <text x="66" y="174" fill="rgba(236,48,77,0.72)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10" font-weight="500">no in-product notification</text>
+          <text x="66" y="192" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">clients unaware of required actions</text>
+
+          <rect x="315" y="154" width="450" height="50" rx="7" fill="rgba(236,48,77,0.04)" stroke="rgba(236,48,77,0.11)" stroke-width="1"/>
+          <text x="331" y="174" fill="rgba(236,48,77,0.72)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10" font-weight="500">approval bottleneck</text>
+          <text x="331" y="192" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">left the dashboard to review content in google docs before approving</text>
+
+          <rect x="785" y="154" width="245" height="50" rx="7" fill="rgba(236,48,77,0.04)" stroke="rgba(236,48,77,0.11)" stroke-width="1"/>
+          <text x="801" y="174" fill="rgba(236,48,77,0.72)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10" font-weight="500">manual coordination</text>
+          <text x="801" y="192" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">cs teams acting as coordinators</text>
+
+          <!-- CS insights sidebar -->
+          <rect x="1075" y="46" width="175" height="158" rx="8" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.065)" stroke-width="1"/>
+          <text x="1091" y="67" fill="rgba(255,255,255,0.22)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="8.5" letter-spacing="2">CS INSIGHTS</text>
+          <text x="1091" y="90" fill="rgba(255,255,255,0.46)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">— missed required actions</text>
+          <text x="1091" y="109" fill="rgba(255,255,255,0.46)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">— key bottleneck: approval</text>
+          <text x="1091" y="128" fill="rgba(255,255,255,0.46)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">— cs acted as coordinators</text>
+          <text x="1091" y="147" fill="rgba(255,255,255,0.46)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">— context lost on tool switch</text>
+          <text x="1091" y="166" fill="rgba(255,255,255,0.46)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="10">— reminders were manual</text>
+        </svg>
+        <div class="cs-img-caption">existing workflow mapped against repeated failure points</div>
       </div>
 
-      <div class="cs-cols--3" style="margin-top:40px">
-        <div class="cs-card">
-          <div class="cs-card__title">slack</div>
-          <div class="cs-card__body">used for all internal communication and client notifications — no record, no state, no searchability.</div>
-        </div>
-        <div class="cs-card">
-          <div class="cs-card__title">spreadsheets</div>
-          <div class="cs-card__body">tracking task status, publishing dates, and content ownership — maintained manually by multiple people.</div>
-        </div>
-        <div class="cs-card">
-          <div class="cs-card__title">google drive + docs</div>
-          <div class="cs-card__body">content drafting, review, and approval — completely outside the product, no connection to task state.</div>
-        </div>
-      </div>
-    </section>
-  </div>
+      <!-- Interactive: typical step-by-step flow -->
+      <div style="margin-top:48px">
 
-  <!-- ══════════════════════════════
-       DISCOVERY
-  ══════════════════════════════ -->
-  <section class="cs-section" id="discovery">
-    <div class="cs-section-label">discovery</div>
-    <div class="cs-cols">
-      <div>
-        <h2 class="cs-section-title">what we found when we looked closely</h2>
-        <p class="cs-body">discovery surfaced a pattern of repeated failure points at every transition between teams. the same problems kept appearing in different forms — notification failures, approval delays, context loss during handoffs.</p>
-        <p class="cs-body">the key insight was that these weren't process failures — they were product gaps. the product didn't support the actions teams needed to take, so teams built workarounds. the workarounds became the system.</p>
-      </div>
-      <div>
-        <div class="cs-img-wrap" style="margin:0">
-          <div class="cs-img-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            <span>discovery synthesis — pattern mapping</span>
+        <div style="font-family:var(--sans);font-size:0.72rem;letter-spacing:0.1em;color:rgba(255,255,255,0.28);margin-bottom:0">typical step-by-step flow</div>
+
+        <!-- Step tabs -->
+        <div id="flow2-nav" style="display:flex;gap:0;border-radius:10px 10px 0 0;overflow:hidden;border:1px solid rgba(255,255,255,0.07);border-bottom:none;margin-top:16px">
+          <button class="flow2-btn active" onclick="goFlow2(0)"><span class="flow2-num">01</span><span class="flow2-lbl">client approval</span></button>
+          <button class="flow2-btn" onclick="goFlow2(1)"><span class="flow2-num">02</span><span class="flow2-lbl">spreadsheet</span></button>
+          <button class="flow2-btn" onclick="goFlow2(2)"><span class="flow2-num">03</span><span class="flow2-lbl">content draft</span></button>
+          <button class="flow2-btn" onclick="goFlow2(3)"><span class="flow2-num">04</span><span class="flow2-lbl">client decision</span></button>
+          <button class="flow2-btn" onclick="goFlow2(4)"><span class="flow2-num">05</span><span class="flow2-lbl">html delivery</span></button>
+          <button class="flow2-btn" onclick="goFlow2(5)"><span class="flow2-num">06</span><span class="flow2-lbl">publish + track</span></button>
+        </div>
+
+        <!-- Progress bar -->
+        <div style="height:2px;background:rgba(255,255,255,0.05);position:relative;overflow:hidden">
+          <div id="flow2-bar" style="height:100%;background:rgba(149,4,96,0.7);transition:width 0.4s ease;width:16.66%"></div>
+        </div>
+
+        <!-- Panels -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-top:none;border-radius:0 0 12px 12px">
+
+          <div class="flow2-panel" id="flow2-p0" style="display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:260px">
+            <div style="padding:40px 44px;border-right:1px solid rgba(255,255,255,0.06)">
+              <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:14px">01 of 06</div>
+              <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:18px;color:var(--text)">client approves content via slack</h4>
+              <p class="cs-body" style="margin:0;max-width:480px">client reviews which content to prioritize and communicates approval via slack. no record is created in the product — approval lives only in the slack thread.</p>
+            </div>
+            <div style="padding:40px 44px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,255,255,0.25);margin-bottom:16px">tools used</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">slack</span>
+                </div>
+              </div>
+              <div style="padding:16px 20px;border-radius:8px;background:rgba(236,48,77,0.05);border:1px solid rgba(236,48,77,0.12)">
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.08em;color:rgba(236,48,77,0.7);margin-bottom:6px">pain point</div>
+                <p class="cs-body" style="margin:0;font-size:0.78rem">no approval record exists in the product — decisions are invisible to the system</p>
+              </div>
+            </div>
           </div>
-          <div class="cs-img-caption">discovery synthesis — failure points mapped across workflow stages</div>
+
+          <div class="flow2-panel" id="flow2-p1" style="display:none;grid-template-columns:1fr 1fr;gap:0;min-height:260px">
+            <div style="padding:40px 44px;border-right:1px solid rgba(255,255,255,0.06)">
+              <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:14px">02 of 06</div>
+              <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:18px;color:var(--text)">add to spreadsheet to track statuses</h4>
+              <p class="cs-body" style="margin:0;max-width:480px">approved items are manually added to the spreadsheet to track statuses and organize deliverables. the spreadsheet becomes the team's working pipeline, maintained by hand.</p>
+            </div>
+            <div style="padding:40px 44px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,255,255,0.25);margin-bottom:16px">tools used</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">spreadsheet</span>
+                </div>
+              </div>
+              <div style="padding:16px 20px;border-radius:8px;background:rgba(236,48,77,0.05);border:1px solid rgba(236,48,77,0.12)">
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.08em;color:rgba(236,48,77,0.7);margin-bottom:6px">pain point</div>
+                <p class="cs-body" style="margin:0;font-size:0.78rem">every status update is a manual entry — no connection to the product means the pipeline drifts from reality</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow2-panel" id="flow2-p2" style="display:none;grid-template-columns:1fr 1fr;gap:0;min-height:260px">
+            <div style="padding:40px 44px;border-right:1px solid rgba(255,255,255,0.06)">
+              <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:14px">03 of 06</div>
+              <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:18px;color:var(--text)">content generated and shared via google docs</h4>
+              <p class="cs-body" style="margin:0;max-width:480px">once the internal team generates or optimizes content, it is copied into google docs for client review. for optimized drafts, the team uses the compare feature so clients can see exactly what changed.</p>
+            </div>
+            <div style="padding:40px 44px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,255,255,0.25);margin-bottom:16px">tools used</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">google docs</span>
+                </div>
+              </div>
+              <div style="padding:16px 20px;border-radius:8px;background:rgba(236,48,77,0.05);border:1px solid rgba(236,48,77,0.12)">
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.08em;color:rgba(236,48,77,0.7);margin-bottom:6px">pain point</div>
+                <p class="cs-body" style="margin:0;font-size:0.78rem">review happens entirely outside the product — feedback gets buried in comments with no link back to workflow state</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow2-panel" id="flow2-p3" style="display:none;min-height:260px">
+            <div style="padding:40px 44px;border-bottom:1px solid rgba(255,255,255,0.06)">
+              <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:10px">04 of 06</div>
+              <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:0;color:var(--text)">client decision — changes or approval</h4>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+              <div style="padding:28px 44px;border-right:1px solid rgba(255,255,255,0.06)">
+                <div style="font-family:var(--sans);font-size:0.74rem;font-weight:600;color:rgba(236,48,77,0.8);margin-bottom:10px">client wants changes</div>
+                <p class="cs-body" style="margin:0 0 12px;font-size:0.82rem">client edits the google doc directly with their requested changes and the cycle continues.</p>
+                <div style="font-family:var(--sans);font-size:0.7rem;color:rgba(255,255,255,0.25)">↩ loops back to internal review</div>
+              </div>
+              <div style="padding:28px 44px">
+                <div style="font-family:var(--sans);font-size:0.74rem;font-weight:600;color:rgba(100,220,140,0.8);margin-bottom:10px">client approves</div>
+                <p class="cs-body" style="margin:0 0 12px;font-size:0.82rem">client communicates approval via slack or marks it approved in the spreadsheet.</p>
+                <div style="font-family:var(--sans);font-size:0.7rem;color:rgba(255,255,255,0.25)">no automated state change in the system</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow2-panel" id="flow2-p4" style="display:none;grid-template-columns:1fr 1fr;gap:0;min-height:260px">
+            <div style="padding:40px 44px;border-right:1px solid rgba(255,255,255,0.06)">
+              <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:14px">05 of 06</div>
+              <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:18px;color:var(--text)">html + json generated and delivered via google drive</h4>
+              <p class="cs-body" style="margin:0;max-width:480px">internal team generates html and json from the approved content. files are delivered via google drive and the spreadsheet is updated to reflect delivery.</p>
+            </div>
+            <div style="padding:40px 44px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,255,255,0.25);margin-bottom:16px">tools used</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">google drive</span>
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">spreadsheet</span>
+                </div>
+              </div>
+              <div style="padding:16px 20px;border-radius:8px;background:rgba(236,48,77,0.05);border:1px solid rgba(236,48,77,0.12)">
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.08em;color:rgba(236,48,77,0.7);margin-bottom:6px">pain point</div>
+                <p class="cs-body" style="margin:0;font-size:0.78rem">file delivery is disconnected from status tracking — the spreadsheet must be updated separately every time</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow2-panel" id="flow2-p5" style="display:none;grid-template-columns:1fr 1fr;gap:0;min-height:260px">
+            <div style="padding:40px 44px;border-right:1px solid rgba(255,255,255,0.06)">
+              <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:14px">06 of 06</div>
+              <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:18px;color:var(--text)">client publishes and impact tracking begins</h4>
+              <p class="cs-body" style="margin:0;max-width:480px">client publishes the content and communicates via slack or inputs the published date in the spreadsheet. the internal team must manually mark it published to begin tracking seo impact.</p>
+            </div>
+            <div style="padding:40px 44px;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(255,255,255,0.25);margin-bottom:16px">tools used</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">slack</span>
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">spreadsheet</span>
+                  <span style="font-family:var(--sans);font-size:0.72rem;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.45)">system</span>
+                </div>
+              </div>
+              <div style="padding:16px 20px;border-radius:8px;background:rgba(236,48,77,0.05);border:1px solid rgba(236,48,77,0.12)">
+                <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.08em;color:rgba(236,48,77,0.7);margin-bottom:6px">pain point</div>
+                <p class="cs-body" style="margin:0;font-size:0.78rem">seo tracking requires a manual trigger — if the team misses the update, impact data is delayed or lost entirely</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prev / Next -->
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 44px;border-top:1px solid rgba(255,255,255,0.06)">
+            <button onclick="goFlow2(flow2Current-1)" id="flow2-prev" disabled style="font-family:var(--sans);font-size:0.75rem;background:none;border:none;color:rgba(255,255,255,0.2);cursor:pointer;padding:0;transition:color 0.2s">← prev</button>
+            <div style="display:flex;gap:6px" id="flow2-dots">
+              <span class="flow2-dot active" onclick="goFlow2(0)" style="cursor:pointer"></span>
+              <span class="flow2-dot" onclick="goFlow2(1)" style="cursor:pointer"></span>
+              <span class="flow2-dot" onclick="goFlow2(2)" style="cursor:pointer"></span>
+              <span class="flow2-dot" onclick="goFlow2(3)" style="cursor:pointer"></span>
+              <span class="flow2-dot" onclick="goFlow2(4)" style="cursor:pointer"></span>
+              <span class="flow2-dot" onclick="goFlow2(5)" style="cursor:pointer"></span>
+            </div>
+            <button onclick="goFlow2(flow2Current+1)" id="flow2-next" style="font-family:var(--sans);font-size:0.75rem;background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;padding:0;transition:color 0.2s">next →</button>
+          </div>
         </div>
+
+        <div class="cs-img-caption" style="margin-top:12px">typical step-by-step flow — manual coordination across slack, spreadsheets, google drive, and docs</div>
       </div>
-    </div>
-  </section>
-
-  <div class="cs-divider"></div>
-
-  <!-- ══════════════════════════════
-       AUDIT
-  ══════════════════════════════ -->
-  <div class="cs-section--full cs-section--dark" id="audit">
-    <section class="cs-section">
-      <div class="cs-section-label">audit of the current workflow</div>
-      <h2 class="cs-section-title">three repeated failure points</h2>
 
       <div class="cs-cards" style="grid-template-columns: repeat(3,1fr); margin-top:40px">
         <div class="cs-card">
-          <div class="cs-card__icon" style="font-size:1.8rem">01</div>
-          <div class="cs-card__title">no in-product notification</div>
-          <div class="cs-card__body">clients were unaware of required actions without external notification. no prompts, no task states, no status visibility inside the product.</div>
+          <div class="cs-card__icon" style="font-size:0.68rem;font-family:var(--sans);font-weight:600;letter-spacing:0.1em;filter:none;color:var(--text-soft)">slack</div>
+          <div class="cs-card__title">no record, no state, no searchability</div>
+          <div class="cs-card__body">used for all internal communication and client notifications — conversations disappeared with no audit trail and no way to query past decisions.</div>
         </div>
         <div class="cs-card">
-          <div class="cs-card__icon" style="font-size:1.8rem">02</div>
-          <div class="cs-card__title">content review outside product</div>
-          <div class="cs-card__body">users were forced to leave the dashboard and review content in google docs before they could approve or dismiss a recommendation.</div>
+          <div class="cs-card__icon" style="font-size:0.68rem;font-family:var(--sans);font-weight:600;letter-spacing:0.1em;filter:none;color:var(--text-soft)">spreadsheets</div>
+          <div class="cs-card__title">manually maintained by multiple people</div>
+          <div class="cs-card__body">tracking task status, publishing dates, and content ownership across people with no single source of truth — always at risk of drifting out of sync.</div>
         </div>
         <div class="cs-card">
-          <div class="cs-card__icon" style="font-size:1.8rem">03</div>
-          <div class="cs-card__title">manual data entry everywhere</div>
-          <div class="cs-card__body">no automation between recommendation, approval, and publishing states. every status update required a human to manually update multiple systems.</div>
+          <div class="cs-card__icon" style="font-size:0.68rem;font-family:var(--sans);font-weight:600;letter-spacing:0.1em;filter:none;color:var(--text-soft)">google drive + docs</div>
+          <div class="cs-card__title">completely outside the product</div>
+          <div class="cs-card__body">content review, and approval lived here. after approval, the html used to publish the content was also delivered via docs. there wasno visibility into where things stood without leaving the dashboard.</div>
         </div>
       </div>
 
-      <div class="cs-img-wrap">
-        <div class="cs-img-placeholder" style="aspect-ratio:16/7">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          <span>workflow audit — failure point documentation</span>
-        </div>
-        <div class="cs-img-caption">documented failure points across the existing optimization workflow — pre-redesign</div>
+      <h3 class="cs-section-title" style="font-size:clamp(1.2rem,2vw,1.8rem);margin-top:48px;margin-bottom:16px">engineering — confirmed feasibility</h3>
+
+      <!-- SVG 2: Engineering feasibility -->
+      <div class="cs-img-wrap" style="margin-top:32px">
+        <svg viewBox="0 0 1300 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+          <defs>
+            <linearGradient id="eng-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#950460"/>
+              <stop offset="100%" stop-color="#EC304D"/>
+            </linearGradient>
+          </defs>
+
+          <text x="50" y="28" fill="rgba(255,255,255,0.28)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5" letter-spacing="2.5">engineering — confirmed feasibility</text>
+
+          <!-- 01: permission-based admin controls -->
+          <rect x="50" y="44" width="283" height="78" rx="8" fill="rgba(149,4,96,0.07)" stroke="rgba(149,4,96,0.2)" stroke-width="1"/>
+          <rect x="50" y="44" width="4" height="78" rx="2" fill="url(#eng-grad)"/>
+          <text x="68" y="64" fill="rgba(149,4,96,0.85)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.5">&#10003;  confirmed  ·  01</text>
+          <text x="68" y="86" fill="rgba(255,255,255,0.82)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13" font-weight="500">permission-based admin</text>
+          <text x="68" y="107" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">role-based access · client/admin separation</text>
+
+          <!-- 02: in-dashboard accept/dismiss + gsc -->
+          <rect x="353" y="44" width="283" height="78" rx="8" fill="rgba(149,4,96,0.07)" stroke="rgba(149,4,96,0.2)" stroke-width="1"/>
+          <rect x="353" y="44" width="4" height="78" rx="2" fill="url(#eng-grad)"/>
+          <text x="371" y="64" fill="rgba(149,4,96,0.85)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.5">&#10003;  confirmed  ·  02</text>
+          <text x="371" y="86" fill="rgba(255,255,255,0.82)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13" font-weight="500">accept / dismiss + gsc data</text>
+          <text x="371" y="107" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">triggers backend state · real gsc context per action</text>
+
+          <!-- 03: action management and tracking -->
+          <rect x="656" y="44" width="283" height="78" rx="8" fill="rgba(149,4,96,0.07)" stroke="rgba(149,4,96,0.2)" stroke-width="1"/>
+          <rect x="656" y="44" width="4" height="78" rx="2" fill="url(#eng-grad)"/>
+          <text x="674" y="64" fill="rgba(149,4,96,0.85)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5" font-weight="600" letter-spacing="0.5">&#10003;  confirmed  ·  03</text>
+          <text x="674" y="86" fill="rgba(255,255,255,0.82)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13" font-weight="500">action management + tracking</text>
+          <text x="674" y="107" fill="rgba(255,255,255,0.3)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">next steps · view draft · approve in-product</text>
+
+          <!-- 04: inline content editor (deferred) -->
+          <rect x="959" y="44" width="291" height="78" rx="8" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.065)" stroke-width="1" stroke-dasharray="5,3"/>
+          <text x="977" y="64" fill="rgba(255,255,255,0.2)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5" letter-spacing="0.5">&#8594;  deferred  ·  04</text>
+          <text x="977" y="86" fill="rgba(255,255,255,0.45)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="13">inline content editor</text>
+          <text x="977" y="107" fill="rgba(255,255,255,0.22)" font-family="'SF Pro Display',system-ui,sans-serif" font-size="9.5">post-mvp · v0 bridges with google docs</text>
+        </svg>
+        <div class="cs-img-caption">capabilities confirmed with engineering before any design decisions were made</div>
+      </div>
+
+      <p class="cs-body" style="max-width:760px;margin-top:40px">for mvp, teams would continue using google docs for content review and approval — that dependency was intentionally kept. the priority was to eliminate reliance on slack for status updates and spreadsheets for tracking, replacing both with in-product workflow state. a native inline editor to fully replace google docs was scoped to post-mvp, once the core flow was validated.</p>
       </div>
     </section>
   </div>
@@ -338,22 +758,23 @@
     <div class="cs-section-label">customer success insights</div>
     <div class="cs-cols">
       <div>
-        <h2 class="cs-section-title">what the people closest to clients were seeing</h2>
-        <p class="cs-body">customer success was the team spending the most time bridging the gap between the product and client needs. their observations were essential — they had the clearest view of where clients got stuck, what questions kept coming up, and which manual steps were costing the most time.</p>
+        <h2 class="cs-section-title">already on the inside before the design work started</h2>
+        <p class="cs-body">when i joined crossfill i worked alongside the customer success team, working directly with clients through the product lifecycle. that gave me a ground-level view of where things were breaking before any research was scoped. 
+          i saw firsthand how much of the cs workload was coordination that should have lived in the product. i had that experience in mind designing the dashboard and ran additional research to pressure-test those observations and surface anything i had missed.</p>
       </div>
       <div>
         <div class="cs-cards" style="margin:0; grid-template-columns:1fr">
           <div class="cs-card">
-            <div class="cs-card__title">insight 1 — clients needed reminders</div>
-            <div class="cs-card__body">clients consistently missed required actions because there were no in-product cues. cs was spending time on reminder messages that should have been automatic.</div>
+            <div class="cs-card__title">finding 1: clients missed required actions</div>
+            <div class="cs-card__body">without any in-product prompts or status visibility, clients were regularly unaware that something was waiting on them. cs was sending manual reminders for actions the product should have surfaced automatically.</div>
           </div>
           <div class="cs-card">
-            <div class="cs-card__title">insight 2 — approval was the biggest bottleneck</div>
-            <div class="cs-card__body">the google docs review step was where work stalled most often. clients lost context between seeing a recommendation and reviewing the content draft.</div>
+            <div class="cs-card__title">finding 2: approval stalled outside the product</div>
+            <div class="cs-card__body">clients had to leave the dashboard and review content drafts in google docs before they could approve or dismiss anything. the context switch meant work sat longer than it should have and approvals were delayed.</div>
           </div>
           <div class="cs-card">
-            <div class="cs-card__title">insight 3 — internal teams played coordinator</div>
-            <div class="cs-card__body">cs was spending significant time simply advancing work through the pipeline — nudging approvals, updating statuses — instead of doing strategy work.</div>
+            <div class="cs-card__title">finding 3: cs was doing the product's job</div>
+            <div class="cs-card__body">a significant portion of cs time was spent nudging approvals and updating statuses across systems rather than doing client strategy work. the coordination load existed because the product had no way to hold workflow state.</div>
           </div>
         </div>
       </div>
@@ -371,75 +792,236 @@
       <h2 class="cs-section-title">scoping what was actually buildable</h2>
       <p class="cs-body" style="max-width:720px;margin-bottom:40px">before committing to any design direction, i ran a feasibility review with engineering. i came in with a prioritized list of capabilities and we worked through what was possible within the timeline — and what needed to be deferred.</p>
 
-      <div class="cs-cards" style="grid-template-columns:repeat(2,1fr)">
-        <div class="cs-card">
-          <span class="cs-card__icon">✅</span>
-          <div class="cs-card__title">confirmed — gsc data integration</div>
-          <div class="cs-card__body">blog recommendations could link directly to google search console data, giving clients real performance context alongside each action item.</div>
+      <!-- Engineering timeline -->
+      <div style="position:relative;margin-top:48px">
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;z-index:1">
+
+          <!-- Step 1 -->
+          <div class="cs-card" style="padding-top:0;border-top:none;background:transparent;box-shadow:none">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:16px">
+              <div style="width:60px;height:60px;border-radius:50%;border:1px solid rgba(149,4,96,0.4);background:rgba(149,4,96,0.08);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:0.65rem;letter-spacing:0.15em;color:rgba(149,4,96,0.9);flex-shrink:0">01</div>
+              <div>
+                <div style="font-family:var(--sans);font-size:0.6rem;letter-spacing:0.18em;color:rgba(255,120,150,1);margin-bottom:8px">confirmed</div>
+                <div class="cs-card__title" style="margin-bottom:8px">permission-based admin controls</div>
+                <div class="cs-card__body">a separate admin layer with role-based access gave the internal team full visibility and management control without exposing admin functions to clients.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="cs-card" style="padding-top:0;border-top:none;background:transparent;box-shadow:none">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:16px">
+              <div style="width:60px;height:60px;border-radius:50%;border:1px solid rgba(149,4,96,0.4);background:rgba(149,4,96,0.08);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:0.65rem;letter-spacing:0.15em;color:rgba(149,4,96,0.9);flex-shrink:0">02</div>
+              <div>
+                <div style="font-family:var(--sans);font-size:0.6rem;letter-spacing:0.18em;color:rgba(255,120,150,1);margin-bottom:8px">confirmed</div>
+                <div class="cs-card__title" style="margin-bottom:8px">in-dashboard accept/dismiss + gsc data</div>
+                <div class="cs-card__body">blog recommendations were linked to google search console. clients could accept or dismiss directly in the product, triggering backend state changes automatically with real performance data alongside each action.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="cs-card" style="padding-top:0;border-top:none;background:transparent;box-shadow:none">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:16px">
+              <div style="width:60px;height:60px;border-radius:50%;border:1px solid rgba(149,4,96,0.4);background:rgba(149,4,96,0.08);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:0.65rem;letter-spacing:0.15em;color:rgba(149,4,96,0.9);flex-shrink:0">03</div>
+              <div>
+                <div style="font-family:var(--sans);font-size:0.6rem;letter-spacing:0.18em;color:rgba(255,120,150,1);margin-bottom:8px">confirmed</div>
+                <div class="cs-card__title" style="margin-bottom:8px">action management and tracking</div>
+                <div class="cs-card__body">once a recommendation was accepted, teams could track it through next steps, view the content draft, and move it through to approval inside the product. no spreadsheets, no external tracking.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: deferred -->
+          <div class="cs-card" style="padding-top:0;border-top:none;background:transparent;box-shadow:none;opacity:0.55">
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:16px">
+              <div style="width:60px;height:60px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:0.65rem;letter-spacing:0.15em;color:rgba(255,255,255,0.35);flex-shrink:0">04</div>
+              <div>
+                <div style="font-family:var(--sans);font-size:0.6rem;letter-spacing:0.18em;color:rgba(255,255,255,0.65);margin-bottom:8px">deferred to post-mvp</div>
+                <div class="cs-card__title" style="margin-bottom:8px">inline content editor</div>
+                <div class="cs-card__body">a native editor for reviewing and editing content drafts directly in crossfill was technically possible but held for post-mvp. v0 bridged the gap with google docs while the core flow was validated.</div>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <div class="cs-card">
-          <span class="cs-card__icon">✅</span>
-          <div class="cs-card__title">confirmed — in-dashboard accept/dismiss</div>
-          <div class="cs-card__body">clients could accept or dismiss recommendations directly in the product, triggering backend workflow state changes automatically.</div>
+      </div>
+      <div class="cs-cols" style="margin-top:64px">
+        <div>
+          <h2 class="cs-section-title">designing the mvp</h2>
+          <p class="cs-body">v0 was the mvp, not the final solution. it was designed as a lightweight tool for tracking and state management, giving teams a shared source of truth while the native editor was still in development.</p>
+          <p class="cs-body">teams continued using google docs for content review during this phase, but now had a single place to track workflow status, reducing reliance on slack and spreadsheets.</p>
         </div>
-        <div class="cs-card">
-          <span class="cs-card__icon">✅</span>
-          <div class="cs-card__title">confirmed — permission-based admin controls</div>
-          <div class="cs-card__body">role-based access was technically feasible — a separate admin tab with login control could ship in v1.</div>
-        </div>
-        <div class="cs-card">
-          <span class="cs-card__icon">🔜</span>
-          <div class="cs-card__title">deferred — inline content editor</div>
-          <div class="cs-card__body">an inline editor for reviewing and editing content directly in crossfill was technically possible but scoped to post-mvp. v0 would bridge the gap.</div>
+        <div>
+          <div class="cs-img-wrap" style="margin:0">
+            <img src="images/ideation.png" alt="v0 ideation wireframes" style="width:100%;display:block;border-radius:4px">
+            <div class="cs-img-caption">mvp ideation — v0 was used for about one month</div>
+          </div>
         </div>
       </div>
     </section>
   </div>
 
-  <!-- ══════════════════════════════
-       V0
-  ══════════════════════════════ -->
   <section class="cs-section" id="v0">
-    <div class="cs-version"><span class="cs-version__dot"></span>v0 — ideation</div>
-    <div class="cs-cols">
-      <div>
-        <h2 class="cs-section-title">a deliberate bridge, not a shortcut</h2>
-        <p class="cs-body">v0 was never meant to be the full solution. it was a deliberately lightweight stop-gap — a tracking and state management tool that gave teams a shared source of truth while the content editor was in development.</p>
-        <p class="cs-body">teams continued using google docs for content review during v0. but they now had a single place to track workflow state, reducing the dependency on slack and spreadsheets even before the full system was ready.</p>
-        <p class="cs-body">v0 ran for approximately one month. the constraint was intentional — building lightweight let us validate assumptions before committing to a larger solution.</p>
-      </div>
-      <div>
-        <div class="cs-callout" style="margin:0">
-          <p>"the goal was not to build the perfect product — it was to stop the bleeding and give teams a foundation to move faster."</p>
-        </div>
-        <div class="cs-img-wrap">
-          <div class="cs-img-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            <span>v0 — early wireframes</span>
-          </div>
-          <div class="cs-img-caption">v0 wireframes — lightweight tracking interface</div>
-        </div>
-      </div>
-    </div>
+    <div class="cs-version"><span class="cs-version__dot"></span>mvp — admin design</div>
+    <div class="cs-section-label" style="margin-top:40px">admin controls</div>
+    <h2 class="cs-section-title">giving the internal team its own space</h2>
+    <p class="cs-body" style="max-width:680px">the first decision was how to separate what clients see from what the internal team needs to manage.</p>
+    <p class="cs-body" style="max-width:680px;margin-bottom:40px">i led the design of how to separate the client experience from internal workflows. early explorations included a fully separate interface with its own login, but through iterative testing and alignment with team needs, i identified a more seamless approach that reduced friction while still clearly distinguishing internal and client facing functionality.</p>
 
-    <div class="cs-section-label" style="margin-top:72px">admin controls</div>
-    <div class="cs-cols">
-      <div>
-        <h2 class="cs-section-title">giving the internal team its own space</h2>
-        <p class="cs-body">one of the first pieces scoped for v0 was a separate admin tab with login control. this gave the internal team visibility and management capability without surfacing admin functions to clients.</p>
-        <p class="cs-body">the admin controls were the foundation everything else was built on — without them, there was no clean separation between what clients saw and what internal teams needed to manage.</p>
+    <!-- Admin tabs -->
+    <div class="cs-admin-tabs cs-tab-group">
+      <div class="cs-admin-tabs__nav">
+        <button class="cs-admin-tab active" onclick="switchTab(this,'admin','idea1')">Idea #1</button>
+        <button class="cs-admin-tab" onclick="switchTab(this,'admin','shipped')">shipped</button>
       </div>
-      <div>
-        <div class="cs-img-wrap" style="margin:0">
-          <div class="cs-img-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-            <span>admin controls — v0 designs</span>
+
+      <!-- Idea #1 -->
+      <div class="cs-admin-tab-panel active" id="admin-idea1">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">separate tab<br>(login control)</h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(149,4,96,0.15);color:rgba(255,120,150,1);font-size:13px;flex-shrink:0">✕</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(255,120,150,1)">explored but not adopted</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">it introduced duplicated workflow logic that would be replaced once the editor shipped</li>
+              <li class="cs-body" style="margin:0">admins and the content team would not be looking at the same screen the client sees, creating a context gap during reviews</li>
+            </ul>
           </div>
-          <div class="cs-img-caption">admin tab — login control and role management interface</div>
+          <div>
+            <img src="images/adminidea.png" alt="admin idea 1" style="width:100%;display:block;border-radius:4px">
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipped -->
+      <div class="cs-admin-tab-panel" id="admin-shipped">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">role-based access<br>within the same view</h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(80,200,120,0.12);color:rgba(100,220,140,1);font-size:13px;flex-shrink:0">✓</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(100,220,140,1)">shipped</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">lower engineering complexity: avoids maintaining a separate admin page and reduces duplicated logic</li>
+              <li class="cs-body" style="margin:0">reuse existing backend + state rules: the popup can call the same create/update flows the client view uses, with an added permission gate/li>
+            </ul>
+          </div>
+          <div>
+            <img src="images/adminshipped.png" alt="admin shipped" style="width:100%;display:block;border-radius:4px">
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <style>
+    .cs-admin-tabs__nav {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .cs-admin-tab {
+      font-family: var(--sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.4);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 24px 12px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      margin-bottom: -1px;
+    }
+    .cs-admin-tab.active {
+      color: var(--text);
+      border-bottom-color: rgba(149,4,96,0.8);
+    }
+    .cs-admin-tab-panel { display: none; }
+    .cs-admin-tab-panel.active { display: block; }
+
+    /* ── Step flow tabs ── */
+    .flow2-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 14px 8px;
+      background: rgba(255,255,255,0.02);
+      border: none;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .flow2-btn:last-child { border-right: none; }
+    .flow2-btn:hover { background: rgba(255,255,255,0.04); }
+    .flow2-btn.active { background: rgba(149,4,96,0.1); }
+    .flow2-num {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: rgba(149,4,96,0.45);
+      transition: color 0.2s;
+    }
+    .flow2-btn.active .flow2-num { color: rgba(149,4,96,1); }
+    .flow2-lbl {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.3);
+      white-space: nowrap;
+      transition: color 0.2s;
+    }
+    .flow2-btn.active .flow2-lbl { color: rgba(255,255,255,0.85); }
+    .flow2-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.14);
+      transition: background 0.2s;
+    }
+    .flow2-dot.active { background: rgba(149,4,96,0.8); }
+    @media (max-width: 640px) {
+      .flow2-lbl { display: none; }
+      .flow2-btn { padding: 12px 6px; }
+    }
+  </style>
+
+  <script>
+    function switchTab(btn, group, tab) {
+      const container = btn.closest('.cs-tab-group');
+      container.querySelectorAll('.cs-admin-tab').forEach(b => b.classList.remove('active'));
+      container.querySelectorAll('.cs-admin-tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(group + '-' + tab).classList.add('active');
+    }
+
+    let flow2Current = 0;
+    const flow2Total = 6;
+    function goFlow2(n) {
+      if (n < 0 || n >= flow2Total) return;
+      flow2Current = n;
+      document.querySelectorAll('#flow2-nav .flow2-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+      for (let i = 0; i < flow2Total; i++) {
+        const p = document.getElementById('flow2-p'+i);
+        if (p) { p.style.display = i===n ? 'grid' : 'none'; }
+      }
+      // step 4 is not a grid (has full-width header)
+      if (n === 3) document.getElementById('flow2-p3').style.display = 'block';
+      document.getElementById('flow2-bar').style.width = ((n+1)/flow2Total*100)+'%';
+      document.querySelectorAll('#flow2-dots .flow2-dot').forEach((d,i) => d.classList.toggle('active', i===n));
+      const prev = document.getElementById('flow2-prev');
+      const next = document.getElementById('flow2-next');
+      prev.disabled = n===0; prev.style.color = n===0 ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.55)';
+      next.disabled = n===flow2Total-1; next.style.color = n===flow2Total-1 ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.55)';
+    }
+  </script>
 
   <div class="cs-divider"></div>
 
@@ -448,46 +1030,497 @@
   ══════════════════════════════ -->
   <div class="cs-section--full cs-section--dark" id="v1">
     <section class="cs-section">
-      <div class="cs-version"><span class="cs-version__dot"></span>v1 — ideation</div>
-      <h2 class="cs-section-title">three features that closed the loop</h2>
+      <div class="cs-version"><span class="cs-version__dot"></span>mvp — feature design</div>
+      <h2 class="cs-section-title">two features that closed the loop</h2>
       <p class="cs-body" style="max-width:680px">v1 replaced the manual workflow with three interconnected features, each targeting a specific failure point. together they made the full optimization cycle operable inside the product for the first time.</p>
     </section>
   </div>
 
   <section class="cs-section">
+
+    <!-- ── Content recommendations ── -->
     <div class="cs-section-label">content recommendations + calendar</div>
-    <div class="cs-cols">
-      <div>
-        <h2 class="cs-section-title">recommendations with real context</h2>
-        <p class="cs-body">the recommendations feature surfaced blog optimization tasks with potential impact scores, creation dates, and associated topics — linked directly to google search console data so clients had the performance context they needed to decide without leaving the product.</p>
-        <p class="cs-body">the calendar view let clients see their content pipeline over time, reducing the surprise of upcoming recommendations and giving them a sense of momentum and ownership over the process.</p>
+    <h2 class="cs-section-title">recommendations with real context</h2>
+    <p class="cs-body" style="max-width:680px;margin-bottom:40px">the recommendations feature surfaced blog optimization tasks with impact scores, creation dates, and associated topics linked directly to google search console data, so clients had the performance context they needed to act without leaving the product.</p>
+
+    <div class="cs-admin-tabs cs-tab-group">
+      <div class="cs-admin-tabs__nav">
+        <button class="cs-admin-tab active" onclick="switchTab(this,'recs','idea1')">Idea #1</button>
+        <button class="cs-admin-tab" onclick="switchTab(this,'recs','shipped')">shipped</button>
       </div>
-      <div>
-        <div class="cs-img-wrap" style="margin:0">
-          <img src="images/crossfill.png" alt="Crossfill recommendations dashboard" />
-          <div class="cs-img-caption">v1 recommendations view — accept/dismiss, impact scores, topic associations, gsc data integration</div>
+
+      <div class="cs-admin-tab-panel active" id="recs-idea1">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">slide-in panel<br></h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(149,4,96,0.15);color:rgba(255,120,150,1);font-size:13px;flex-shrink:0">✕</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(255,120,150,1)">explored but not adopted</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">too much information in one view</li>
+              <li class="cs-body" style="margin:0">the calendar structure buried the priority signal that impact scores were meant to surface</li>
+            </ul>
+          </div>
+          <div>
+            <img src="images/recidea.png" alt="recommendations idea 1" style="width:100%;display:block;border-radius:4px">
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-admin-tab-panel" id="recs-shipped">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">separate tab</h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(80,200,120,0.12);color:rgba(100,220,140,1);font-size:13px;flex-shrink:0">✓</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(100,220,140,1)">shipped</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">workflow execution has a main view; planning + guidance lives in its own dedicated space</li>
+              <li class="cs-body" style="margin:0">scales better over time without cramming the page</li>
+            </ul>
+          </div>
+          <div>
+            <img src="images/recshipped.png" alt="recommendations shipped" style="width:100%;display:block;border-radius:4px">
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- ── Actions page layout ── -->
     <div class="cs-section-label" style="margin-top:72px">actions page layout</div>
-    <div class="cs-cols">
-      <div>
-        <div class="cs-img-wrap" style="margin:0">
-          <div class="cs-img-placeholder">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            <span>actions page — layout exploration</span>
+    <h2 class="cs-section-title">structure that shows who owns what</h2>
+    <p class="cs-body" style="max-width:680px;margin-bottom:40px">the actions page needed to make workflow state visible at a glance. several layouts were explored before landing on the approach that kept state clarity without structural confusion.</p>
+
+    <div class="cs-admin-tabs cs-tab-group">
+      <div class="cs-admin-tabs__nav">
+        <button class="cs-admin-tab active" onclick="switchTab(this,'actions','idea1')">Idea #1</button>
+        <button class="cs-admin-tab" onclick="switchTab(this,'actions','idea2')">Idea #2</button>
+        <button class="cs-admin-tab" onclick="switchTab(this,'actions','shipped')">shipped</button>
+      </div>
+
+      <div class="cs-admin-tab-panel active" id="actions-idea1">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">kanban layout</h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(149,4,96,0.15);color:rgba(255,120,150,1);font-size:13px;flex-shrink:0">✕</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(255,120,150,1)">explored but not adopted</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">a single blog could belong to multiple topics, creating ambiguity about where it “lives”</li>
+              <li class="cs-body" style="margin:0">cognitive load increases quickly as cards accumulate across columns </li>
+              <li class="cs-body" style="margin:0">state visibility was secondary</li>
+            </ul>
           </div>
-          <div class="cs-img-caption">actions page — final shipped layout with clear ownership states</div>
+          <div>
+            <img src="images/actionidea1.png" alt="actions idea 1" style="width:100%;display:block;border-radius:4px">
+          </div>
         </div>
       </div>
-      <div>
-        <h2 class="cs-section-title">structure that shows who owns what</h2>
-        <p class="cs-body">the actions page layout was designed to make ownership and status visible at a glance. based on a kanban structure, it organized tasks by state — not just by date — so teams could see what was waiting on a client, what was in progress, and what was ready to publish.</p>
-        <p class="cs-body">the original kanban exploration created ambiguity when blogs belonged to multiple topics simultaneously. the shipped version simplified to a list-first approach that preserved the state clarity without the structural confusion.</p>
+
+      <div class="cs-admin-tab-panel" id="actions-idea2">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">actions on one tab</h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(149,4,96,0.15);color:rgba(255,120,150,1);font-size:13px;flex-shrink:0">✕</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(255,120,150,1)">explored but not adopted</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">visually noisy due to heavy reliance on color to distinguish states</li>
+              <li class="cs-body" style="margin:0">action buttons appeared inconsistently, making next steps less obvious</li>
+              <li class="cs-body" style="margin:0">felt more like a database view than a workflow tool</li>
+            </ul>
+          </div>
+          <div>
+            <img src="images/actionidea2.png" alt="actions idea 2" style="width:100%;display:block;border-radius:4px">
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-admin-tab-panel" id="actions-shipped">
+        <div class="cs-cols" style="align-items:flex-start;margin-top:32px">
+          <div>
+            <h3 style="font-family:var(--serif);font-size:clamp(1.3rem,2vw,2rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:20px;color:var(--text)">state-based tabs</h3>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+              <span style="display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(80,200,120,0.12);color:rgba(100,220,140,1);font-size:13px;flex-shrink:0">✓</span>
+              <span style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.08em;color:rgba(100,220,140,1)">shipped</span>
+            </div>
+            <ul style="list-style:disc;padding-left:20px;display:flex;flex-direction:column;gap:12px">
+              <li class="cs-body" style="margin:0">clear mental model: one tab = one action</li>
+              <li class="cs-body" style="margin:0">improved scannability and prioritization</li>
+              <li class="cs-body" style="margin:0">scales cleanly as volume grows</li>
+            </ul>
+          </div>
+          <div>
+            <img src="images/actionshipped.png" alt="actions shipped" style="width:100%;display:block;border-radius:4px">
+          </div>
+        </div>
       </div>
     </div>
+
   </section>
+
+
+  <!-- ══════════════════════════════
+       POST-MVP NATIVE EDITOR
+  ══════════════════════════════ -->
+  <div class="cs-editor-transition" id="native-editor">
+    <div class="cs-editor-transition__grid" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="cs-editor-transition__content">
+      <div class="cs-version cs-version--editor"><span class="cs-version__dot"></span>post-mvp — native editor</div>
+      <h2 class="cs-editor-transition__heading">bringing the workflow<br>fully in-product</h2>
+      <p class="cs-editor-transition__sub">v1 validated the workflow. the next phase eliminated the last external dependency — google docs — by building a native inline editor directly into crossfill.</p>
+    </div>
+    <div class="cs-editor-transition__scan" aria-hidden="true"></div>
+  </div>
+
+  <section class="cs-section" id="editor-section">
+
+    <div class="cs-section-label">ideation</div>
+    <h2 class="cs-section-title">editor feature requirements</h2>
+    <p class="cs-body" style="max-width:680px;margin-bottom:40px">the team mapped out what an in inline editor would need to support in order to replace google docs</p>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px">
+
+      <div style="padding:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;background:rgba(255,255,255,0.02)">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(149,4,96,0.1);border:1px solid rgba(149,4,96,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,120,150,1)" stroke-width="1.5" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <div style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.06em;color:rgba(255,255,255,0.7);margin-bottom:8px;font-weight:500">viewing content</div>
+        <p style="font-family:var(--sans);font-size:0.85rem;color:rgba(255,255,255,0.4);line-height:1.6;margin:0">clients needed to read the full content draft in context before making any decision, without leaving the dashboard or opening a separate document.</p>
+      </div>
+
+      <div style="padding:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;background:rgba(255,255,255,0.02)">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(149,4,96,0.1);border:1px solid rgba(149,4,96,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,120,150,1)" stroke-width="1.5" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <div style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.06em;color:rgba(255,255,255,0.7);margin-bottom:8px;font-weight:500">seeing changes</div>
+        <p style="font-family:var(--sans);font-size:0.85rem;color:rgba(255,255,255,0.4);line-height:1.6;margin:0">the editor needed to surface edits and revisions clearly so clients and the internal team could track what changed between drafts without relying on version history in google docs.</p>
+      </div>
+
+      <div style="padding:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;background:rgba(255,255,255,0.02)">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(149,4,96,0.1);border:1px solid rgba(149,4,96,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,120,150,1)" stroke-width="1.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.06em;color:rgba(255,255,255,0.7);margin-bottom:8px;font-weight:500">approve or edit</div>
+        <p style="font-family:var(--sans);font-size:0.85rem;color:rgba(255,255,255,0.4);line-height:1.6;margin:0">clients needed to either approve content as-is or make inline edits directly. both actions had to trigger the correct backend state change automatically, without a manual follow-up step.</p>
+      </div>
+
+      <div style="padding:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;background:rgba(255,255,255,0.02)">
+        <div style="width:36px;height:36px;border-radius:8px;background:rgba(149,4,96,0.1);border:1px solid rgba(149,4,96,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,120,150,1)" stroke-width="1.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <div style="font-family:var(--sans);font-size:0.75rem;letter-spacing:0.06em;color:rgba(255,255,255,0.7);margin-bottom:8px;font-weight:500">html generation</div>
+        <p style="font-family:var(--sans);font-size:0.85rem;color:rgba(255,255,255,0.4);line-height:1.6;margin:0">once content was approved, clients needed to copy the generated html and json schema directly to publish to their cms. the editor had to produce publish-ready output without any manual export or file handoff.</p>
+      </div>
+
+    </div>
+
+    <h3 class="cs-section-title" style="font-size:clamp(1.2rem,2vw,1.8rem);margin-bottom:24px">wireframes</h3>
+
+    <img src="images/editorwire.png" alt="editor wireframes" style="width:100%;display:block;border-radius:4px">
+
+    <div class="cs-section-label" style="margin-top:80px">final design</div>
+    <h2 class="cs-section-title">the inline editor</h2>
+    <p class="cs-body" style="max-width:680px;margin-bottom:40px">the native editor brought content review, drafting, and approval directly into the crossfill dashboard — eliminating the google docs handoff entirely and keeping all workflow state in one place.</p>
+
+    <p style="font-family:var(--sans);font-size:0.85rem;letter-spacing:0.04em;color:rgba(255,255,255,0.85);margin-bottom:16px;font-weight:500">viewing, approving and editing content</p>
+    <div class="cs-video-wrap" style="margin-bottom:72px">
+      <video autoplay loop muted playsinline>
+        <source src="videos/approval.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <p style="font-family:var(--sans);font-size:0.85rem;letter-spacing:0.04em;color:rgba(255,255,255,0.85);margin-bottom:16px;font-weight:500">after approval — html generation and publication</p>
+    <div class="cs-video-wrap">
+      <video autoplay loop muted playsinline>
+        <source src="videos/html.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Outcomes + Impact -->
+    <div style="margin-top:80px;padding-top:64px;border-top:1px solid rgba(255,255,255,0.07)">
+      <div class="cs-section-label">outcomes + impact</div>
+      <h2 class="cs-section-title">results after shipping</h2>
+      <p class="cs-body" style="max-width:620px;margin-bottom:56px">shipping the native inline editor alongside the core workflow changes had a measurable effect on how clients and the internal team interacted with the platform.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+
+        <div style="padding:36px 32px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:400;letter-spacing:-0.04em;color:rgba(149,4,96,0.9);line-height:1;margin-bottom:16px">30%</div>
+          <div style="font-family:var(--sans);font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:10px;letter-spacing:0.01em">reduced turnaround time</div>
+          <p class="cs-body" style="margin:0;font-size:0.8rem">content approvals moved faster once clients could review, edit, and approve directly in the dashboard without switching to google docs.</p>
+        </div>
+
+        <div style="padding:36px 32px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:400;letter-spacing:-0.04em;color:rgba(149,4,96,0.9);line-height:1;margin-bottom:16px">90%</div>
+          <div style="font-family:var(--sans);font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:10px;letter-spacing:0.01em">less reliance on customer success</div>
+          <p class="cs-body" style="margin:0;font-size:0.8rem">clients no longer needed to route update requests through the cs team — the in-product workflow gave them the visibility and control to act independently.</p>
+        </div>
+
+        <div style="padding:36px 32px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07)">
+          <div style="font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:400;letter-spacing:-0.04em;color:rgba(149,4,96,0.9);line-height:1;margin-bottom:16px">50%</div>
+          <div style="font-family:var(--sans);font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.85);margin-bottom:10px;letter-spacing:0.01em">increase in platform engagement</div>
+          <p class="cs-body" style="margin:0;font-size:0.8rem">bringing more of the workflow into crossfill gave clients a reason to return to the product regularly rather than managing approvals outside it.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <style>
+    /* ── Transition banner ── */
+    .cs-editor-transition {
+      position: relative;
+      background: #0a0a0f;
+      padding: 100px 80px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 340px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .cs-editor-transition__grid {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      pointer-events: none;
+    }
+    .cs-editor-transition__grid span {
+      border-right: 1px solid rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      animation: gridPulse 4s ease-in-out infinite;
+    }
+    .cs-editor-transition__grid span:nth-child(3n) { animation-delay: 0.6s; }
+    .cs-editor-transition__grid span:nth-child(5n) { animation-delay: 1.2s; }
+    .cs-editor-transition__grid span:nth-child(7n) { animation-delay: 1.8s; }
+    @keyframes gridPulse {
+      0%, 100% { background: transparent; }
+      50% { background: rgba(149,4,96,0.04); }
+    }
+    .cs-editor-transition__scan {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, rgba(149,4,96,0.6), rgba(236,48,77,0.4), transparent);
+      animation: scanLine 3.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes scanLine {
+      0% { top: 0; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .cs-editor-transition__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 680px;
+    }
+    .cs-version--editor {
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .cs-editor-transition__heading {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .cs-editor-transition__sub {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+    }
+
+    /* ── Slideshow ── */
+    .cs-slideshow {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+    }
+    .cs-slideshow__track {
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cs-slideshow__slide {
+      min-width: 100%;
+      flex-shrink: 0;
+    }
+    .cs-slideshow__slide .cs-img-placeholder {
+      border-radius: 0;
+      border: none;
+    }
+    .cs-slideshow__controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .cs-slideshow__btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      color: rgba(255,255,255,0.6);
+      transition: background 0.2s, color 0.2s;
+    }
+    .cs-slideshow__btn:hover { background: rgba(149,4,96,0.2); color: #fff; }
+    .cs-slideshow__dots { display: flex; gap: 8px; }
+    .cs-slideshow__dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .cs-slideshow__dot.active { background: rgba(149,4,96,0.9); transform: scale(1.3); }
+
+    /* ── Video ── */
+    .cs-video-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .cs-video-wrap video {
+      width: 100%;
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .cs-editor-transition { padding: 64px 28px; }
+    }
+
+    /* ── More work section ── */
+    .more-work {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 96px 52px 80px;
+    }
+    .more-work__eyebrow {
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 8px;
+    }
+    .more-work__heading {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 2.5vw, 2rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
+    .more-work__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .more-work-card {
+      display: block;
+      text-decoration: none;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      overflow: hidden;
+      transition: border-color 0.25s, background 0.25s, transform 0.3s;
+    }
+    .more-work-card:hover {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      transform: translateY(-4px);
+    }
+    .more-work-card__img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      background: #111116;
+      padding: 20px 12px;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .more-work-card__body {
+      padding: 20px 22px 22px;
+    }
+    .more-work-card__tag {
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.28);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .more-work-card__title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .more-work-card__desc {
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.38);
+    }
+    .more-work-card__link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 14px;
+      font-family: var(--sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.3);
+      transition: color 0.2s;
+    }
+    .more-work-card:hover .more-work-card__link { color: var(--text); }
+
+    @media (max-width: 640px) {
+      .more-work { padding: 72px 24px 60px; }
+      .more-work__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+
+  <script>
+    let editorCurrent = 0;
+    const editorTotal = 2;
+    function editorGoTo(n) {
+      editorCurrent = n;
+      document.getElementById('editorTrack').style.transform = `translateX(-${n * 100}%)`;
+      document.querySelectorAll('#editorDots .cs-slideshow__dot').forEach((d, i) => d.classList.toggle('active', i === n));
+    }
+    function editorSlide(dir) {
+      editorGoTo((editorCurrent + dir + editorTotal) % editorTotal);
+    }
+  </script>
 
   <div class="cs-divider"></div>
 
@@ -506,18 +1539,26 @@
           <div class="cs-roadmap">
             <div class="cs-roadmap__item">
               <span class="cs-roadmap__num">01</span>
-              <span class="cs-roadmap__text">move review and drafting fully in-platform — eliminate remaining google docs dependency</span>
+              <span class="cs-roadmap__text">real-time alerts when performance drops or content needs attention</span>
             </div>
             <div class="cs-roadmap__item">
               <span class="cs-roadmap__num">02</span>
-              <span class="cs-roadmap__text">inline editor for optimized content — write, review, and approve without leaving crossfill</span>
+              <span class="cs-roadmap__text">provide clear reasoning behind each recommendation to build trust and transparency</span>
             </div>
             <div class="cs-roadmap__item">
               <span class="cs-roadmap__num">03</span>
-              <span class="cs-roadmap__text">deeper integration with search data and real-time ai performance insights</span>
+              <span class="cs-roadmap__text">allow users to review each change individually and choose which recommendations to accept or reject</span>
             </div>
             <div class="cs-roadmap__item">
               <span class="cs-roadmap__num">04</span>
+              <span class="cs-roadmap__text">provide clear progress reporting to show what was done and what improved</span>
+            </div>
+            <div class="cs-roadmap__item">
+              <span class="cs-roadmap__num">05</span>
+              <span class="cs-roadmap__text">enable instant html generation so approved content can be immediately copied and implemented</span>
+            </div>
+            <div class="cs-roadmap__item">
+              <span class="cs-roadmap__num">06</span>
               <span class="cs-roadmap__text">versioning and re-optimization workflows — track content changes and surface new opportunities over time</span>
             </div>
           </div>
@@ -527,14 +1568,54 @@
   </div>
 
   <!-- ══════════════════════════════
+       MORE WORK
+  ══════════════════════════════ -->
+  <div class="more-work">
+    <div class="more-work__eyebrow">more work</div>
+    <h2 class="more-work__heading">keep exploring</h2>
+    <div class="more-work__grid">
+
+      <a href="greekclean.html" class="more-work-card">
+        <img src="images/greekclean.png" alt="Greek Clean" class="more-work-card__img" />
+        <div class="more-work-card__body">
+          <span class="more-work-card__tag">product design · 2024</span>
+          <div class="more-work-card__title">greek clean</div>
+          <div class="more-work-card__desc">designing a simple way to manage campus waste more responsibly</div>
+          <div class="more-work-card__link">view case study ↗</div>
+        </div>
+      </a>
+
+      <a href="#" class="more-work-card">
+        <img src="images/plantment.png" alt="Plantment" class="more-work-card__img" />
+        <div class="more-work-card__body">
+          <span class="more-work-card__tag">design systems · 2023</span>
+          <div class="more-work-card__title">plantment</div>
+          <div class="more-work-card__desc">a gamified ai-assisted plant care platform — webkinz inspired</div>
+          <div class="more-work-card__link">view case study ↗</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
        FOOTER
   ══════════════════════════════ -->
-  <footer class="cs-footer">
-    <p class="cs-footer__label">next project</p>
-    <a href="index.html#work" class="cs-footer__next">
-      greek clean
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
+  <footer>
+    <img src="images/coloredcat.png" alt="" class="footer-cat-bg" aria-hidden="true">
+    <div class="footer-top">
+      <h2 class="footer-heading">hi again! lets grab boba</h2>
+    </div>
+    <div class="footer-contact">
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/elena-qian1/" target="_blank">linkedin</a>
+        <a href="resume.html">resume</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>@2026 elena qian 🐾</span>
+      <span class="footer-star">✦</span>
+    </div>
   </footer>
 
   <!-- ══════════════════════════════
@@ -577,7 +1658,41 @@
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+
+    // Parallax background for objective section
+    const objectiveBg = document.getElementById('objectiveBg');
+    const objectiveSection = document.getElementById('objective');
+    if (objectiveBg && objectiveSection) {
+      function rafParallax() {
+        const rect = objectiveSection.getBoundingClientRect();
+        const sectionH = rect.height;
+        const imgH = objectiveBg.offsetHeight;
+        // progress 0 = section top at viewport top, 1 = section bottom at viewport bottom
+        const progress = Math.min(1, Math.max(0, -rect.top / (sectionH - window.innerHeight)));
+        const maxTravel = sectionH - imgH;
+        const offset = Math.max(0, maxTravel) * progress;
+        objectiveBg.style.transform = `translateX(-50%) translateY(${offset}px)`;
+        requestAnimationFrame(rafParallax);
+      }
+      requestAnimationFrame(rafParallax);
+    }
   </script>
 
+  <script>
+    (function(){
+      var wrap=document.querySelector('.boba-o-wrap');
+      if(!wrap)return;
+      var obs=new IntersectionObserver(function(entries){
+        if(entries[0].isIntersecting){
+          setTimeout(function(){
+            wrap.classList.add('animate');
+            setTimeout(function(){ wrap.classList.add('floating'); }, 1500);
+          }, 500);
+          obs.disconnect();
+        }
+      },{threshold:0.4});
+      obs.observe(wrap);
+    })();
+  </script>
 </body>
 </html>
