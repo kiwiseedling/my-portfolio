@@ -83,6 +83,7 @@
       text-decoration: none; transition: color 0.2s, gap 0.25s;
     }
     .cs-back:hover { color: var(--text); gap: 12px; }
+    @media (max-width: 768px) { .cs-back { display: none; } }
 
     /* ── Page wrap ── */
     .gc-page {
@@ -102,7 +103,7 @@
       font-family: var(--sans);
       font-size: 0.68rem;
       letter-spacing: 0.16em;
-      color: #f9c4d4;
+      color: rgba(255,255,255,0.38);
       margin-bottom: 18px;
       display: flex; align-items: center; gap: 10px;
     }
@@ -110,7 +111,7 @@
       content: '';
       display: inline-block;
       width: 28px; height: 1px;
-      background: #f9c4d4;
+      background: rgba(255,255,255,0.38);
       opacity: 0.6;
     }
     .gc-hero__title {
@@ -125,7 +126,7 @@
     }
     .gc-hero__sub {
       font-family: var(--sans);
-      font-size: 1rem;
+      font-size: 0.78rem;
       line-height: 1.65;
       color: rgba(255,255,255,0.92);
       max-width: 540px;
@@ -144,7 +145,7 @@
       border-radius: 999px;
       border: 1px solid var(--gc-border);
       background: var(--gc-warm);
-      color: #f9c4d4;
+      color: #88c4a0;
     }
 
     /* hero image */
@@ -794,20 +795,176 @@
       .gc-dp-badge { padding: 14px 24px; }
     }
 
+    /* ── Journey Map ── */
+    .gc-journey-map {
+      margin-top: 28px;
+      margin-bottom: 40px;
+      border: 1px solid var(--gc-border);
+      border-radius: 20px;
+      background: rgba(14,40,28,0.48);
+      padding: 28px 32px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .gc-journey-map-label {
+      font-family: var(--mono, monospace);
+      font-size: 0.5rem;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .gc-journey-curve-wrap svg {
+      width: 100%;
+      height: 90px;
+      display: block;
+    }
+    .gc-journey-stages {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0 6px;
+      margin-top: 18px;
+    }
+    .gc-journey-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 5px;
+    }
+    .gc-journey-stage-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 9px;
+    }
+    .gc-journey-num {
+      font-family: var(--mono, monospace);
+      font-size: 0.42rem;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 4px;
+    }
+    .gc-journey-name {
+      font-family: var(--sans);
+      font-size: 0.58rem;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.58);
+      line-height: 1.3;
+    }
+    .gc-journey-stage:last-child .gc-journey-name { color: #88c4a0; }
+    .gc-journey-thought {
+      font-family: var(--serif);
+      font-size: 0.63rem;
+      font-style: italic;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.52);
+      margin-bottom: 8px;
+    }
+    .gc-journey-action {
+      font-family: var(--sans);
+      font-size: 0.52rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.32);
+      margin-bottom: 8px;
+    }
+    .gc-journey-tag {
+      font-family: var(--sans);
+      font-size: 0.47rem;
+      letter-spacing: 0.07em;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .gc-journey-pain {
+      background: rgba(255,80,80,0.06);
+      border: 1px solid rgba(255,80,80,0.14);
+      color: rgba(255,130,130,0.68);
+    }
+    .gc-journey-opp {
+      background: rgba(45,122,82,0.14);
+      border: 1px solid rgba(45,122,82,0.3);
+      color: #88c4a0;
+    }
+    @media (max-width: 640px) {
+      .gc-journey-curve-wrap { display: none; }
+      .gc-journey-stages {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .gc-journey-stage {
+        align-items: flex-start;
+        text-align: left;
+        padding: 0 0 24px 40px;
+        position: relative;
+      }
+      .gc-journey-stage-header {
+        flex-direction: row;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .gc-journey-num {
+        position: absolute;
+        left: 0; top: 1px;
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.03);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.42rem;
+        color: rgba(255,255,255,0.38);
+        margin-bottom: 0;
+        letter-spacing: 0.05em;
+      }
+      .gc-journey-stage:last-child .gc-journey-num {
+        border-color: rgba(45,122,82,0.35);
+        background: rgba(45,122,82,0.08);
+        color: #88c4a0;
+      }
+      .gc-journey-stage:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        left: 12px; top: 27px;
+        width: 1px;
+        height: calc(100% - 18px);
+        background: rgba(255,255,255,0.06);
+      }
+      .gc-journey-stage:last-child { padding-bottom: 0; }
+      .gc-journey-thought { font-size: 0.62rem; }
+      .gc-journey-action  { font-size: 0.56rem; }
+      .gc-journey-map { padding: 20px 20px 24px; }
+    }
+
   </style>
 </head>
 <body>
 
+  <!-- Scroll-driven particle canvas -->
+  <canvas id="gcCanvas" aria-hidden="true" style="
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.9;
+  "></canvas>
+
+  <!-- Left gutter animation canvas -->
+  <canvas id="gcLeft" aria-hidden="true" style="position:fixed;left:0;top:0;height:100%;pointer-events:none;z-index:0;"></canvas>
+  <!-- Right gutter animation canvas -->
+  <canvas id="gcRight" aria-hidden="true" style="position:fixed;right:0;top:0;height:100%;pointer-events:none;z-index:0;"></canvas>
+
   <div class="gc-progress" id="gcProgress"></div>
 
-  <a href="index.html" class="cs-back">
+  <a href="/" class="cs-back">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     back
   </a>
 
   <nav id="nav">
     <div class="nav-pill">
-      <a href="index.html" class="nav-link">home</a>
+      <a href="/" class="nav-link">home</a>
       <a href="playground.html" class="nav-link">playground</a>
       <a href="resume.html" class="nav-link">resume</a>
     </div>
@@ -845,7 +1002,7 @@
       </div>
 
       <div class="gc-hero__img-wrap">
-        <video src="videos/greekclean.mp4" autoplay loop muted playsinline style="width:100%;display:block;"></video>
+        <video id="gcHeroVid" src="videos/greekclean.mp4" autoplay loop muted playsinline preload="auto" style="width:100%;display:block;"></video>
       </div>
 
     </section>
@@ -997,8 +1154,94 @@
         User journey mapping helped visualize the full experience — from recognizing a mess to final cleanup — focusing on emotional touchpoints and frustration areas. Three core flows were redesigned from scratch.
       </p>
 
-      <div class="gc-hero__img-wrap" style="margin-top:28px;margin-bottom:40px;">
-        <img src="images/journey.png" alt="user journey map" style="width:100%;display:block;" />
+      <div class="gc-journey-map">
+        <div class="gc-journey-map-label">user journey — from mess to managed</div>
+
+        <!-- Emotion curve (desktop) -->
+        <div class="gc-journey-curve-wrap">
+          <svg viewBox="0 0 1000 115" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gcJFill" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="rgba(255,110,110,0.04)"/>
+                <stop offset="72%"  stop-color="rgba(255,80,80,0.09)"/>
+                <stop offset="100%" stop-color="rgba(45,122,82,0.13)"/>
+              </linearGradient>
+            </defs>
+            <!-- Fill under curve -->
+            <path d="M 100,42 C 185,42 225,86 300,86 C 378,86 422,73 500,73 C 578,73 622,96 700,96 C 778,96 842,20 900,20 L 900,115 L 100,115 Z"
+                  fill="url(#gcJFill)"/>
+            <!-- Curve line -->
+            <path d="M 100,42 C 185,42 225,86 300,86 C 378,86 422,73 500,73 C 578,73 622,96 700,96 C 778,96 842,20 900,20"
+                  fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Stage dots -->
+            <circle cx="100" cy="42" r="3.5" fill="rgba(255,255,255,0.48)"/>
+            <circle cx="300" cy="86" r="3.5" fill="rgba(255,120,120,0.65)"/>
+            <circle cx="500" cy="73" r="3.5" fill="rgba(255,130,130,0.5)"/>
+            <circle cx="700" cy="96" r="4"   fill="rgba(255,90,90,0.72)"/>
+            <circle cx="900" cy="20" r="4.5" fill="rgba(45,195,115,0.85)"/>
+            <!-- Emotion labels -->
+            <text x="100" y="31"  text-anchor="middle" font-size="7" font-family="monospace" fill="rgba(255,255,255,0.32)" letter-spacing="2">NEUTRAL</text>
+            <text x="300" y="101" text-anchor="middle" font-size="7" font-family="monospace" fill="rgba(255,130,130,0.52)" letter-spacing="2">STRESSED</text>
+            <text x="500" y="88"  text-anchor="middle" font-size="7" font-family="monospace" fill="rgba(255,130,130,0.44)" letter-spacing="2">CONFUSED</text>
+            <text x="700" y="111" text-anchor="middle" font-size="7" font-family="monospace" fill="rgba(255,100,100,0.62)" letter-spacing="2">FRUSTRATED</text>
+            <text x="900" y="34"  text-anchor="middle" font-size="7" font-family="monospace" fill="rgba(45,195,115,0.78)"  letter-spacing="2">RELIEVED</text>
+          </svg>
+        </div>
+
+        <!-- Stage details grid -->
+        <div class="gc-journey-stages">
+
+          <div class="gc-journey-stage">
+            <div class="gc-journey-stage-header">
+              <div class="gc-journey-num">01</div>
+              <div class="gc-journey-name">event night</div>
+            </div>
+            <div class="gc-journey-thought">"cleanup can wait 'til tomorrow"</div>
+            <div class="gc-journey-action">hosting party, filling all bins</div>
+            <span class="gc-journey-tag gc-journey-pain">no waste plan</span>
+          </div>
+
+          <div class="gc-journey-stage">
+            <div class="gc-journey-stage-header">
+              <div class="gc-journey-num">02</div>
+              <div class="gc-journey-name">the morning after</div>
+            </div>
+            <div class="gc-journey-thought">"there's trash everywhere — we'll get fined"</div>
+            <div class="gc-journey-action">discovering overflowing bins</div>
+            <span class="gc-journey-tag gc-journey-pain">no immediate solution</span>
+          </div>
+
+          <div class="gc-journey-stage">
+            <div class="gc-journey-stage-header">
+              <div class="gc-journey-num">03</div>
+              <div class="gc-journey-name">searching</div>
+            </div>
+            <div class="gc-journey-thought">"this city form asks for a permit number?"</div>
+            <div class="gc-journey-action">city sites, search engines, phone calls</div>
+            <span class="gc-journey-tag gc-journey-pain">designed for homeowners</span>
+          </div>
+
+          <div class="gc-journey-stage">
+            <div class="gc-journey-stage-header">
+              <div class="gc-journey-num">04</div>
+              <div class="gc-journey-name">on hold</div>
+            </div>
+            <div class="gc-journey-thought">"been on hold 20 min. still no idea what this costs"</div>
+            <div class="gc-journey-action">multiple calls, zero confirmation</div>
+            <span class="gc-journey-tag gc-journey-pain">zero transparency</span>
+          </div>
+
+          <div class="gc-journey-stage">
+            <div class="gc-journey-stage-header">
+              <div class="gc-journey-num">05</div>
+              <div class="gc-journey-name">greek clean</div>
+            </div>
+            <div class="gc-journey-thought">"scheduled in 2 min — I can track them live"</div>
+            <div class="gc-journey-action">books pickup, instant confirmation</div>
+            <span class="gc-journey-tag gc-journey-opp">simple, student-first</span>
+          </div>
+
+        </div>
       </div>
 
       <!-- User flow comparison -->
@@ -1460,6 +1703,505 @@
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
     });
+  </script>
+
+  <script>
+  // ── Greek Clean: scroll-driven particle story (messy → clean) ──
+  (function() {
+    const canvas = document.getElementById('gcCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const isMobile = window.innerWidth <= 768;
+    const N = isMobile ? 28 : 72;
+    let W, H;
+    const particles = [];
+    const mouse = { x: -9999, y: -9999 };
+
+    // Track mouse (desktop) + touch (mobile)
+    window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+    window.addEventListener('touchmove', e => {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener('touchend', () => { mouse.x = -9999; mouse.y = -9999; });
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+      setCleanTargets();
+    }
+
+    function setCleanTargets() {
+      const cols = Math.round(Math.sqrt(N * (W / H)));
+      const rows = Math.ceil(N / cols);
+      const sx = W / (cols + 1);
+      const sy = H / (rows + 1);
+      particles.forEach((p, i) => {
+        p.tx = ((i % cols) + 1) * sx;
+        p.ty = (Math.floor(i / cols) + 1) * sy;
+      });
+    }
+
+    function init() {
+      for (let i = 0; i < N; i++) {
+        const nv = 5 + Math.floor(Math.random() * 4); // 5–8 jagged verts
+        particles.push({
+          x:  window.innerWidth * 0.28 + Math.random() * window.innerWidth * 0.44,
+          y:  -8 - Math.random() * 28,
+          vx: (Math.random() - 0.5) * 5.5,
+          vy: Math.random() * 0.8,
+          gravity:    0.28 + Math.random() * 0.14,
+          dropDelay:  Math.floor(i * (18 / N) + Math.random() * 10),
+          dropped:    false,
+          cx: Math.random() * window.innerWidth,
+          cy: Math.random() * window.innerHeight,
+          tx: 0, ty: 0,
+          baseSize:    Math.random() * 3 + 1.5,
+          baseOpacity: Math.random() * 0.18 + 0.07,
+          rot:  Math.random() * Math.PI * 2,
+          rotV: (Math.random() - 0.5) * 0.025,
+          // jagged irregular verts — spiky for dirty feel
+          verts: Array.from({ length: nv }, (_, j) => ({
+            angle: (j / nv) * Math.PI * 2 + (Math.random() - 0.5) * 1.4,
+            r: j % 2 === 0 ? 0.9 + Math.random() * 0.5 : 0.2 + Math.random() * 0.3,
+          })),
+          // dirty tint channel (0=grey-green, 1=white)
+          tint: Math.random(),
+          sparkle: 0,
+          glowPulse: Math.random() * Math.PI * 2, // phase offset for breathing glow
+        });
+      }
+      setCleanTargets();
+    }
+
+    function getProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    }
+
+    function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4-2*t)*t; }
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function drawIrregular(size, verts) {
+      ctx.beginPath();
+      verts.forEach((v, j) => {
+        const px = Math.cos(v.angle) * size * v.r;
+        const py = Math.sin(v.angle) * size * v.r;
+        j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      });
+      ctx.closePath();
+      ctx.fill();
+      // jagged stroke for extra grit
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    function drawStar(r, points, innerRatio) {
+      ctx.beginPath();
+      for (let i = 0; i < points * 2; i++) {
+        const a   = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2;
+        const rad = i % 2 === 0 ? r : r * innerRatio;
+        i === 0 ? ctx.moveTo(Math.cos(a)*rad, Math.sin(a)*rad)
+                : ctx.lineTo(Math.cos(a)*rad, Math.sin(a)*rad);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawGlow(x, y, r, color, alpha) {
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0,   `rgba(${color},${alpha})`);
+      g.addColorStop(0.4, `rgba(${color},${alpha * 0.5})`);
+      g.addColorStop(1,   `rgba(${color},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    let time = 0;
+    let introT = 0;
+
+    // Block rects — fade particles that land behind solid content cards
+    let blockRects = [];
+    let blockFrame = 0;
+    const BLOCK_SEL = '.gc-card,.gc-flow__row,.gc-insight,.gc-takeaway,.gc-comp-card,.gc-stat,.gc-ia-card,.gc-journey-map,.gc-hero__img-wrap,.gc-dp-block,.gc-persona-card,.gc-quote,.gc-more-card,.gc-dp-badge';
+    function refreshBlocks() {
+      blockRects = Array.from(document.querySelectorAll(BLOCK_SEL)).map(el => el.getBoundingClientRect());
+    }
+    function isOverBlock(px, py) {
+      for (let i = 0; i < blockRects.length; i++) {
+        const r = blockRects[i];
+        if (px >= r.left && px <= r.right && py >= r.top && py <= r.bottom) return true;
+      }
+      return false;
+    }
+
+    function draw() {
+      time += 0.016;
+      introT++;
+      blockFrame++;
+      if (blockFrame % 20 === 0) refreshBlocks(); // refresh every 20 frames
+
+      const progress = getProgress();
+      const ease     = easeInOut(clamp(progress * 1.08, 0, 1));
+      const sparklePhase = clamp((progress - 0.85) / 0.15, 0, 1); // 0→1 in last 15%
+
+      ctx.clearRect(0, 0, W, H);
+
+      particles.forEach(p => {
+        // ── Drop-in gate: hold above screen until staggered delay passes ──
+        if (!p.dropped) {
+          if (introT < p.dropDelay) return;
+          p.dropped = true;
+        }
+
+        // Gravity — drives the falling drop; decays fast once particle passes its float target
+        if (p.gravity > 0.003) {
+          p.vy += p.gravity;
+          p.gravity *= (p.y > p.cy) ? 0.84 : 0.974;
+        }
+
+        // ── Target position ──
+        const tX = lerp(p.cx, p.tx, ease);
+        const tY = lerp(p.cy, p.ty, ease);
+
+        // Spring toward blended target — extra sluggish in sparkle phase
+        const k = lerp(0.0008, 0.012, ease) * lerp(1, 0.15, sparklePhase);
+        p.vx += (tX - p.x) * k;
+        p.vy += (tY - p.y) * k;
+
+        // Mouse attraction — particles float toward cursor direction
+        const mdx   = mouse.x - p.x;
+        const mdy   = mouse.y - p.y;
+        const mdist = Math.sqrt(mdx*mdx + mdy*mdy) + 1;
+        const mouseStrength = clamp(500 / mdist, 0, 1) * lerp(0.013, 0.003, sparklePhase);
+        p.vx += mdx / mdist * mouseStrength;
+        p.vy += mdy / mdist * mouseStrength;
+
+        // Chaos jitter fades out (much lighter)
+        const jitter = (1 - ease) * 0.07;
+        p.vx += (Math.random() - 0.5) * jitter;
+        p.vy += (Math.random() - 0.5) * jitter;
+
+        // Heavy damping in sparkle phase = near-still float
+        p.vx *= lerp(0.965, lerp(0.986, 0.995, sparklePhase), ease);
+        p.vy *= lerp(0.965, lerp(0.986, 0.995, sparklePhase), ease);
+
+        // Clamp speed: wide open during drop, ramps to uniform slow float once gravity fades
+        const dropFactor = clamp(p.gravity / 0.04, 0, 1);
+        const maxSpd = lerp(lerp(0.55, 0.18, ease), 8, dropFactor);
+        const spd = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        if (spd > maxSpd) { const s = maxSpd / spd; p.vx *= s; p.vy *= s; }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Rotation — very slow, stops completely in clean phase
+        p.rot  += p.rotV * (1 - ease * 0.98);
+        p.rotV *= lerp(0.997, 0.985, ease);
+
+        // Sparkle — very rare, very slow, very subtle in last 15%
+        const sparkleChance = lerp(0.0008, 0.004, sparklePhase);
+        if (progress > 0.85 && Math.random() < sparkleChance) p.sparkle = 1;
+        p.sparkle *= lerp(0.984, 0.972, sparklePhase); // slow fade
+        p.glowPulse += 0.003; // very slow breathing pulse
+
+        // ── Visuals ──
+        const size = lerp(p.baseSize * 3.5, p.baseSize * 1.0, ease);
+        const baseOp = lerp(p.baseOpacity * 1.1, p.baseOpacity * 1.8, ease);
+        const breathe = sparklePhase > 0 ? 1 + Math.sin(p.glowPulse) * 0.1 * sparklePhase : 1;
+        const rawOpacity = clamp(baseOp * breathe + p.sparkle * 0.18, 0, 0.62);
+        // Fade particles that overlap the content column — keeps text readable
+        const distC = Math.abs(p.x - W * 0.5);
+        const hC    = Math.min(W * 0.42, 450);
+        const cFade = clamp((distC / hC - 0.08) / 0.55, 0, 1);
+        // Fade particles out in the lower portion of the page (reduces density toward end)
+        const lowerFade = progress > 0.45 ? 1 - clamp((progress - 0.45) * 1.3, 0, 0.60) : 1;
+        // Nearly invisible when sitting behind a solid content block
+        const blockFade = isOverBlock(p.x, p.y) ? 0.03 : 1;
+        const opacity = rawOpacity * lerp(0.08, 1.0, cFade) * lowerFade * blockFade;
+
+        // Dirty tint: grey-brown at low ease, pure white at high ease
+        const r255 = Math.round(lerp(lerp(160, 200, p.tint), 255, ease));
+        const g255 = Math.round(lerp(lerp(155, 185, p.tint), 255, ease));
+        const b255 = Math.round(lerp(lerp(140, 170, p.tint), 255, ease));
+        const fillColor = `rgb(${r255},${g255},${b255})`;
+
+        // ── Glow halo in sparkle phase (very subtle) ──
+        if (sparklePhase > 0.3 && p.sparkle > 0.3) {
+          const glowR  = size * lerp(2, 4.5, p.sparkle);
+          const glowA  = clamp(p.sparkle * 0.06 + sparklePhase * 0.015, 0, 0.07);
+          drawGlow(p.x, p.y, glowR, '220,240,255', glowA);
+        }
+
+        ctx.save();
+        ctx.globalAlpha = opacity;
+        ctx.fillStyle   = fillColor;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+
+        if (ease < 0.3) {
+          // ── DIRTY: jagged irregular shards ──
+          drawIrregular(size, p.verts);
+
+        } else if (ease < 0.68) {
+          // ── TRANSITION: fragment collapsing into order ──
+          const t2 = (ease - 0.3) / 0.38;
+          const blendSize = size * lerp(1, 0.55, t2);
+          // fade from jagged to cross
+          ctx.globalAlpha = opacity * (1 - t2);
+          drawIrregular(blendSize, p.verts);
+          ctx.globalAlpha = opacity * t2;
+          ctx.fillStyle = fillColor;
+          const w = blendSize * 0.35;
+          ctx.beginPath();
+          ctx.rect(-blendSize * 0.8, -w, blendSize * 1.6, w*2);
+          ctx.rect(-w, -blendSize * 0.8, w*2, blendSize * 1.6);
+          ctx.fill();
+
+        } else if (p.sparkle > 0.3 && progress > 0.85) {
+          // ── SPARKLE: tiny glowing circle, slow pulse ──
+          const sr = size * 0.55;
+          // soft outer halo
+          const haloA = clamp(p.sparkle * 0.12, 0, 0.14);
+          ctx.globalAlpha = haloA;
+          ctx.fillStyle = 'rgba(220,240,255,1)';
+          ctx.beginPath();
+          ctx.arc(0, 0, sr * 3.2, 0, Math.PI * 2);
+          ctx.fill();
+          // mid glow ring
+          ctx.globalAlpha = clamp(p.sparkle * 0.22, 0, 0.26);
+          ctx.beginPath();
+          ctx.arc(0, 0, sr * 1.7, 0, Math.PI * 2);
+          ctx.fill();
+          // crisp center dot
+          ctx.globalAlpha = clamp(opacity + p.sparkle * 0.28, 0, 0.52);
+          ctx.fillStyle = `rgba(230,245,255,1)`;
+          ctx.beginPath();
+          ctx.arc(0, 0, sr, 0, Math.PI * 2);
+          ctx.fill();
+
+        } else {
+          // ── CLEAN: crisp small circle with soft edge ──
+          const cr = size * 0.6;
+          ctx.globalAlpha = opacity * breathe;
+          // soft halo
+          ctx.fillStyle = `rgba(${r255},${g255},${b255},0.12)`;
+          ctx.beginPath();
+          ctx.arc(0, 0, cr * 2.2, 0, Math.PI * 2);
+          ctx.fill();
+          // crisp dot
+          ctx.fillStyle = fillColor;
+          ctx.globalAlpha = opacity * breathe;
+          ctx.beginPath();
+          ctx.arc(0, 0, cr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      });
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    init();
+    draw();
+  })();
+  </script>
+
+  <script>
+  // ── Gutter animations: left debris organising · right progress line ──
+  (function() {
+    const LC = document.getElementById('gcLeft');
+    const RC = document.getElementById('gcRight');
+    if (!LC || !RC) return;
+    const lc = LC.getContext('2d');
+    const rc = RC.getContext('2d');
+
+    const CONTENT_W = 860;
+    let GW = 0, GH = 0, t2 = 0;
+
+    function gprog() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      return max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    }
+    function L(a,b,t){ return a+(b-a)*t; }
+    function C(v,lo,hi){ return Math.max(lo,Math.min(hi,v)); }
+    function eio(t){ return t<0.5?2*t*t:-1+(4-2*t)*t; }
+
+    /* ─── Left: debris particles that organise ─── */
+    const LN = 6;
+    const ld = [];
+
+    function initLD() {
+      ld.length = 0;
+      if (GW < 40) return;
+      for (let i = 0; i < LN; i++) {
+        const nv = 5 + Math.floor(Math.random()*3);
+        ld.push({
+          x: Math.random()*GW, y: Math.random()*GH,
+          vx:(Math.random()-.5)*0.6, vy:(Math.random()-.5)*0.6,
+          tx: GW*0.5, ty: (i+0.5)/LN*GH,
+          sz: Math.random()*2.4+1.2,
+          op: Math.random()*0.22+0.08,
+          rot: Math.random()*Math.PI*2,
+          rotV:(Math.random()-.5)*0.09,
+          tnt: Math.random(),
+          verts: Array.from({length:nv},(_,j)=>({
+            angle: j/nv*Math.PI*2+(Math.random()-.5)*1.2,
+            r: j%2===0 ? 0.85+Math.random()*0.45 : 0.2+Math.random()*0.35
+          }))
+        });
+      }
+    }
+
+    function resize() {
+      GW = Math.max(0, Math.floor((window.innerWidth - CONTENT_W)/2 - 20));
+      GH = window.innerHeight;
+      LC.width = GW; LC.height = GH;
+      RC.width = GW; RC.height = GH;
+      LC.style.width = GW+'px'; RC.style.width = GW+'px';
+      LC.style.display = RC.style.display = GW >= 50 ? 'block' : 'none';
+      initLD();
+    }
+
+    function drawLeft(ease, sp) {
+      if (GW < 50) return;
+      lc.clearRect(0, 0, GW, GH);
+      ld.forEach((p, i) => {
+        const k = L(0.003, 0.04, ease);
+        p.vx += (p.tx-p.x)*k + (Math.random()-.5)*(1-ease)*0.55;
+        p.vy += (p.ty-p.y)*k + (Math.random()-.5)*(1-ease)*0.55;
+        p.vx *= L(0.93,0.972,ease); p.vy *= L(0.93,0.972,ease);
+        p.x += p.vx; p.y += p.vy;
+        p.rot += p.rotV*(1-ease*0.95);
+
+        const size = L(p.sz*3.2, p.sz*0.9, ease);
+        const r = Math.round(L(L(155,200,p.tnt), 255, ease));
+        const g = Math.round(L(L(150,185,p.tnt), 255, ease));
+        const b = Math.round(L(L(135,165,p.tnt), 255, ease));
+        const breathe = sp>0 ? 1+Math.sin(t2*2.2+i*0.8)*0.14*sp : 1;
+        const alpha = C(p.op*L(1.1,2.0,ease)*breathe, 0, 0.55);
+
+        lc.save();
+        lc.globalAlpha = alpha;
+        lc.fillStyle = `rgb(${r},${g},${b})`;
+        lc.translate(p.x, p.y);
+        lc.rotate(p.rot);
+
+        if (ease < 0.65) {
+          lc.beginPath();
+          p.verts.forEach((v,j)=>{
+            const px=Math.cos(v.angle)*size*v.r, py=Math.sin(v.angle)*size*v.r;
+            j===0 ? lc.moveTo(px,py) : lc.lineTo(px,py);
+          });
+          lc.closePath(); lc.fill();
+          lc.strokeStyle='rgba(255,255,255,0.11)'; lc.lineWidth=0.4; lc.stroke();
+        } else {
+          if (sp > 0.4) {
+            const gr = lc.createRadialGradient(0,0,0,0,0,size*2.5);
+            gr.addColorStop(0, `rgba(210,235,255,${sp*0.04})`);
+            gr.addColorStop(1, 'rgba(210,235,255,0)');
+            lc.fillStyle = gr;
+            lc.beginPath(); lc.arc(0,0,size*2.5,0,Math.PI*2); lc.fill();
+          }
+          lc.fillStyle = `rgb(${r},${g},${b})`;
+          lc.beginPath(); lc.arc(0,0,size*0.65,0,Math.PI*2); lc.fill();
+        }
+        lc.restore();
+      });
+    }
+
+    function drawRight(progress, ease, sp) {
+      if (GW < 50) return;
+      rc.clearRect(0, 0, GW, GH);
+
+      const cx  = Math.round(GW * 0.5);
+      const pt  = 70, pb = 70;
+      const lH  = GH - pt - pb;
+      const pY  = pt + lH * progress;
+
+      /* Vertical line: jagged at dirty → clean smooth */
+      const segs = 55;
+      rc.lineCap = 'round'; rc.lineWidth = 0.8;
+      for (let s = 0; s < segs; s++) {
+        const f  = s / segs;
+        const sy = pt + f * lH;
+        const ey = sy + lH/segs + 0.5;
+        if (f > progress) {
+          rc.globalAlpha = 0.07;
+          rc.strokeStyle = 'rgba(255,255,255,1)';
+          rc.beginPath(); rc.moveTo(cx,sy); rc.lineTo(cx,ey); rc.stroke();
+          continue;
+        }
+        const chaos = (1-ease)*Math.sin(t2*2.8+s*0.9)*2.8;
+        const segSP = f > 0.82 ? sp : 0;
+        const al = C(0.28+ease*0.35+segSP*0.28, 0, 0.8);
+        const rv = Math.round(L(175,220,ease));
+        const gv = Math.round(L(170,240,ease));
+        const bv = Math.round(L(155,255,ease));
+        rc.globalAlpha = al;
+        rc.strokeStyle = segSP > 0.3 ? `rgba(210,235,255,${al})` : `rgb(${rv},${gv},${bv})`;
+        rc.beginPath(); rc.moveTo(cx+chaos,sy); rc.lineTo(cx+chaos*0.15,ey); rc.stroke();
+      }
+
+      /* Progress dot (no glow) */
+      if (progress > 0.01) {
+        rc.globalAlpha = L(0.5,0.92,ease);
+        rc.fillStyle = sp>0.5 ? 'rgba(210,235,255,1)'
+          : `rgb(${Math.round(L(195,255,ease))},${Math.round(L(190,255,ease))},${Math.round(L(175,255,ease))})`;
+        rc.beginPath(); rc.arc(cx,pY,L(3.5,2.2,ease),0,Math.PI*2); rc.fill();
+      }
+
+      /* Phase label */
+      if (progress > 0.04) {
+        const lbs = ['disorder','ordering','resolved','✦'];
+        const lbl = lbs[Math.min(Math.floor(progress*lbs.length), lbs.length-1)];
+        rc.font = '8px monospace';
+        rc.textAlign = 'center';
+        rc.globalAlpha = C((progress-0.04)*10, 0, 1) * (ease>0.7 ? 0.55 : 0.32);
+        rc.fillStyle = ease>0.7 ? 'rgba(210,235,255,1)' : 'rgba(190,185,172,1)';
+        rc.fillText(lbl.toUpperCase(), cx, pY+15);
+      }
+
+      rc.globalAlpha = 1;
+    }
+
+    function loop2() {
+      t2 += 0.016;
+      const progress = gprog();
+      const ease = eio(C(progress*1.08,0,1));
+      const sp   = C((progress-0.85)/0.15, 0, 1);
+      drawLeft(ease, sp);
+      drawRight(progress, ease, sp);
+      requestAnimationFrame(loop2);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    loop2();
+  })();
+  </script>
+
+  <script>
+  // Force autoplay on mobile — iOS Safari needs a direct .play() call
+  (function() {
+    const v = document.getElementById('gcHeroVid');
+    if (!v) return;
+    v.muted = true;
+    const attempt = () => { v.play().catch(() => {}); };
+    attempt();
+    // Retry on first touch/scroll in case browser blocked it
+    document.addEventListener('touchstart', attempt, { once: true, passive: true });
+    document.addEventListener('scroll',     attempt, { once: true, passive: true });
+  })();
   </script>
 
 </body>

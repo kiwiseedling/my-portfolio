@@ -673,6 +673,9 @@ video.project-img {
   border-bottom: 1px solid var(--border);
   gap:           0;
 }
+.exp-item:last-child {
+  border-bottom: none;
+}
 .exp-item__top {
   display:         flex;
   justify-content: space-between;
