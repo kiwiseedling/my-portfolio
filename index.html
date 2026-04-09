@@ -26,7 +26,7 @@
   ═══════════════════════════════ -->
   <nav id="nav">
     <div class="nav-pill">
-      <a href="#work"      class="nav-link active">home</a>
+      <a href="index.html" class="nav-link active">home</a>
       <a href="playground.html" class="nav-link">playground</a>
       <a href="resume.html" class="nav-link">resume</a>
     </div>
@@ -51,15 +51,20 @@
   ═══════════════════════════════ -->
   <section class="hero">
 
-    <div class="hero-content">
-      <h1 class="hero-greeting">hi,</h1>
+    <!-- top-left greeting -->
+    <h1 class="hero-greeting">hi!</h1>
+
+    <!-- centered name + pronunciation -->
+    <div class="hero-center">
       <h1 class="hero-name">i'm <span class="hero-name-accent">elena</span></h1>
       <p class="hero-pronunciation"># ee-lay-nuh or /ɛˈleɪnə/</p>
-      <p class="hero-sub">
-        <strong>product designer</strong> in the <strong>bay area</strong> focused on making ai<br>
-        products feel human 
-      </p>
     </div>
+
+    <!-- bottom-left sub -->
+    <p class="hero-sub">
+      <strong>product designer</strong> in the <strong>bay area</strong> focused on making ai<br>
+      products feel human
+    </p>
 
     <!-- Cat + star illustration -->
     <div class="hero-illustration" aria-hidden="true">
@@ -114,7 +119,7 @@
     </div>
 
     <!-- Story link (bottom-right, like Cody's) -->
-    <a href="#work" class="hero-story-link">
+    <a href="#work" class="hero-story-link" onclick="event.preventDefault();document.getElementById('work').scrollIntoView({behavior:'smooth'})">
       case studies and designs
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M12 5v14M5 13l7 6 7-6"/>
@@ -170,6 +175,10 @@
           <span class="project-year">2025–2026</span>
         </div>
         <h2 class="project-title">crossfill</h2>
+        <div class="project-pills">
+          <span class="project-pill">product strategy</span>
+          <span class="project-pill">interaction design</span>
+        </div>
         <p class="project-desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</p>
       </div>
     </a>
@@ -184,6 +193,10 @@
           <span class="project-year">2024</span>
         </div>
         <h2 class="project-title">greek clean</h2>
+        <div class="project-pills">
+          <span class="project-pill">user research</span>
+          <span class="project-pill">service design</span>
+        </div>
         <p class="project-desc">designing a simple way to manage campus waste more responsibly</p>
       </div>
     </a>
@@ -198,6 +211,10 @@
           <span class="project-year">2024</span>
         </div>
         <h2 class="project-title">plantment</h2>
+        <div class="project-pills">
+          <span class="project-pill">usability testing</span>
+          <span class="project-pill">gamification</span>
+        </div>
         <p class="project-desc">a gamified ai-assisted plant care platform — webkinz inspired</p>
       </div>
     </a>
@@ -288,8 +305,11 @@
     </div>
     <div class="footer-contact">
       <div class="footer-links">
-        <a href="https://www.linkedin.com/in/elena-qian1/" target="_blank">linkedin</a>
-        <a href="resume.html">resume</a>
+        <a href="mailto:elenaqian02@gmail.com">elenaqian02@gmail.com</a>
+        <div class="footer-links-row">
+          <a href="https://www.linkedin.com/in/elena-qian1/" target="_blank">linkedin</a>
+          <a href="resume.html">resume</a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
