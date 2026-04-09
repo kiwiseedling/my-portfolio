@@ -639,7 +639,7 @@
 }
 
 @media (max-width: 540px) {
-  .cs-hero   { padding: 90px 20px 48px; }
+  .cs-hero   { padding: 68px 20px 48px; }
   .cs-section { padding: 48px 20px; }
   .cs-section--dark .cs-section { padding: 48px 20px; }
   .cs-divider { margin: 0 20px; }

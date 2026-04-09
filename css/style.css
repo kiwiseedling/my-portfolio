@@ -998,23 +998,16 @@ footer {
   .hero-sub { font-size: 0.95rem; max-width: 100%; }
   .hero-pronunciation { font-size: 0.8rem; }
 
-  /* Scale down the cat illustration so it doesn't overwhelm */
+  /* On mobile: hide cat, show stars instead */
   .hero-illustration {
-    width:  clamp(220px, 85vw, 340px);
-    height: clamp(220px, 85vw, 340px);
+    width:  clamp(260px, 90vw, 360px);
+    height: clamp(260px, 90vw, 360px);
     left:   50%;
-    top:    58%;
-    opacity: 0.35;
+    top:    52%;
+    opacity: 0.6;
   }
-  .cat-idle {
-    width: clamp(200px, 80vw, 320px);
-  }
-  /* Slow/reduce bounce on mobile for perf */
-  .cat-idle {
-    animation: catAppear 0.9s cubic-bezier(0.16,1,0.3,1) 0.3s forwards,
-               catBob    7s ease-in-out 1.2s infinite;
-  }
-  .star-a, .star-b, .star-c { display: none; }
+  .cat-idle { display: none; }
+  .star-a, .star-b, .star-c { display: flex; }
 
   .hero-story-link {
     position: static;
