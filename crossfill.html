@@ -201,7 +201,7 @@
         <button class="gate-submit" onclick="checkGate()">enter →</button>
       </div>
       <div class="gate-error" id="gateError"></div>
-      <div class="gate-hint">protected case study · passcode required</div>
+      <div class="gate-hint">password on resume for </div>
     </div>
   </div>
 
@@ -609,7 +609,7 @@
               <div style="font-family:var(--sans);font-size:0.68rem;letter-spacing:0.1em;color:rgba(149,4,96,0.75);margin-bottom:10px">04 of 06</div>
               <h4 style="font-family:var(--serif);font-size:clamp(1.25rem,2.2vw,1.75rem);font-weight:400;letter-spacing:-0.02em;line-height:1.2;margin-bottom:0;color:var(--text)">client decision — changes or approval</h4>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+            <div class="flow2-decision-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:0">
               <div style="padding:28px 44px;border-right:1px solid rgba(255,255,255,0.06)">
                 <div style="font-family:var(--sans);font-size:0.74rem;font-weight:600;color:rgba(236,48,77,0.8);margin-bottom:10px">client wants changes</div>
                 <p class="cs-body" style="margin:0 0 12px;font-size:0.82rem">client edits the google doc directly with their requested changes and the cycle continues.</p>
@@ -795,7 +795,7 @@
       <!-- Engineering timeline -->
       <div style="position:relative;margin-top:48px">
 
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;z-index:1">
+        <div class="eng-timeline-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;z-index:1">
 
           <!-- Step 1 -->
           <div class="cs-card" style="padding-top:0;border-top:none;background:transparent;box-shadow:none">
@@ -990,6 +990,51 @@
     @media (max-width: 640px) {
       .flow2-lbl { display: none; }
       .flow2-btn { padding: 12px 6px; }
+
+      /* ── Single-column panels on mobile ── */
+      .flow2-panel {
+        grid-template-columns: 1fr !important;
+        min-height: auto !important;
+      }
+      .flow2-panel > div {
+        border-right: none !important;
+        padding: 24px 20px !important;
+      }
+      .flow2-panel > div + div {
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+      .flow2-decision-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .flow2-decision-grid > div {
+        border-right: none !important;
+        padding: 24px 20px !important;
+      }
+      .flow2-decision-grid > div + div {
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      /* ── Reduce prev/next padding ── */
+      #flow2-nav + div + div > div:last-child {
+        padding: 14px 20px;
+      }
+    }
+
+    /* ── Responsive grids (override inline styles) ── */
+    @media (max-width: 768px) {
+      .eng-timeline-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+      .outcomes-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (max-width: 540px) {
+      .eng-timeline-grid,
+      .editor-features-grid,
+      .outcomes-grid {
+        grid-template-columns: 1fr !important;
+      }
     }
   </style>
 
@@ -1188,7 +1233,7 @@
     <h2 class="cs-section-title">editor feature requirements</h2>
     <p class="cs-body" style="max-width:680px;margin-bottom:40px">the team mapped out what an in inline editor would need to support in order to replace google docs</p>
 
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px">
+    <div class="editor-features-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px">
 
       <div style="padding:28px;border:1px solid rgba(255,255,255,0.07);border-radius:8px;background:rgba(255,255,255,0.02)">
         <div style="width:36px;height:36px;border-radius:8px;background:rgba(149,4,96,0.1);border:1px solid rgba(149,4,96,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
@@ -1252,7 +1297,7 @@
       <h2 class="cs-section-title">results after shipping</h2>
       <p class="cs-body" style="max-width:620px;margin-bottom:56px">shipping the native inline editor alongside the core workflow changes had a measurable effect on how clients and the internal team interacted with the platform.</p>
 
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+      <div class="outcomes-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
 
         <div style="padding:36px 32px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07)">
           <div style="font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:400;letter-spacing:-0.04em;color:rgba(149,4,96,0.9);line-height:1;margin-bottom:16px">30%</div>
@@ -1411,6 +1456,14 @@
 
     @media (max-width: 768px) {
       .cs-editor-transition { padding: 64px 28px; }
+      .editor-features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (max-width: 540px) {
+      .editor-features-grid {
+        grid-template-columns: 1fr !important;
+      }
     }
 
     /* ── More work section ── */

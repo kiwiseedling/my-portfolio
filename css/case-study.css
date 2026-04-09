@@ -630,11 +630,12 @@
   .cs-divider     { margin: 0 28px; }
   .cs-footer      { padding: 64px 28px; }
   .cs-meta        { gap: 28px; }
-  .cs-cards       { grid-template-columns: 1fr; }
+  .cs-cards       { grid-template-columns: 1fr !important; }
   .cs-stats       { flex-direction: column; }
   .cs-stat        { border-right: none; border-bottom: 1px solid var(--border); }
   .cs-stat:last-child { border-bottom: none; }
   .cs-back        { left: 16px; }
+  .cs-hero__title { overflow-wrap: break-word; }
 }
 
 @media (max-width: 540px) {
@@ -646,4 +647,5 @@
   .cs-hero__title { letter-spacing: -0.02em; }
   .cs-meta    { gap: 20px; }
   .cs-callout { padding: 16px 20px; }
+  .cs-back    { display: none; }
 }
