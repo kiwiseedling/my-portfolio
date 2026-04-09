@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="images/savi.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Elena Qian — Product Designer</title>
   <link rel="stylesheet" href="css/style.css" />
@@ -57,19 +58,17 @@
     <!-- top-left greeting -->
     <h1 class="hero-greeting">hi!</h1>
 
-    <!-- centered name + pronunciation -->
+    <!-- centered name + pronunciation + sub -->
     <div class="hero-center">
       <div class="hero-name-wrap">
         <h1 class="hero-name">i'm <span class="hero-name-accent">elena</span></h1>
       </div>
       <p class="hero-pronunciation"># ee-lay-nuh or /ɛˈleɪnə/</p>
+      <p class="hero-sub">
+        <strong>product designer</strong> in the <strong>bay area</strong> focused on making ai<br>
+        products human
+      </p>
     </div>
-
-    <!-- bottom-left sub -->
-    <p class="hero-sub">
-      <strong>product designer</strong> in the <strong>bay area</strong> focused on making ai<br>
-      products feel human
-    </p>
 
     <!-- Cat + star illustration -->
     <div class="hero-illustration" aria-hidden="true">
@@ -139,7 +138,7 @@
   <!-- ═══════════════════════════════
        FEATURED WORK
   ═══════════════════════════════ -->
-  <section class="work" id="work">
+  <section class="work" id="work" style="padding-bottom:48px;">
 
     <!-- Crossfill — real laptop frame image -->
     <a href="crossfill.html" class="project-card project-card--ghost" style="--glow: rgba(149, 4, 96, 0.45); --glow2: rgba(236, 48, 77, 0.25)">
@@ -205,12 +204,84 @@
   </section>
 
   <!-- ═══════════════════════════════
+       PLAYGROUND PREVIEW
+  ═══════════════════════════════ -->
+  <style>
+    /* mobile tap overlay — hidden on desktop */
+    .pg-mobile-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      background: rgba(0,0,0,0.45);
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+    .pg-mobile-overlay__text {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 10px 22px;
+      background: rgba(255,255,255,0.06);
+    }
+    @media (max-width: 768px) {
+      .pg-mobile-overlay { display: flex; }
+      #pg-embed-overlay  { display: none; }
+    }
+
+    @keyframes pgBounceIn {
+      0%   { opacity:0; transform: translateY(28px) scale(0.88) rotate(-1.5deg); }
+      55%  { opacity:1; transform: translateY(-8px)  scale(1.06) rotate(1deg); }
+      75%  { transform: translateY(4px)  scale(0.97) rotate(-0.5deg); }
+      90%  { transform: translateY(-3px) scale(1.02) rotate(0.3deg); }
+      100% { opacity:1; transform: translateY(0)     scale(1)    rotate(0deg); }
+    }
+    @keyframes pgPulse {
+      0%,100% { text-shadow: 0 0 0px rgba(255,192,203,0); }
+      50%      { text-shadow: 0 0 18px rgba(255,192,203,0.55); }
+    }
+    #pg-preview-label.visible {
+      animation: pgBounceIn 0.75s cubic-bezier(0.34,1.56,0.64,1) forwards,
+                 pgPulse 2.8s ease-in-out 0.8s infinite;
+    }
+  </style>
+  <section style="padding: 36px 87px 0; max-width: 1100px; margin: 0 auto;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+      <div>
+        <p id="pg-preview-label" style="font-family:var(--serif); font-style:italic; font-size:1.05rem; letter-spacing:0.02em; color:rgba(255,192,203,0.85); margin:0; opacity:0;">drag to move</p>
+        <p style="font-family:var(--sans); font-size:0.65rem; letter-spacing:0.06em; color:rgba(255,255,255,0.65); margin:5px 0 0;">or explore entire playground →</p>
+      </div>
+      <a href="playground.html"
+         style="font-family:var(--sans); font-size:0.82rem; letter-spacing:0.06em; color:rgba(255,255,255,0.82); text-decoration:none; border:1px solid rgba(255,255,255,0.2); border-radius:999px; padding:6px 18px; transition:color 0.2s, border-color 0.2s, background 0.2s;"
+         onmouseover="this.style.color='rgba(255,255,255,1)';this.style.borderColor='rgba(255,255,255,0.4)';this.style.background='rgba(255,255,255,0.06)'"
+         onmouseout="this.style.color='rgba(255,255,255,0.82)';this.style.borderColor='rgba(255,255,255,0.2)';this.style.background='transparent'">
+        explore entire playground ↗
+      </a>
+    </div>
+    <div style="position:relative; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 48px rgba(0,0,0,0.5);">
+      <iframe id="pg-embed-frame" src="playground.html?embed=1"
+              style="width:100%; height:440px; border:none; display:block;"
+              title="Playground preview"></iframe>
+      <!-- overlay: lets scroll pass to parent, forwards drag to iframe -->
+      <div id="pg-embed-overlay" style="position:absolute;inset:0;z-index:10;cursor:grab;"></div>
+      <!-- mobile tap-to-open overlay -->
+      <a href="playground.html" class="pg-mobile-overlay">
+        <span class="pg-mobile-overlay__text">tap to explore playground ↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
        EXPERIENCE
   ═══════════════════════════════ -->
   <section class="experience" id="experience">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0">
       <h2 class="section-title" style="margin-bottom:0">experience</h2>
-      <a href="images/Elena Qians Resume.pdf" download="Elena Qians Resume.pdf" class="btn-download-resume">
+      <a href="images/Elena Qians Resume.pdf" download="Elena Qians Resume.pdf" target="_blank" rel="noopener" class="btn-download-resume">
         <span>download resume</span><span class="btn-dl-arrow">↓</span>
       </a>
     </div>
@@ -302,6 +373,66 @@
   </footer>
 
   <script>
+    // Playground embed — overlay forwards drag to iframe, scroll passes to parent
+    (function() {
+      const frame   = document.getElementById('pg-embed-frame');
+      const overlay = document.getElementById('pg-embed-overlay');
+      let dragging  = false;
+
+      function iframeCanvas() {
+        try { return frame.contentDocument && frame.contentDocument.getElementById('pg-canvas'); }
+        catch(e) { return null; }
+      }
+      function iframeWin() {
+        try { return frame.contentWindow; }
+        catch(e) { return null; }
+      }
+
+      overlay.addEventListener('mousedown', function(e) {
+        const cvs = iframeCanvas();
+        if (!cvs) return;
+        dragging = true;
+        overlay.style.cursor = 'grabbing';
+        const r = frame.getBoundingClientRect();
+        cvs.dispatchEvent(new MouseEvent('mousedown', {
+          bubbles: true, clientX: e.clientX - r.left, clientY: e.clientY - r.top
+        }));
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!dragging) return;
+        const win = iframeWin();
+        if (!win) return;
+        const r = frame.getBoundingClientRect();
+        win.dispatchEvent(new MouseEvent('mousemove', {
+          bubbles: false, clientX: e.clientX - r.left, clientY: e.clientY - r.top
+        }));
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (!dragging) return;
+        dragging = false;
+        overlay.style.cursor = 'grab';
+        const win = iframeWin();
+        if (win) win.dispatchEvent(new MouseEvent('mouseup', { bubbles: false }));
+      });
+    })();
+
+    // Playground label bounce-in on scroll
+    (function() {
+      var label = document.getElementById('pg-preview-label');
+      if (!label) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            label.classList.add('visible');
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      observer.observe(label);
+    })();
+
     function toggleExpBullets(btn) {
       var item = btn.closest('.exp-item');
       var expanded = item.classList.toggle('expanded');

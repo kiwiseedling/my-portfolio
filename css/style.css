@@ -236,9 +236,8 @@ body.loaded #loader {
 }
 
 .hero-sub {
-  position:    absolute;
-  bottom:      64px;
-  left:        72px;
+  position:    static;
+  margin-top:  28px;
   font-family: var(--serif);
   font-size:   1.05rem;
   color:       var(--text-soft);
@@ -1131,16 +1130,22 @@ footer {
   }
   .hero-center { position: static; transform: none; text-align: left; margin-top: 16px; }
 
-  /* Sketch — mobile: center relative to hero, smaller */
+  /* Sketch — mobile: anchor to bottom of hero */
   .hero-sketch {
     position:  absolute;
-    top:       60px;
-    bottom:    auto;
+    top:       auto;
+    bottom:    0;
     left:      50%;
     min-width: clamp(280px, 90vw, 420px);
     opacity:   0.16;
   }
-  .hero-sub { position: static; font-size: 0.95rem; max-width: 100%; margin-top: 20px; }
+
+  /* Force accent colour to match desktop */
+  .hero-name-accent {
+    color: #6B3EFF !important;
+    -webkit-text-fill-color: #6B3EFF !important;
+  }
+  .hero-sub { font-size: 0.95rem; max-width: 100%; margin-top: 20px; }
   .hero-pronunciation { font-size: 0.8rem; }
   .hero-story-link { position: static !important; margin-top: 32px; }
 

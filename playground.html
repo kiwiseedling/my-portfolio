@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="images/savi.png" type="image/png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Playground — Elena Qian</title>
   <link rel="stylesheet" href="css/style.css" />
@@ -84,7 +85,7 @@
       font-family: var(--sans);
       font-size: 0.62rem;
       letter-spacing: 0.12em;
-      color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.55);
       margin-bottom: 12px;
       display: flex; align-items: center; gap: 6px;
     }
@@ -109,7 +110,7 @@
       font-family: var(--sans);
       font-size: 0.75rem;
       line-height: 1.65;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.65);
       max-width: 280px;
     }
     .pg-capsule--sm  { width: 280px; }
@@ -155,7 +156,7 @@
       font-family: var(--sans);
       font-size: 0.62rem;
       letter-spacing: 0.14em;
-      color: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.35);
       pointer-events: none;
       white-space: nowrap;
     }
@@ -320,6 +321,12 @@
   </div>
 
   <script>
+    const isEmbed = new URLSearchParams(window.location.search).get('embed') === '1';
+    if (isEmbed) {
+      document.getElementById('nav').style.display = 'none';
+      document.querySelector('.pg-hint').style.display = 'none';
+    }
+
     const canvas = document.getElementById('pg-canvas');
     const world  = document.getElementById('pg-world');
 
@@ -339,7 +346,7 @@
       }
     });
 
-    let ox = -160, oy = -60, scale = 1;
+    let ox = isEmbed ? -380 : -160, oy = isEmbed ? -60 : -60, scale = 1;
     const MIN_SCALE = 0.3, MAX_SCALE = 3;
     let dragging = false, startX = 0, startY = 0, startOX = 0, startOY = 0;
     let didDrag = false;
@@ -373,10 +380,10 @@
       canvas.classList.remove('dragging');
     });
 
-    /* wheel: pinch (ctrlKey) or mouse scroll wheel (deltaMode 1/2) = zoom
-             2-finger trackpad scroll (deltaMode 0, no ctrlKey) = pan     */
+    /* wheel: embed mode = disabled; full mode = zoom or pan */
     canvas.addEventListener('wheel', e => {
       e.preventDefault();
+      if (isEmbed) return; // drag-only in embed
       const isZoom = e.ctrlKey || e.deltaMode > 0;
       if (isZoom) {
         const factor   = e.deltaY < 0 ? 1.08 : 0.93;
