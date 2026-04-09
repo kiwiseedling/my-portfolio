@@ -168,10 +168,10 @@
     }
     .pm-body + .pm-body { margin-top: 12px; }
 
-    .pm-level { margin-top: 110px; }
+    .pm-level { margin-top: 96px; }
 
     /* ── hero ── */
-    .pm-hero { padding-top: 130px; padding-bottom: 72px; }
+    .pm-hero { padding-top: 130px; padding-bottom: 0; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
@@ -252,9 +252,9 @@
       animation: fadeUp 0.7s 0.5s ease both;
       position: relative;
     }
-    .pm-hero-img-wrap::before {
+    .pm-hero-img-wrap::after {
       content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, var(--n), transparent);
       opacity: 0.35;
     }
@@ -423,11 +423,128 @@
     .pm-wf-ico { font-size: 0.5rem; letter-spacing: 0.14em; color: var(--dim); flex-shrink: 0; padding-top: 3px; }
     .pm-wf-txt { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: var(--soft); line-height: 1.72; }
 
+/* ── hifi transition ── */
+    .pm-hifi-divider {
+      margin: 72px 0 80px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0;
+    }
+
+    /* top beam — tall, glows in */
+    .pm-hifi-beam {
+      width: 1px; height: 100px;
+      background: linear-gradient(to bottom, transparent, #a8dfa8);
+      transform-origin: top center;
+      transform: scaleY(0);
+      transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+    }
+    .pm-hifi-divider.hifi-visible .pm-hifi-beam { transform: scaleY(1); }
+
+    /* center badge */
+    .pm-hifi-badge {
+      display: flex; align-items: center; gap: 24px;
+      padding: 20px 44px;
+      border: 1px solid rgba(168,223,168,0.3);
+      border-radius: 100px;
+      background: rgba(168,223,168,0.07);
+      position: relative; overflow: hidden;
+      transform: translateY(20px) scale(0.94); opacity: 0;
+      transition: transform 0.7s cubic-bezier(0.34,1.5,0.64,1) 0.55s,
+                  opacity 0.45s ease 0.55s;
+    }
+    .pm-hifi-divider.hifi-visible .pm-hifi-badge {
+      transform: translateY(0) scale(1); opacity: 1;
+    }
+
+    /* shimmer sweep */
+    .pm-hifi-badge::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%);
+      transform: translateX(-100%);
+    }
+    .pm-hifi-divider.hifi-visible .pm-hifi-badge::after {
+      animation: pmShimmer 1s ease 1.1s forwards;
+    }
+    @keyframes pmShimmer { to { transform: translateX(260%); } }
+
+    /* dot sparkles */
+    .pm-hifi-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #a8dfa8; opacity: 0;
+      flex-shrink: 0;
+      transition: opacity 0.35s ease 1s, transform 0.5s cubic-bezier(0.34,1.8,0.64,1) 1s;
+      transform: scale(0);
+    }
+    .pm-hifi-dot:last-child { transition-delay: 1.1s; }
+    .pm-hifi-divider.hifi-visible .pm-hifi-dot { opacity: 1; transform: scale(1); }
+
+    /* label */
+    .pm-hifi-divider-txt {
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.36em;
+      color: #a8dfa8;
+    }
+
+    /* bottom beam — tall, fades out */
+    .pm-hifi-beam-b {
+      width: 1px; height: 100px;
+      background: linear-gradient(to bottom, #a8dfa8, transparent);
+      transform-origin: top center;
+      transform: scaleY(0);
+      transition: transform 0.8s cubic-bezier(0.4,0,0.2,1) 1s;
+    }
+    .pm-hifi-divider.hifi-visible .pm-hifi-beam-b { transform: scaleY(1); }
+
+    /* ── features layout ── */
+    .pm-feat-layout { margin-top: 0; }
+
+    /* ── fixed left features nav ── */
+    .pm-feat-nav {
+      position: fixed; left: 30px; top: 50%;
+      transform: translateY(-50%); z-index: 100;
+      display: flex; flex-direction: column; gap: 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s;
+    }
+    .pm-feat-nav.visible { opacity: 1; pointer-events: auto; }
+    .pm-feat-nav-plant {
+      font-size: 0.95rem; margin-bottom: 10px; padding-left: 2px;
+      filter: grayscale(1) brightness(1.8);
+    }
+    .pm-feat-nav-item {
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; padding: 5px 0;
+      text-decoration: none;
+    }
+    .pm-feat-nav-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      transition: all 0.25s; flex-shrink: 0;
+    }
+    .pm-feat-nav-lbl {
+      font-family: var(--mono); font-size: 0.44rem; letter-spacing: 0.13em;
+      color: var(--dim); opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.2s, transform 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .pm-feat-nav-item:hover .pm-feat-nav-lbl { opacity: 0.7; transform: translateX(0); }
+    .pm-feat-nav-item:hover .pm-feat-nav-dot { background: rgba(255,255,255,0.4); }
+    .pm-feat-nav-item.active .pm-feat-nav-lbl { opacity: 1; transform: translateX(0); color: #f9c4d4; }
+    .pm-feat-nav-item.active .pm-feat-nav-dot {
+      background: #f9c4d4; box-shadow: 0 0 8px rgba(249,196,212,0.5);
+      width: 7px; height: 7px;
+    }
+    @media (max-width: 900px) { .pm-feat-nav { display: none; } }
+
     /* features */
-    .pm-features { display: flex; flex-direction: column; gap: 88px; margin-top: 60px; }
+    .pm-features { display: flex; flex-direction: column; gap: 80px; }
     .pm-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
     .pm-feat--flip { direction: rtl; }
     .pm-feat--flip > * { direction: ltr; }
+    /* full-width feature block (for image-first features) */
+    .pm-feat-block { display: flex; flex-direction: column; gap: 20px; }
+    .pm-feat-block-img { width: 100%; border-radius: 14px; display: block; border: 1px solid rgba(255,255,255,0.06); }
     .pm-feat-id {
       font-size: 0.5rem; letter-spacing: 0.22em;
       color: var(--dim); margin-bottom: 10px;
@@ -558,6 +675,22 @@
     .pm-tw-title { font-size: 0.82rem; font-weight: 600; color: var(--txt); margin-bottom: 5px; position: relative; z-index: 1; }
     .pm-tw-body { font-family: 'Montserrat', sans-serif; font-size: 0.84rem; color: var(--soft); line-height: 1.72; position: relative; z-index: 1; }
 
+    /* more work */
+    .more-work { max-width: 1000px; margin: 0 auto; padding: 96px 52px 80px; }
+    .more-work__eyebrow { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.14em; color: rgba(255,255,255,0.25); margin-bottom: 8px; }
+    .more-work__heading { font-family: var(--serif); font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 400; font-style: italic; color: var(--text); margin-bottom: 32px; letter-spacing: -0.02em; }
+    .more-work__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .more-work-card { display: block; text-decoration: none; border-radius: 16px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); overflow: hidden; transition: border-color 0.25s, background 0.25s, transform 0.3s; }
+    .more-work-card:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); transform: translateY(-4px); }
+    .more-work-card__img { width: 100%; aspect-ratio: 16/9; object-fit: contain; object-position: center; display: block; background: #111116; padding: 20px 12px; box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .more-work-card__body { padding: 20px 22px 22px; }
+    .more-work-card__tag { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.28); display: block; margin-bottom: 8px; }
+    .more-work-card__title { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .more-work-card__desc { font-family: var(--sans); font-size: 0.74rem; line-height: 1.6; color: rgba(255,255,255,0.38); }
+    .more-work-card__link { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); transition: color 0.2s; }
+    .more-work-card:hover .more-work-card__link { color: var(--text); }
+    @media (max-width: 640px) { .more-work { padding: 72px 24px 60px; } .more-work__grid { grid-template-columns: 1fr; } }
+
     /* footer */
     .pm-footer { margin-top: 130px; padding-top: 52px; border-top: 1px solid var(--border); text-align: center; }
     .pm-footer-lbl { font-size: 0.5rem; letter-spacing: 0.24em; color: var(--dim); margin-bottom: 14px; }
@@ -607,6 +740,14 @@
     <div class="pm-nav-id">plantment.case_study</div>
   </nav>
 
+  <nav id="nav">
+    <div class="nav-pill">
+      <a href="index.html" class="nav-link">home</a>
+      <a href="playground.html" class="nav-link">playground</a>
+      <a href="resume.html" class="nav-link">resume</a>
+    </div>
+  </nav>
+
   <nav class="pm-sidenav" aria-hidden="true">
     <div class="pm-sn-item active" data-s="pm-hero"><span class="pm-sn-lbl">overview</span><div class="pm-sn-dot"></div></div>
     <div class="pm-sn-item" data-s="pm-l1"><span class="pm-sn-lbl">problem brief</span><div class="pm-sn-dot"></div></div>
@@ -614,7 +755,7 @@
     <div class="pm-sn-item" data-s="pm-l3"><span class="pm-sn-lbl">field research</span><div class="pm-sn-dot"></div></div>
     <div class="pm-sn-item" data-s="pm-l4"><span class="pm-sn-lbl">key findings</span><div class="pm-sn-dot"></div></div>
     <div class="pm-sn-item" data-s="pm-l5"><span class="pm-sn-lbl">empathy map</span><div class="pm-sn-dot"></div></div>
-    <div class="pm-sn-item" data-s="pm-l6"><span class="pm-sn-lbl">system design</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l6"><span class="pm-sn-lbl">feature design</span><div class="pm-sn-dot"></div></div>
     <div class="pm-sn-item" data-s="pm-l7"><span class="pm-sn-lbl">xp earned</span><div class="pm-sn-dot"></div></div>
   </nav>
 
@@ -625,7 +766,7 @@
       <div class="pm-hero-tag">final project · bootcamp · 2 weeks · team of 4</div>
       <div class="pm-hero-title">plant</div>
       <div class="pm-hero-title pm-hero-title-accent">ment</div>
-      <p class="pm-hero-sub">gamifying plant care with ai — webkinz for your windowsill. real plants, virtual rewards, and a companion that actually knows what your monstera needs.</p>
+      <p class="pm-hero-sub">a gamified ai-assisted plant care app inspired by webkinz</p>
       <div class="pm-hero-chips">
         <span class="pm-chip pm-chip--lit">ux designer</span>
         <span class="pm-chip pm-chip--lit">user researcher</span>
@@ -664,7 +805,7 @@
         <div class="lvl-name">problem brief</div>
       </div>
       <h2 class="pm-h2">why is plant care so <em>hard to get right?</em></h2>
-      <p class="pm-body">"why is it so easy to forget to water your plants and so hard to know what they actually need?" — this question kicked off our research. we mapped every recurring frustration plant owners face to understand what was actually broken.</p>
+      <p class="pm-body">"this question kicked off our research. we mapped every recurring frustration plant owners face to understand what was actually broken.</p>
       <ul class="pm-error-list">
         <li class="pm-err"><div class="pm-err-code">err_01</div><div class="pm-err-txt">figuring out where to place plants for the right light</div></li>
         <li class="pm-err"><div class="pm-err-code">err_02</div><div class="pm-err-txt">forgetting to water or accidentally overwatering</div></li>
@@ -784,150 +925,115 @@
       <div class="lvl-head">
         <div class="lvl-badge">lvl.06</div>
         <div class="lvl-rule"></div>
-        <div class="lvl-name">system design</div>
+        <div class="lvl-name">feature design</div>
       </div>
-      <h2 class="pm-h2">soft, alive, <em>and slightly addictive</em></h2>
-      <p class="pm-body">soft greens, muted neutrals, and rounded shapes became the foundation. nothing should feel sharp or clinical. everything should feel like a space you could return to daily — calm but quietly engaging.</p>
+      <h2 class="pm-h2">soft and<em> slightly addictive</em></h2>
+      <p class="pm-body">greens ground the experience in nature — calm, alive, and easy to return to. warm oranges and golds surface only when something is earned: a streak hit, a coin collected, a level unlocked. the reward moments feel distinct because the rest of the palette stays quiet.</p>
 
       <div class="pm-palette">
-        <div class="pm-sw"><div class="pm-sw-dot" style="background:#a8dfa8"></div><span class="pm-sw-hex">#a8dfa8</span></div>
-        <div class="pm-sw"><div class="pm-sw-dot" style="background:#6ec97a"></div><span class="pm-sw-hex">#6ec97a</span></div>
-        <div class="pm-sw"><div class="pm-sw-dot" style="background:#4a9e5c"></div><span class="pm-sw-hex">#4a9e5c</span></div>
-        <div class="pm-sw"><div class="pm-sw-dot" style="background:#2a5c35"></div><span class="pm-sw-hex">#2a5c35</span></div>
-        <div class="pm-sw"><div class="pm-sw-dot" style="background:#0d1f10"></div><span class="pm-sw-hex">#0d1f10</span></div>
-        <div class="pm-sw"><div class="pm-sw-dot" style="background:#f5f0e8;border-color:rgba(255,255,255,0.15)"></div><span class="pm-sw-hex">neutral</span></div>
+        <div class="pm-sw">
+          <div class="pm-sw-dot" style="background:linear-gradient(135deg,#e8f7f2,#c8ede2)"></div>
+          <span class="pm-sw-hex">#e8f7f2</span>
+        </div>
+        <div class="pm-sw">
+          <div class="pm-sw-dot" style="background:linear-gradient(135deg,#3ecf8e,#2db87a)"></div>
+          <span class="pm-sw-hex">#2db87a</span>
+        </div>
+        <div class="pm-sw">
+          <div class="pm-sw-dot" style="background:linear-gradient(135deg,#1e9e64,#16784c)"></div>
+          <span class="pm-sw-hex">#1e9e64</span>
+        </div>
+        <div class="pm-sw">
+          <div class="pm-sw-dot" style="background:linear-gradient(135deg,#ffc94d,#f5a623)"></div>
+          <span class="pm-sw-hex">#f5a623</span>
+        </div>
+        <div class="pm-sw">
+          <div class="pm-sw-dot" style="background:linear-gradient(135deg,#f5a623,#e07b0a)"></div>
+          <span class="pm-sw-hex">#e07b0a</span>
+        </div>
+        <div class="pm-sw">
+          <div class="pm-sw-dot" style="background:#f9f9f9;border-color:rgba(255,255,255,0.15)"></div>
+          <span class="pm-sw-hex">#f9f9f9</span>
+        </div>
       </div>
 
-      <div class="pm-wf-note">
-        <div class="pm-wf-ico">note //</div>
-        <div class="pm-wf-txt">wireframes focused on establishing the core information architecture before adding visual polish. the goal was to test the flow — onboarding a plant, viewing its profile, diagnosing an issue — with real users before committing to high-fidelity design. every screen was tested and iterated before finals.</div>
+
+      <!-- Low-fidelity wireframes -->
+      <div style="margin-top:48px">
+        <div style="font-family:'Montserrat',sans-serif;font-size:0.55rem;letter-spacing:0.2em;color:#f9c4d4;margin-bottom:20px">low-fidelity wireframes</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <img src="images/lfg1.png" alt="low-fidelity wireframe 1" style="width:100%;border-radius:10px;display:block;border:1px solid rgba(255,255,255,0.07)">
+          <img src="images/lfg2.png" alt="low-fidelity wireframe 2" style="width:45%;border-radius:10px;display:block;border:1px solid rgba(255,255,255,0.07)">
+        </div>
       </div>
 
-      <div class="pm-features">
-
-        <div class="pm-feat">
-          <div>
-            <div class="pm-feat-id">feature_01 — plant profiles</div>
-            <h3 class="pm-feat-h3">a dedicated page for every plant</h3>
-            <p class="pm-feat-body">each plant gets a dedicated page where users can see watering needs, sunlight status, care tips, and their plant's progress over time. the profile becomes a living record — not just a reminder, but a relationship.</p>
-          </div>
-          <div class="pm-phone">
-            <svg viewBox="0 0 190 330" width="82%" fill="none">
-              <rect x="8" y="8" width="174" height="314" rx="22" fill="#080f09" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
-              <rect x="65" y="18" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.06)"/>
-              <rect x="18" y="36" width="154" height="108" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-              <path d="M75 95 C75 95 88 73 110 68 C132 63 143 79 143 79 C143 79 130 101 108 106 C86 111 75 95 75 95Z" fill="rgba(109,255,82,0.32)"/>
-              <path d="M75 95 C84 87 93 78 104 71" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-linecap="round"/>
-              <rect x="18" y="156" width="85" height="7" rx="2" fill="rgba(255,255,255,0.62)"/>
-              <rect x="18" y="169" width="56" height="3.5" rx="1.5" fill="rgba(255,255,255,0.16)"/>
-              <rect x="18" y="184" width="154" height="5" rx="2.5" fill="rgba(255,255,255,0.06)"/>
-              <rect x="18" y="184" width="118" height="5" rx="2.5" fill="rgba(109,255,82,0.5)"/>
-              <rect x="18" y="200" width="46" height="32" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-              <rect x="72" y="200" width="46" height="32" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-              <rect x="126" y="200" width="46" height="32" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-              <rect x="24" y="208" width="34" height="3.5" rx="1" fill="rgba(255,255,255,0.35)"/>
-              <rect x="24" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
-              <rect x="78" y="208" width="34" height="3.5" rx="1" fill="rgba(255,255,255,0.35)"/>
-              <rect x="78" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
-              <rect x="132" y="208" width="34" height="3.5" rx="1" fill="rgba(255,255,255,0.35)"/>
-              <rect x="132" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
-              <rect x="18" y="244" width="154" height="26" rx="4" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-              <rect x="26" y="252" width="75" height="3.5" rx="1" fill="rgba(255,255,255,0.2)"/>
-              <rect x="26" y="260" width="95" height="3" rx="1" fill="rgba(255,255,255,0.09)"/>
-              <rect x="18" y="280" width="154" height="26" rx="5" fill="rgba(109,255,82,0.08)" stroke="rgba(109,255,82,0.18)" stroke-width="1"/>
-              <rect x="58" y="289" width="74" height="8" rx="2" fill="rgba(109,255,82,0.45)"/>
-            </svg>
-          </div>
+<!-- Transition to high-fidelity -->
+      <div class="pm-hifi-divider" id="pmHifiDivider">
+        <div class="pm-hifi-beam"></div>
+        <div class="pm-hifi-badge">
+          <div class="pm-hifi-dot"></div>
+          <div class="pm-hifi-divider-txt">high — fidelity — designs</div>
+          <div class="pm-hifi-dot"></div>
         </div>
+        <div class="pm-hifi-beam-b"></div>
+      </div>
 
-        <div class="pm-feat pm-feat--flip">
-          <div>
-            <div class="pm-feat-id">feature_02 — ai diagnosis</div>
-            <h3 class="pm-feat-h3">a calm companion, not a chatbot</h3>
-            <p class="pm-feat-body">the ai assistant was designed to feel like a calm companion rather than a technical chatbot. it asks questions the way a knowledgeable friend would — without jargon — and guides users from symptom to solution in a few taps.</p>
-          </div>
-          <div>
-            <div class="pm-diag-segs" id="pmDiagSegs">
-              <div class="pm-diag-seg done"></div><div class="pm-diag-seg"></div>
-              <div class="pm-diag-seg"></div><div class="pm-diag-seg"></div>
-            </div>
-            <div class="pm-diag-panel">
-              <div class="pm-diag-lbl" id="pmDiagLbl">step 1 of 4</div>
-              <div class="pm-diag-txt" id="pmDiagTxt">hi 🌿 — which plant are you concerned about today?</div>
-            </div>
-            <div class="pm-diag-nav">
-              <button class="pm-diag-btn" id="pmDiagPrev" disabled>← back</button>
-              <button class="pm-diag-btn" id="pmDiagNext">next →</button>
-            </div>
-            <div class="pm-term">
-              <div class="pm-term-dots"><div class="pm-term-dot"></div><div class="pm-term-dot"></div><div class="pm-term-dot"></div></div>
-              <div style="display:flex;gap:8px">
-                <span class="pm-t-prompt">ai &gt;</span>
-                <span id="pmTermTxt">awaiting plant selection...</span>
-                <span class="pm-t-cur"></span>
-              </div>
-            </div>
-          </div>
-        </div>
+      <!-- Fixed left features nav (shown only within features section) -->
+      <nav class="pm-feat-nav" id="pmFeatNav" aria-hidden="true">
+        <div class="pm-feat-nav-plant">🌿</div>
+        <div class="pm-feat-nav-item active" data-feat="feat-profiles"><div class="pm-feat-nav-dot"></div><span class="pm-feat-nav-lbl">plant profiles</span></div>
+        <div class="pm-feat-nav-item" data-feat="feat-diagnosis"><div class="pm-feat-nav-dot"></div><span class="pm-feat-nav-lbl">diagnosis flow</span></div>
+        <div class="pm-feat-nav-item" data-feat="feat-room"><div class="pm-feat-nav-dot"></div><span class="pm-feat-nav-lbl">my room</span></div>
+        <div class="pm-feat-nav-item" data-feat="feat-coins"><div class="pm-feat-nav-dot"></div><span class="pm-feat-nav-lbl">coin economy</span></div>
+      </nav>
 
-        <div class="pm-feat">
+      <!-- Features content -->
+      <div class="pm-feat-layout">
+        <div class="pm-features">
+
+          <!-- Feature 01 — Plant Profiles -->
+          <div class="pm-feat-block" id="feat-profiles">
+            <div>
+              <div class="pm-feat-id">feature_01 — plant profiles</div>
+              <h3 class="pm-feat-h3">the garden</h3>
+              <p class="pm-feat-body">the plant profile became the emotional center of the product. each plant gets a dedicated page where users can see watering needs, sunlight status, care tips, and their plant's progress over time.</p>
+            </div>
+            <img src="images/pp.png" alt="plant profile screen" class="pm-feat-block-img">
+          </div>
+
+          <!-- Feature 02 — AI Diagnosis -->
+          <div class="pm-feat-block" id="feat-diagnosis">
+            <div>
+              <div class="pm-feat-id">feature_02 — diagnosis flow</div>
+              <h3 class="pm-feat-h3">a calm companion, not a chatbot</h3>
+              <p class="pm-feat-body">the ai assistant was designed to feel like a calm companion rather than a technical chatbot. users can ask questions, upload photos, or check symptoms, and the responses appear in simple, friendly language.</p>
+            </div>
+            <img src="images/ai.png" alt="ai diagnosis screen" class="pm-feat-block-img">
+          </div>
+
+        <div class="pm-feat-block" id="feat-room">
           <div>
             <div class="pm-feat-id">feature_03 — my room</div>
             <h3 class="pm-feat-h3">creating a little world</h3>
-            <p class="pm-feat-body">healthy plants result in happy virtual plants. neglected plants show subtle signs like slight drooping or low energy. the virtual room wasn't just decoration — it became an emotional mirror that reflected your real-world care habits back at you.</p>
+            <p class="pm-feat-body">the room builder is where the experience becomes personal.</p>
+            <p class="pm-feat-body" style="margin-top:12px">healthy plants result in happy virtual plants. neglected plants show subtle signs like slight drooping or low energy. this mirror system creates a gentle emotional loop that supports behavior change.</p>
+            <p class="pm-feat-body" style="margin-top:12px">users can place items, rearrange furniture, and customize their world. it becomes a visual reflection of their attention and progress.</p>
           </div>
-          <div class="pm-game" id="pmPlantGame">
-            <div class="pm-game-hud">
-              <div>
-                <div class="pm-gh-lbl">plant health</div>
-                <div class="pm-gh-bar"><div class="pm-gh-fill" id="pmHealthFill"></div></div>
-              </div>
-              <div class="pm-gh-coins">
-                <svg width="11" height="11" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="rgba(251,191,36,0.16)" stroke="rgba(251,191,36,0.5)" stroke-width="1.2"/><text x="8" y="12" text-anchor="middle" fill="rgba(251,191,36,0.9)" font-size="8" font-weight="bold">¢</text></svg>
-                <span id="pmCoins">120</span>
-              </div>
-            </div>
-            <div class="pm-game-stage" id="pmStage">
-              <svg id="pmPlantSvg" width="110" height="142" viewBox="0 0 110 150" fill="none" style="transition:filter 0.5s">
-                <path d="M38 130 L72 130 L68 150 L42 150Z" fill="rgba(160,100,50,0.5)" stroke="rgba(160,100,50,0.25)" stroke-width="1"/>
-                <rect x="32" y="122" width="46" height="11" rx="3" fill="rgba(160,100,50,0.6)" stroke="rgba(160,100,50,0.25)" stroke-width="1"/>
-                <ellipse cx="55" cy="122" rx="20" ry="4" fill="rgba(60,32,12,0.75)"/>
-                <path d="M55 122 C55 110 53 95 55 80" stroke="rgba(109,255,82,0.6)" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M55 100 C45 92 31 90 27 82 C35 78 49 84 55 94Z" fill="rgba(109,255,82,0.6)"/>
-                <path d="M55 90 C65 80 79 76 85 68 C79 62 65 70 55 82Z" fill="rgba(109,255,82,0.6)"/>
-                <path d="M55 80 C51 68 47 55 51 46 C59 52 63 66 57 78Z" fill="rgba(180,255,160,0.7)"/>
-                <path d="M49 86 C43 82 39 84 37 88 C41 90 47 90 49 86Z" fill="rgba(109,255,82,0.3)"/>
-                <path d="M61 78 C67 72 71 73 73 77 C69 80 63 80 61 78Z" fill="rgba(109,255,82,0.3)"/>
-              </svg>
-            </div>
-            <button class="pm-water-btn" id="pmWaterBtn">💧 water plant</button>
-          </div>
+          <img src="images/room.png" alt="my room" class="pm-feat-block-img">
         </div>
 
-        <div class="pm-feat pm-feat--flip">
+        <div class="pm-feat-block" id="feat-coins">
           <div>
-            <div class="pm-feat-id">feature_04 — coin economy</div>
-            <h3 class="pm-feat-h3">real actions. virtual rewards.</h3>
-            <p class="pm-feat-body">the coin system connects real actions — like watering plants and completing care tasks — with in-app motivation. coins unlock decorations, new plant companions, and themes for your virtual room, keeping the habit loop alive.</p>
+            <div class="pm-feat-id">feature_04 — coin economy &amp; rewards</div>
+            <h3 class="pm-feat-h3">gentle encouragement</h3>
+            <p class="pm-feat-body">the coin system connects real actions like watering plants and completing tasks with in-app motivation.</p>
+            <p class="pm-feat-body" style="margin-top:12px">these coins can be used to unlock items, decorations, and themes in the virtual room. the goal was not to gamify everything, but to add gentle encouragement that keeps users returning to the app without feeling forced.</p>
           </div>
-          <div>
-            <div class="pm-shop">
-              <div class="pm-shop-item"><div class="pm-shop-icon">🌵</div><div class="pm-shop-name">new plant</div><div class="pm-shop-price">¢ 200</div></div>
-              <div class="pm-shop-item"><div class="pm-shop-icon">🪴</div><div class="pm-shop-name">planter</div><div class="pm-shop-price">¢ 80</div></div>
-              <div class="pm-shop-item locked"><div class="pm-shop-icon">🌸</div><div class="pm-shop-name">bloom theme</div><div class="pm-shop-price">¢ 350 🔒</div></div>
-              <div class="pm-shop-item locked"><div class="pm-shop-icon">🏆</div><div class="pm-shop-name">golden pot</div><div class="pm-shop-price">¢ 500 🔒</div></div>
-            </div>
-            <div class="pm-earn">
-              <div class="pm-earn-lbl">earn coins by</div>
-              <div class="pm-earn-row"><span class="pm-earn-action">💧 watering a plant</span><span class="pm-earn-val">+10 ¢</span></div>
-              <div class="pm-earn-row"><span class="pm-earn-action">✅ completing a care task</span><span class="pm-earn-val">+15 ¢</span></div>
-              <div class="pm-earn-row"><span class="pm-earn-action">🌱 logging a new leaf</span><span class="pm-earn-val">+25 ¢</span></div>
-              <div class="pm-earn-row"><span class="pm-earn-action">🔥 7-day care streak</span><span class="pm-earn-val">+100 ¢</span></div>
-            </div>
-          </div>
+          <img src="images/coins.png" alt="coin economy screen" class="pm-feat-block-img">
         </div>
 
-      </div>
+        </div><!-- end pm-features -->
+      </div><!-- end pm-feat-layout -->
     </section>
 
     <!-- lvl.07 — takeaways -->
@@ -977,15 +1083,52 @@
       </div>
     </section>
 
-    <div class="pm-footer">
-      <div class="pm-footer-lbl">next project</div>
-      <a href="greekclean.html" class="pm-footer-next">
-        greek clean
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  <div class="more-work">
+    <div class="more-work__eyebrow">more work</div>
+    <h2 class="more-work__heading">keep exploring</h2>
+    <div class="more-work__grid">
+
+      <a href="crossfill.html" class="more-work-card">
+        <img src="images/crossfill.png" alt="Crossfill" class="more-work-card__img" />
+        <div class="more-work-card__body">
+          <span class="more-work-card__tag">product design · 2025–2026</span>
+          <div class="more-work-card__title">crossfill</div>
+          <div class="more-work-card__desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</div>
+          <div class="more-work-card__link">view case study ↗</div>
+        </div>
       </a>
+
+      <a href="greekclean.html" class="more-work-card">
+        <img src="images/greekclean.png" alt="Greek Clean" class="more-work-card__img" />
+        <div class="more-work-card__body">
+          <span class="more-work-card__tag">product design · 2024</span>
+          <div class="more-work-card__title">greek clean</div>
+          <div class="more-work-card__desc">designing a simple way to manage campus waste more responsibly</div>
+          <div class="more-work-card__link">view case study ↗</div>
+        </div>
+      </a>
+
     </div>
+  </div>
 
   </div>
+
+  <footer>
+    <img src="images/coloredcat.png" alt="" class="footer-cat-bg" aria-hidden="true">
+    <div class="footer-top">
+      <h2 class="footer-heading">hi again! lets grab boba</h2>
+    </div>
+    <div class="footer-contact">
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/elena-qian1/" target="_blank">linkedin</a>
+        <a href="resume.html">resume</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>@2026 elena qian 🐾</span>
+      <span class="footer-star">✦</span>
+    </div>
+  </footer>
 
   <script>
     window.addEventListener('scroll', () => {
@@ -993,18 +1136,29 @@
       document.getElementById('pm-bar').style.width = (window.scrollY / max * 100) + '%';
     });
 
-    const secs = ['pm-hero','pm-l1','pm-l2','pm-l3','pm-l4','pm-l5','pm-l6','pm-l7'];
+    const secs  = ['pm-hero','pm-l1','pm-l2','pm-l3','pm-l4','pm-l5','pm-l6','pm-l7'];
     const items = document.querySelectorAll('.pm-sn-item');
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          const i = secs.indexOf(e.target.id);
-          if (i !== -1) items.forEach((el,j) => el.classList.toggle('active', j === i));
+
+    // Use scroll position to find which section's top is closest above the 35% viewport mark
+    function updateActiveSection() {
+      const trigger = window.innerHeight * 0.35;
+      let best = -1, bestDist = Infinity;
+      secs.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const top = el.getBoundingClientRect().top;
+        // section top must be above the trigger line and closest to it
+        if (top <= trigger) {
+          const dist = trigger - top;
+          if (dist < bestDist) { bestDist = dist; best = i; }
         }
       });
-    }, { threshold: 0.3 });
-    secs.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
-    items.forEach((item,i) => item.addEventListener('click', () => {
+      if (best !== -1) items.forEach((el, j) => el.classList.toggle('active', j === best));
+    }
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
+    updateActiveSection();
+
+    items.forEach((item, i) => item.addEventListener('click', () => {
       const el = document.getElementById(secs[i]);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     }));
@@ -1036,47 +1190,52 @@
     const xpEl = document.getElementById('pm-l7');
     if (xpEl) xpObs.observe(xpEl);
 
-    let health = 75, coins = 120;
-    document.getElementById('pmWaterBtn').addEventListener('click', function() {
-      health = Math.min(100, health + 9);
-      coins += 10;
-      document.getElementById('pmHealthFill').style.width = health + '%';
-      document.getElementById('pmCoins').textContent = coins;
-      const stage = document.getElementById('pmStage');
-      for (let i = 0; i < 3; i++) {
-        const c = document.createElement('div');
-        c.className = 'pm-coin-rise';
-        c.textContent = '+¢';
-        c.style.cssText = `left:${30+Math.random()*40}%;bottom:${16+Math.random()*14}px;--cx:${(Math.random()-.5)*30}px;`;
-        stage.appendChild(c);
-        setTimeout(() => c.remove(), 800);
-      }
-      const svg = document.getElementById('pmPlantSvg');
-      svg.style.filter = 'brightness(1.5) drop-shadow(0 0 12px rgba(109,255,82,0.6))';
-      setTimeout(() => svg.style.filter = 'none', 580);
-      this.textContent = '✨ watered!';
-      setTimeout(() => this.textContent = '💧 water plant', 1100);
-    });
 
-    const steps = [
-      { lbl:'step 1 of 4', txt:'hi 🌿 — which plant are you concerned about today?', term:'awaiting plant selection...' },
-      { lbl:'step 2 of 4', txt:'what are you noticing? yellowing leaves, drooping, spots, or something else?', term:'analyzing symptom keywords...' },
-      { lbl:'step 3 of 4', txt:'when did you last water it, and where does it live — near a window or inside?', term:'cross-referencing care patterns...' },
-      { lbl:'step 4 of 4', txt:'🌿 diagnosis: likely overwatering. let the soil dry out completely before the next water. you\'ve got this.', term:'diagnosis complete · confidence: 92%' },
-    ];
-    let diagIdx = 0;
-    function renderDiag() {
-      const d = steps[diagIdx];
-      document.getElementById('pmDiagLbl').textContent = d.lbl;
-      document.getElementById('pmDiagTxt').textContent = d.txt;
-      document.getElementById('pmTermTxt').textContent = d.term;
-      const segs = document.getElementById('pmDiagSegs').children;
-      for (let i = 0; i < segs.length; i++) segs[i].classList.toggle('done', i <= diagIdx);
-      document.getElementById('pmDiagPrev').disabled = diagIdx === 0;
-      document.getElementById('pmDiagNext').disabled = diagIdx === steps.length - 1;
-    }
-    document.getElementById('pmDiagNext').addEventListener('click', () => { if (diagIdx < steps.length-1) { diagIdx++; renderDiag(); } });
-    document.getElementById('pmDiagPrev').addEventListener('click', () => { if (diagIdx > 0) { diagIdx--; renderDiag(); } });
+
+// ── hifi divider: scroll-triggered entrance ──
+    (function() {
+      const div = document.getElementById('pmHifiDivider');
+      if (!div) return;
+      const obs = new IntersectionObserver(([e]) => {
+        if (e.isIntersecting) { div.classList.add('hifi-visible'); obs.disconnect(); }
+      }, { threshold: 0.2 });
+      obs.observe(div);
+    })();
+
+// ── features left nav: show/hide + highlight ──
+    (function() {
+      const featNav  = document.getElementById('pmFeatNav');
+      const navItems = document.querySelectorAll('.pm-feat-nav-item');
+      if (!featNav) return;
+
+      const l6 = document.getElementById('pm-l6');
+      const l7 = document.getElementById('pm-l7');
+
+      // Show/hide based on scroll position relative to section boundaries
+      function updateVisibility() {
+        if (!l6 || !l7) return;
+        const y      = window.scrollY;
+        const start  = l6.offsetTop - 200;
+        const end    = l7.offsetTop - 100;
+        featNav.classList.toggle('visible', y >= start && y < end);
+      }
+      window.addEventListener('scroll', updateVisibility, { passive: true });
+      updateVisibility();
+
+      // Highlight active feature on scroll
+      const featObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting)
+            navItems.forEach(el => el.classList.toggle('active', el.dataset.feat === e.target.id));
+        });
+      }, { rootMargin: '-30% 0px -60% 0px' });
+
+      navItems.forEach(item => {
+        const el = document.getElementById(item.dataset.feat);
+        if (el) featObs.observe(el);
+        item.addEventListener('click', () => { if (el) el.scrollIntoView({ behavior: 'smooth' }); });
+      });
+    })();
   </script>
 
 </body>

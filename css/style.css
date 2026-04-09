@@ -1002,7 +1002,7 @@ footer {
   /* Hero */
   .hero {
     padding:    100px 20px 24px;
-    min-height: 100svh;
+    min-height: unset;
   }
   .hero-greeting,
   .hero-name {

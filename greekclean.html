@@ -650,6 +650,150 @@
       .gc-more__grid { grid-template-columns: 1fr; }
     }
 
+    /* ── design process showcase ── */
+    .gc-design-intro {
+      margin-top: 56px;
+    }
+
+    /* phase pill */
+    .gc-dp-phase {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--mono, monospace); font-size: 0.52rem; letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.35); margin-bottom: 20px;
+    }
+    .gc-dp-phase-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.44rem; color: rgba(255,255,255,0.5);
+    }
+
+    /* section beam + badge (same style as plantment hifi) */
+    .gc-dp-divider {
+      display: flex; flex-direction: column; align-items: center;
+      margin: 56px 0 64px; gap: 0;
+    }
+    .gc-dp-beam {
+      width: 1px; height: 80px;
+      background: linear-gradient(to bottom, transparent, rgba(220,220,225,0.4));
+      transform-origin: top; transform: scaleY(0);
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+    .gc-dp-beam-b {
+      width: 1px; height: 80px;
+      background: linear-gradient(to bottom, rgba(220,220,225,0.4), transparent);
+      transform-origin: top; transform: scaleY(0);
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1) 0.85s;
+    }
+    .gc-dp-badge {
+      display: flex; align-items: center; gap: 20px;
+      padding: 18px 40px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(8px);
+      position: relative; overflow: hidden;
+      transform: translateY(16px) scale(0.95); opacity: 0;
+      transition: transform 0.65s cubic-bezier(0.34,1.5,0.64,1) 0.4s,
+                  opacity 0.4s ease 0.4s;
+    }
+    .gc-dp-badge::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.09) 50%, transparent 70%);
+      transform: translateX(-100%);
+    }
+    .gc-dp-badge-txt {
+      font-family: var(--mono, monospace); font-size: 0.62rem; letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.7);
+    }
+    .gc-dp-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.4); opacity: 0; transform: scale(0);
+      flex-shrink: 0;
+      transition: opacity 0.3s ease 0.9s, transform 0.4s cubic-bezier(0.34,1.8,0.64,1) 0.9s;
+    }
+    .gc-dp-dot:last-child { transition-delay: 1s; }
+    .gc-dp-divider.gc-dp-visible .gc-dp-beam { transform: scaleY(1); }
+    .gc-dp-divider.gc-dp-visible .gc-dp-beam-b { transform: scaleY(1); }
+    .gc-dp-divider.gc-dp-visible .gc-dp-badge {
+      transform: translateY(0) scale(1); opacity: 1;
+    }
+    .gc-dp-divider.gc-dp-visible .gc-dp-badge::after {
+      animation: gcShimmer 0.9s ease 1s forwards;
+    }
+    .gc-dp-divider.gc-dp-visible .gc-dp-dot { opacity: 1; transform: scale(1); }
+    @keyframes gcShimmer { to { transform: translateX(260%); } }
+
+    /* phase blocks */
+    .gc-dp-block {
+      margin-bottom: 72px;
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.4,0,0.2,1);
+    }
+    .gc-dp-block.gc-dp-in { opacity: 1; transform: translateY(0); }
+
+    .gc-dp-block-label {
+      font-family: var(--mono, monospace); font-size: 0.5rem; letter-spacing: 0.22em;
+      color: #f9c4d4; margin-bottom: 14px;
+    }
+    .gc-dp-block-title {
+      font-family: var(--serif, serif); font-size: 1.1rem; font-weight: 400;
+      color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .gc-dp-block-body {
+      font-size: 0.8rem; line-height: 1.72; color: rgba(255,255,255,0.45);
+      max-width: 560px; margin-bottom: 22px;
+    }
+    .gc-dp-img {
+      width: 100%; border-radius: 14px; display: block;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .gc-dp-img-wide { max-width: 640px; margin: 0 auto; display: block; }
+    .gc-dp-video {
+      width: 100%; max-width: 320px; border-radius: 14px; display: block;
+      border: 1px solid rgba(255,255,255,0.07); margin: 0 auto;
+    }
+
+    /* final screens grid */
+    .gc-dp-screens {
+      display: flex; flex-direction: column; gap: 48px;
+      margin-top: 8px;
+    }
+    .gc-dp-screen {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .gc-dp-screen-img-wrap {
+      overflow: visible; border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+      transform: translateZ(0);
+      position: relative; z-index: 0;
+    }
+    .gc-dp-screen-img-wrap:hover {
+      z-index: 10;
+    }
+    .gc-dp-screen-img {
+      width: 100%; display: block;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform: translateZ(0) scale(1.0001);
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .gc-dp-screen-img-wrap:hover .gc-dp-screen-img { transform: translateZ(0) scale(1.25); }
+    .gc-dp-screen-lbl {
+      font-family: var(--mono, monospace); font-size: 0.58rem; letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.7);
+    }
+    .gc-dp-screen-title {
+      font-family: var(--serif, serif); font-size: 1.1rem; font-weight: 400;
+      color: var(--text); letter-spacing: -0.01em;
+    }
+    @media (max-width: 640px) {
+      .gc-dp-badge { padding: 14px 24px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1090,62 +1234,75 @@
         </div>
       </div>
 
-      <!-- Wireframes note -->
-      <div class="gc-card" style="margin-top:40px">
-        <div class="gc-two-col__head" style="margin-bottom:10px">wireframing + prototyping</div>
-        <p class="gc-body" style="margin:0">
-          Low and mid-fidelity sketches explored layouts and navigation before moving to digital. Emphasis on clear progress indicators and large, tappable buttons. Mid and high-fidelity Figma prototypes tested transitions, button placement, and messaging — user feedback directly shaped confirmation screens and icon labeling.
+      <!-- Design Process Grand Entrance -->
+      <div class="gc-design-intro">
+
+        <!-- Divider badge -->
+        <div class="gc-dp-divider" id="gcDpDivider">
+          <div class="gc-dp-beam"></div>
+          <div class="gc-dp-badge">
+            <div class="gc-dp-dot"></div>
+            <div class="gc-dp-badge-txt">design process</div>
+            <div class="gc-dp-dot"></div>
+          </div>
+          <div class="gc-dp-beam-b"></div>
+        </div>
+
+        <p class="gc-body" style="margin-bottom:56px;max-width:600px">
+          Low and mid-fidelity sketches explored layouts and navigation before moving to digital. Emphasis on clear progress indicators and large, tappable buttons. User feedback directly shaped confirmation screens and icon labeling.
         </p>
-      </div>
 
-      <!-- Mid-fidelity prototype -->
-      <div style="margin-top:28px;display:flex;flex-direction:column;align-items:center;text-align:center">
-        <div class="gc-two-col__head" style="margin-bottom:14px;color:#f9c4d4">mid-fidelity prototype</div>
-        <img src="images/gcsketch.png" alt="mid-fidelity prototype" style="width:100%;max-width:640px;border-radius:12px;display:block;filter:contrast(1.4) brightness(1.1)">
+        <!-- Phase 01 — Wireframe Sketches -->
+        <div class="gc-dp-block" id="gcDpBlock1">
+          <div class="gc-dp-block-label">phase_01 — wireframe sketches</div>
+          <h3 class="gc-dp-block-title">mapping the flows on paper first</h3>
+          <p class="gc-dp-block-body">rough sketches established the core navigation structure and task flows before any pixels were touched. the goal was speed — test the logic, not the look.</p>
+          <img src="images/gcsketch.png" alt="wireframe sketches" class="gc-dp-img gc-dp-img-wide">
+        </div>
+
+        <!-- Phase 02 — Mid-fidelity Prototype -->
+        <div class="gc-dp-block" id="gcDpBlock2">
+          <div class="gc-dp-block-label">phase_02 — mid-fidelity prototype</div>
+          <h3 class="gc-dp-block-title">testing transitions and button placement</h3>
+          <p class="gc-dp-block-body">interactive prototypes in figma let real users navigate the three core tasks. feedback from these sessions directly reshaped confirmation screens, icon labeling, and price visibility.</p>
+          <video src="https://framerusercontent.com/assets/bxJru1jjAx4lZ9mM8uzxrgQ1k.mp4" class="gc-dp-video" autoplay loop muted playsinline></video>
+        </div>
+
+        <!-- Phase 03 — Final Design -->
+        <div class="gc-dp-block" id="gcDpBlock3">
+          <div class="gc-dp-block-label">phase_03 — final design</div>
+          <h3 class="gc-dp-block-title">three ways to handle waste, one clear system</h3>
+          <p class="gc-dp-block-body">the final screens distilled every research insight and usability fix into a focused, task-driven interface — clean enough for a stressed-out student, clear enough for anyone.</p>
+          <div class="gc-dp-screens">
+            <div class="gc-dp-screen">
+              <div class="gc-dp-screen-img-wrap">
+                <img src="images/rentdump.svg" alt="hire a crew" class="gc-dp-screen-img">
+              </div>
+              <div class="gc-dp-screen-lbl">01 — hire a crew</div>
+              <div class="gc-dp-screen-title">schedule a team to handle the heavy lifting</div>
+            </div>
+            <div class="gc-dp-screen">
+              <div class="gc-dp-screen-img-wrap">
+                <img src="images/rentdump.svg" alt="rent a dumpster" class="gc-dp-screen-img">
+              </div>
+              <div class="gc-dp-screen-lbl">02 — rent a dumpster</div>
+              <div class="gc-dp-screen-title">book a dumpster for large-scale cleanouts</div>
+            </div>
+            <div class="gc-dp-screen">
+              <div class="gc-dp-screen-img-wrap">
+                <img src="images/bin.svg" alt="find a bin" class="gc-dp-screen-img">
+              </div>
+              <div class="gc-dp-screen-lbl">03 — find a bin</div>
+              <div class="gc-dp-screen-title">quick drop-off points near you</div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </section>
 
 
-    <!-- ══════════════════════════
-         USABILITY TESTING
-    ══════════════════════════ -->
-    <section class="gc-section" id="testing">
-
-      <div class="gc-section-label">usability testing</div>
-      <h2 class="gc-section-title">five students. three tasks. a lot of surprises.</h2>
-
-      <p class="gc-body">
-        Five students tested three core tasks: scheduling a pickup, renting a dumpster, and finding a nearby bin. The sessions surfaced five clear patterns that reshaped the final design.
-      </p>
-
-      <div class="gc-insights">
-        <div class="gc-insight">
-          <div class="gc-insight__dot"></div>
-          visible progress indicators were essential — users felt lost without knowing where they were in a flow
-        </div>
-        <div class="gc-insight">
-          <div class="gc-insight__dot"></div>
-          users preferred seeing price early in the process — cost uncertainty caused hesitation and drop-off
-        </div>
-        <div class="gc-insight">
-          <div class="gc-insight__dot"></div>
-          confirmation screens build trust and peace of mind — "did that actually work?" was a common question
-        </div>
-        <div class="gc-insight">
-          <div class="gc-insight__dot"></div>
-          text labels are necessary alongside icons — icon-only navigation caused consistent confusion
-        </div>
-        <div class="gc-insight">
-          <div class="gc-insight__dot"></div>
-          shorter forms work best under stress — long inputs were abandoned when users imagined a real cleanup scenario
-        </div>
-        <div class="gc-insight">
-          <div class="gc-insight__dot"></div>
-          rough prototypes revealed more truth than polished screens — low-fi sessions yielded the most actionable feedback
-        </div>
-      </div>
-    </section>
 
 
     <!-- ══════════════════════════
@@ -1234,6 +1391,25 @@
   </footer>
 
   <script>
+    // ── design process: scroll-triggered entrance ──
+    (function() {
+      const divider = document.getElementById('gcDpDivider');
+      if (divider) {
+        new IntersectionObserver(([e]) => {
+          if (e.isIntersecting) { divider.classList.add('gc-dp-visible'); }
+        }, { threshold: 0.3 }).observe(divider);
+      }
+      ['gcDpBlock1','gcDpBlock2','gcDpBlock3'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new IntersectionObserver(([e]) => {
+          if (e.isIntersecting) {
+            setTimeout(() => el.classList.add('gc-dp-in'), i * 80);
+          }
+        }, { threshold: 0.15 }).observe(el);
+      });
+    })();
+
     // Progress bar
     window.addEventListener('scroll', function () {
       const doc = document.documentElement;
