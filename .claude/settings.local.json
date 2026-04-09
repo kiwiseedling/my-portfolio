@@ -10,7 +10,14 @@
       "Bash(curl -s \"https://www.codymak.com/\")",
       "Bash(python3)",
       "Bash(curl -s -H \"User-Agent: Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36\" \"https://www.codymak.com/\")",
-      "Bash(curl -s -H \"User-Agent: Mozilla/5.0\" \"https://www.codymak.com/\")"
+      "Bash(curl -s -H \"User-Agent: Mozilla/5.0\" \"https://www.codymak.com/\")",
+      "WebFetch(domain:kartikeygupta.myportfolio.com)",
+      "Bash(python3 -c ':*)",
+      "Bash(identify /mnt/c/Users/elena/my-portfolio/images/laptop-frame.png)",
+      "Bash(node -e \"const {createCanvas, loadImage} = require\\('canvas'\\); console.log\\('canvas ok'\\)\")",
+      "Bash(node -e \"const jimp = require\\('jimp'\\); console.log\\('jimp ok'\\)\")",
+      "Bash(npm install:*)",
+      "WebFetch(domain:elenaqianportfolio.framer.website)"
     ]
   }
 }

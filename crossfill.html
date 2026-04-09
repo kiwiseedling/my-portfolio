@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crossfill — Elena Qian</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/case-study.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet"/>
+</head>
+<body class="loaded cs-page">
+
+  <!-- ── Nav ── -->
+  <nav id="nav">
+    <div class="nav-pill">
+      <a href="index.html" class="nav-link">home</a>
+      <a href="about.html" class="nav-link">about</a>
+      <a href="resume.pdf" class="nav-link" target="_blank">resume</a>
+    </div>
+  </nav>
+
+  <!-- ── Back ── -->
+  <a href="index.html#work" class="cs-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    back
+  </a>
+
+  <!-- ── Scroll progress bar ── -->
+  <div class="cs-progress-bar" id="csProgress"></div>
+
+  <!-- ══════════════════════════════
+       SCROLL NAV (right side)
+  ══════════════════════════════ -->
+  <nav class="cs-scroll-nav" id="csScrollNav">
+    <a href="#hero"            class="cs-scroll-nav__item active" data-label="intro">       <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">intro</span></a>
+    <a href="#overview"        class="cs-scroll-nav__item"        data-label="overview">    <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">overview</span></a>
+    <a href="#intro-section"   class="cs-scroll-nav__item"        data-label="introduction"><span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">introduction</span></a>
+    <a href="#team"            class="cs-scroll-nav__item"        data-label="team">        <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">team</span></a>
+    <a href="#problem"         class="cs-scroll-nav__item"        data-label="problem">     <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">problem</span></a>
+    <a href="#objective"       class="cs-scroll-nav__item"        data-label="objective">   <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">objective</span></a>
+    <a href="#kickoff"         class="cs-scroll-nav__item"        data-label="kickoff">     <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">kickoff</span></a>
+    <a href="#existing"        class="cs-scroll-nav__item"        data-label="existing system"><span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">existing system</span></a>
+    <a href="#discovery"       class="cs-scroll-nav__item"        data-label="discovery">   <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">discovery</span></a>
+    <a href="#audit"           class="cs-scroll-nav__item"        data-label="audit">       <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">audit</span></a>
+    <a href="#cs-insights"     class="cs-scroll-nav__item"        data-label="cs insights"> <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">cs insights</span></a>
+    <a href="#engineering"     class="cs-scroll-nav__item"        data-label="engineering"> <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">engineering</span></a>
+    <a href="#v0"              class="cs-scroll-nav__item"        data-label="v0">          <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">v0</span></a>
+    <a href="#v1"              class="cs-scroll-nav__item"        data-label="v1">          <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">v1</span></a>
+    <a href="#next-steps"      class="cs-scroll-nav__item"        data-label="next steps">  <span class="cs-scroll-nav__dot"></span><span class="cs-scroll-nav__label">next steps</span></a>
+  </nav>
+
+  <!-- ══════════════════════════════
+       HERO
+  ══════════════════════════════ -->
+  <section class="cs-hero" id="hero">
+    <img src="images/crossfill.png" alt="" class="cs-hero__img" aria-hidden="true" />
+
+    <div class="cs-hero__eyebrow">
+      <span class="cs-hero__label">case study</span>
+      <span class="cs-hero__dot">·</span>
+      <span class="cs-hero__label">2025–2026</span>
+      <span class="cs-hero__dot">·</span>
+      <span class="cs-hero__label">associate product designer</span>
+    </div>
+
+    <h1 class="cs-hero__title">crossfill</h1>
+    <p class="cs-hero__tagline">shipped a dashboard that replaces fragmented manual workflows</p>
+
+    <div class="cs-meta">
+      <div class="cs-meta__item">
+        <span class="cs-meta__label">role</span>
+        <span class="cs-meta__value">associate product designer</span>
+      </div>
+      <div class="cs-meta__item">
+        <span class="cs-meta__label">scope</span>
+        <span class="cs-meta__value">internal admin feature lead</span>
+      </div>
+      <div class="cs-meta__item">
+        <span class="cs-meta__label">team</span>
+        <span class="cs-meta__value">design · engineering · customer success</span>
+      </div>
+      <div class="cs-meta__item">
+        <span class="cs-meta__label">status</span>
+        <span class="cs-meta__value">shipped ✦</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════
+       OVERVIEW
+  ══════════════════════════════ -->
+  <section class="cs-section" id="overview">
+    <div class="cs-section-label">overview</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">an end-to-end ai visibility platform</h2>
+        <p class="cs-body">crossfill helps brands understand their presence in ai search and improve visibility across ai-generated answers. as ai reshapes how users discover information, brands need new tools to track and act on ai visibility — not just traditional seo metrics.</p>
+      </div>
+      <div class="cs-stats">
+        <div class="cs-stat"><span class="cs-stat__num">4+</span><span class="cs-stat__label">tools replaced</span></div>
+        <div class="cs-stat"><span class="cs-stat__num">~1mo</span><span class="cs-stat__label">v0 → v1</span></div>
+        <div class="cs-stat"><span class="cs-stat__num">3</span><span class="cs-stat__label">features shipped</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       INTRODUCTION
+  ══════════════════════════════ -->
+  <section class="cs-section" id="intro-section">
+    <div class="cs-section-label">introduction</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">what is crossfill?</h2>
+        <p class="cs-body">crossfill is a b2b saas platform that gives brands visibility into how they appear in ai-generated search results — and tools to improve that presence. as llms like chatgpt, perplexity, and google's ai overviews increasingly answer questions directly, traditional seo metrics no longer tell the whole story.</p>
+        <p class="cs-body">i joined the team as an associate product designer, leading the internal admin experience — the set of tools that let our team manage client workflows, track optimization tasks, and ship recommendations at scale.</p>
+      </div>
+      <div class="cs-img-wrap" style="margin:0">
+        <div class="cs-img-placeholder">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span>crossfill — product overview</span>
+        </div>
+        <div class="cs-img-caption">crossfill platform — ai visibility dashboard</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       TEAM
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="team">
+    <section class="cs-section">
+      <div class="cs-section-label">team</div>
+      <h2 class="cs-section-title">who i worked with</h2>
+      <div class="cs-cols--3">
+        <div class="cs-card">
+          <span class="cs-card__icon">🎨</span>
+          <div class="cs-card__title">design</div>
+          <div class="cs-card__body">lead product designer owned the overall dashboard experience. i led the internal admin feature end-to-end.</div>
+        </div>
+        <div class="cs-card">
+          <span class="cs-card__icon">⚙️</span>
+          <div class="cs-card__title">engineering</div>
+          <div class="cs-card__body">responsible for implementation and deployment. worked closely with me to scope what was feasible within each sprint.</div>
+        </div>
+        <div class="cs-card">
+          <span class="cs-card__icon">🤝</span>
+          <div class="cs-card__title">customer success</div>
+          <div class="cs-card__body">provided direct client workflow insights and helped identify where the biggest friction points were in the real-world process.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════
+       PROBLEM
+  ══════════════════════════════ -->
+  <section class="cs-section" id="problem">
+    <div class="cs-section-label">problem we had to solve</div>
+    <h2 class="cs-section-title">the optimization workflow lived outside the product</h2>
+    <div class="cs-callout">
+      <p>"teams were coordinating through slack, tracking in spreadsheets, storing drafts in google drive, and reviewing in docs. none of it connected. none of it scaled."</p>
+    </div>
+    <p class="cs-body">the core problem wasn't a ui problem — it was a process problem that needed a product solution. the optimization workflow was fragmented across multiple disconnected tools, creating unreliable tracking, duplicate work, human error, and slower publishing velocity.</p>
+
+    <div class="cs-cards">
+      <div class="cs-card">
+        <span class="cs-card__icon">⚡</span>
+        <div class="cs-card__title">manual handoffs between teams</div>
+        <div class="cs-card__body">every step required someone to manually notify the next person — no automation, no in-product state changes.</div>
+      </div>
+      <div class="cs-card">
+        <span class="cs-card__icon">🔁</span>
+        <div class="cs-card__title">duplicated tracking systems</div>
+        <div class="cs-card__body">parallel records existed in both the product and spreadsheets — mismatched data, wasted effort, constant reconciliation.</div>
+      </div>
+      <div class="cs-card">
+        <span class="cs-card__icon">📤</span>
+        <div class="cs-card__title">approvals outside the product</div>
+        <div class="cs-card__body">clients had to leave the dashboard entirely to review content in google docs before approving anything.</div>
+      </div>
+      <div class="cs-card">
+        <span class="cs-card__icon">❓</span>
+        <div class="cs-card__title">unclear ownership of next steps</div>
+        <div class="cs-card__body">no clear task assignment in-product meant internal teams spent time following up manually rather than designing.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       OBJECTIVE
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="objective">
+    <section class="cs-section">
+      <div class="cs-section-label">objective</div>
+      <div class="cs-cols">
+        <div>
+          <h2 class="cs-section-title">design a dashboard that lets teams take action directly in the product</h2>
+          <p class="cs-body">the goal was to move the full optimization cycle — from recommendation to approval to publishing — inside crossfill. no slack threads. no spreadsheets. no leaving the product to review a google doc.</p>
+        </div>
+        <div class="cs-callout" style="margin:0">
+          <p>"design a dashboard experience that supports the end-to-end optimization workflow and allows teams to take action directly in the product."</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════
+       KICKOFF
+  ══════════════════════════════ -->
+  <section class="cs-section" id="kickoff">
+    <div class="cs-section-label">kickoff</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">how we started</h2>
+        <p class="cs-body">before any sketching, i needed to understand what was actually happening — not what the intended workflow was, but what teams were doing in practice. i started by sitting in on customer success calls and mapping the real-world process step by step.</p>
+        <p class="cs-body">what became clear immediately was that the product as it stood handled data display well but had almost no support for action. it could tell you what to do — it couldn't help you do it.</p>
+      </div>
+      <div>
+        <div class="cs-img-wrap" style="margin:0">
+          <div class="cs-img-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 9m0 8V9m0 0L9 7"/></svg>
+            <span>workflow mapping — kickoff session</span>
+          </div>
+          <div class="cs-img-caption">initial workflow map — current state before any design</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       UNDERSTANDING EXISTING SYSTEM
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="existing">
+    <section class="cs-section">
+      <div class="cs-section-label">understanding the existing system</div>
+      <h2 class="cs-section-title">mapping what we actually had</h2>
+      <p class="cs-body" style="max-width:720px">before designing solutions, i audited the current product and the external tools teams were using alongside it. the goal was to understand where each tool started and stopped — and where the gaps lived.</p>
+
+      <div class="cs-img-wrap">
+        <div class="cs-img-placeholder" style="aspect-ratio:21/9">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          <span>existing system audit — tool ecosystem map</span>
+        </div>
+        <div class="cs-img-caption">current tool ecosystem — slack, sheets, drive, docs mapped against the optimization workflow steps</div>
+      </div>
+
+      <div class="cs-cols--3" style="margin-top:40px">
+        <div class="cs-card">
+          <div class="cs-card__title">slack</div>
+          <div class="cs-card__body">used for all internal communication and client notifications — no record, no state, no searchability.</div>
+        </div>
+        <div class="cs-card">
+          <div class="cs-card__title">spreadsheets</div>
+          <div class="cs-card__body">tracking task status, publishing dates, and content ownership — maintained manually by multiple people.</div>
+        </div>
+        <div class="cs-card">
+          <div class="cs-card__title">google drive + docs</div>
+          <div class="cs-card__body">content drafting, review, and approval — completely outside the product, no connection to task state.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════
+       DISCOVERY
+  ══════════════════════════════ -->
+  <section class="cs-section" id="discovery">
+    <div class="cs-section-label">discovery</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">what we found when we looked closely</h2>
+        <p class="cs-body">discovery surfaced a pattern of repeated failure points at every transition between teams. the same problems kept appearing in different forms — notification failures, approval delays, context loss during handoffs.</p>
+        <p class="cs-body">the key insight was that these weren't process failures — they were product gaps. the product didn't support the actions teams needed to take, so teams built workarounds. the workarounds became the system.</p>
+      </div>
+      <div>
+        <div class="cs-img-wrap" style="margin:0">
+          <div class="cs-img-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <span>discovery synthesis — pattern mapping</span>
+          </div>
+          <div class="cs-img-caption">discovery synthesis — failure points mapped across workflow stages</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       AUDIT
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="audit">
+    <section class="cs-section">
+      <div class="cs-section-label">audit of the current workflow</div>
+      <h2 class="cs-section-title">three repeated failure points</h2>
+
+      <div class="cs-cards" style="grid-template-columns: repeat(3,1fr); margin-top:40px">
+        <div class="cs-card">
+          <div class="cs-card__icon" style="font-size:1.8rem">01</div>
+          <div class="cs-card__title">no in-product notification</div>
+          <div class="cs-card__body">clients were unaware of required actions without external notification. no prompts, no task states, no status visibility inside the product.</div>
+        </div>
+        <div class="cs-card">
+          <div class="cs-card__icon" style="font-size:1.8rem">02</div>
+          <div class="cs-card__title">content review outside product</div>
+          <div class="cs-card__body">users were forced to leave the dashboard and review content in google docs before they could approve or dismiss a recommendation.</div>
+        </div>
+        <div class="cs-card">
+          <div class="cs-card__icon" style="font-size:1.8rem">03</div>
+          <div class="cs-card__title">manual data entry everywhere</div>
+          <div class="cs-card__body">no automation between recommendation, approval, and publishing states. every status update required a human to manually update multiple systems.</div>
+        </div>
+      </div>
+
+      <div class="cs-img-wrap">
+        <div class="cs-img-placeholder" style="aspect-ratio:16/7">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span>workflow audit — failure point documentation</span>
+        </div>
+        <div class="cs-img-caption">documented failure points across the existing optimization workflow — pre-redesign</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════
+       CUSTOMER SUCCESS INSIGHTS
+  ══════════════════════════════ -->
+  <section class="cs-section" id="cs-insights">
+    <div class="cs-section-label">customer success insights</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">what the people closest to clients were seeing</h2>
+        <p class="cs-body">customer success was the team spending the most time bridging the gap between the product and client needs. their observations were essential — they had the clearest view of where clients got stuck, what questions kept coming up, and which manual steps were costing the most time.</p>
+      </div>
+      <div>
+        <div class="cs-cards" style="margin:0; grid-template-columns:1fr">
+          <div class="cs-card">
+            <div class="cs-card__title">insight 1 — clients needed reminders</div>
+            <div class="cs-card__body">clients consistently missed required actions because there were no in-product cues. cs was spending time on reminder messages that should have been automatic.</div>
+          </div>
+          <div class="cs-card">
+            <div class="cs-card__title">insight 2 — approval was the biggest bottleneck</div>
+            <div class="cs-card__body">the google docs review step was where work stalled most often. clients lost context between seeing a recommendation and reviewing the content draft.</div>
+          </div>
+          <div class="cs-card">
+            <div class="cs-card__title">insight 3 — internal teams played coordinator</div>
+            <div class="cs-card__body">cs was spending significant time simply advancing work through the pipeline — nudging approvals, updating statuses — instead of doing strategy work.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       ENGINEERING REVIEW
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="engineering">
+    <section class="cs-section">
+      <div class="cs-section-label">engineering capability review</div>
+      <h2 class="cs-section-title">scoping what was actually buildable</h2>
+      <p class="cs-body" style="max-width:720px;margin-bottom:40px">before committing to any design direction, i ran a feasibility review with engineering. i came in with a prioritized list of capabilities and we worked through what was possible within the timeline — and what needed to be deferred.</p>
+
+      <div class="cs-cards" style="grid-template-columns:repeat(2,1fr)">
+        <div class="cs-card">
+          <span class="cs-card__icon">✅</span>
+          <div class="cs-card__title">confirmed — gsc data integration</div>
+          <div class="cs-card__body">blog recommendations could link directly to google search console data, giving clients real performance context alongside each action item.</div>
+        </div>
+        <div class="cs-card">
+          <span class="cs-card__icon">✅</span>
+          <div class="cs-card__title">confirmed — in-dashboard accept/dismiss</div>
+          <div class="cs-card__body">clients could accept or dismiss recommendations directly in the product, triggering backend workflow state changes automatically.</div>
+        </div>
+        <div class="cs-card">
+          <span class="cs-card__icon">✅</span>
+          <div class="cs-card__title">confirmed — permission-based admin controls</div>
+          <div class="cs-card__body">role-based access was technically feasible — a separate admin tab with login control could ship in v1.</div>
+        </div>
+        <div class="cs-card">
+          <span class="cs-card__icon">🔜</span>
+          <div class="cs-card__title">deferred — inline content editor</div>
+          <div class="cs-card__body">an inline editor for reviewing and editing content directly in crossfill was technically possible but scoped to post-mvp. v0 would bridge the gap.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════
+       V0
+  ══════════════════════════════ -->
+  <section class="cs-section" id="v0">
+    <div class="cs-version"><span class="cs-version__dot"></span>v0 — ideation</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">a deliberate bridge, not a shortcut</h2>
+        <p class="cs-body">v0 was never meant to be the full solution. it was a deliberately lightweight stop-gap — a tracking and state management tool that gave teams a shared source of truth while the content editor was in development.</p>
+        <p class="cs-body">teams continued using google docs for content review during v0. but they now had a single place to track workflow state, reducing the dependency on slack and spreadsheets even before the full system was ready.</p>
+        <p class="cs-body">v0 ran for approximately one month. the constraint was intentional — building lightweight let us validate assumptions before committing to a larger solution.</p>
+      </div>
+      <div>
+        <div class="cs-callout" style="margin:0">
+          <p>"the goal was not to build the perfect product — it was to stop the bleeding and give teams a foundation to move faster."</p>
+        </div>
+        <div class="cs-img-wrap">
+          <div class="cs-img-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span>v0 — early wireframes</span>
+          </div>
+          <div class="cs-img-caption">v0 wireframes — lightweight tracking interface</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-section-label" style="margin-top:72px">admin controls</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">giving the internal team its own space</h2>
+        <p class="cs-body">one of the first pieces scoped for v0 was a separate admin tab with login control. this gave the internal team visibility and management capability without surfacing admin functions to clients.</p>
+        <p class="cs-body">the admin controls were the foundation everything else was built on — without them, there was no clean separation between what clients saw and what internal teams needed to manage.</p>
+      </div>
+      <div>
+        <div class="cs-img-wrap" style="margin:0">
+          <div class="cs-img-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            <span>admin controls — v0 designs</span>
+          </div>
+          <div class="cs-img-caption">admin tab — login control and role management interface</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       V1
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="v1">
+    <section class="cs-section">
+      <div class="cs-version"><span class="cs-version__dot"></span>v1 — ideation</div>
+      <h2 class="cs-section-title">three features that closed the loop</h2>
+      <p class="cs-body" style="max-width:680px">v1 replaced the manual workflow with three interconnected features, each targeting a specific failure point. together they made the full optimization cycle operable inside the product for the first time.</p>
+    </section>
+  </div>
+
+  <section class="cs-section">
+    <div class="cs-section-label">content recommendations + calendar</div>
+    <div class="cs-cols">
+      <div>
+        <h2 class="cs-section-title">recommendations with real context</h2>
+        <p class="cs-body">the recommendations feature surfaced blog optimization tasks with potential impact scores, creation dates, and associated topics — linked directly to google search console data so clients had the performance context they needed to decide without leaving the product.</p>
+        <p class="cs-body">the calendar view let clients see their content pipeline over time, reducing the surprise of upcoming recommendations and giving them a sense of momentum and ownership over the process.</p>
+      </div>
+      <div>
+        <div class="cs-img-wrap" style="margin:0">
+          <img src="images/crossfill.png" alt="Crossfill recommendations dashboard" />
+          <div class="cs-img-caption">v1 recommendations view — accept/dismiss, impact scores, topic associations, gsc data integration</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-section-label" style="margin-top:72px">actions page layout</div>
+    <div class="cs-cols">
+      <div>
+        <div class="cs-img-wrap" style="margin:0">
+          <div class="cs-img-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>actions page — layout exploration</span>
+          </div>
+          <div class="cs-img-caption">actions page — final shipped layout with clear ownership states</div>
+        </div>
+      </div>
+      <div>
+        <h2 class="cs-section-title">structure that shows who owns what</h2>
+        <p class="cs-body">the actions page layout was designed to make ownership and status visible at a glance. based on a kanban structure, it organized tasks by state — not just by date — so teams could see what was waiting on a client, what was in progress, and what was ready to publish.</p>
+        <p class="cs-body">the original kanban exploration created ambiguity when blogs belonged to multiple topics simultaneously. the shipped version simplified to a list-first approach that preserved the state clarity without the structural confusion.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-divider"></div>
+
+  <!-- ══════════════════════════════
+       NEXT STEPS
+  ══════════════════════════════ -->
+  <div class="cs-section--full cs-section--dark" id="next-steps">
+    <section class="cs-section">
+      <div class="cs-section-label">next steps</div>
+      <div class="cs-cols">
+        <div>
+          <h2 class="cs-section-title">where crossfill goes from here</h2>
+          <p class="cs-body">v1 closed the immediate gap. the roadmap is focused on pulling more of the optimization lifecycle fully in-product — eliminating the remaining external tool dependencies and building deeper integration with ai search performance data.</p>
+        </div>
+        <div>
+          <div class="cs-roadmap">
+            <div class="cs-roadmap__item">
+              <span class="cs-roadmap__num">01</span>
+              <span class="cs-roadmap__text">move review and drafting fully in-platform — eliminate remaining google docs dependency</span>
+            </div>
+            <div class="cs-roadmap__item">
+              <span class="cs-roadmap__num">02</span>
+              <span class="cs-roadmap__text">inline editor for optimized content — write, review, and approve without leaving crossfill</span>
+            </div>
+            <div class="cs-roadmap__item">
+              <span class="cs-roadmap__num">03</span>
+              <span class="cs-roadmap__text">deeper integration with search data and real-time ai performance insights</span>
+            </div>
+            <div class="cs-roadmap__item">
+              <span class="cs-roadmap__num">04</span>
+              <span class="cs-roadmap__text">versioning and re-optimization workflows — track content changes and surface new opportunities over time</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ══════════════════════════════
+       FOOTER
+  ══════════════════════════════ -->
+  <footer class="cs-footer">
+    <p class="cs-footer__label">next project</p>
+    <a href="index.html#work" class="cs-footer__next">
+      greek clean
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </footer>
+
+  <!-- ══════════════════════════════
+       SCROLL NAV JS
+  ══════════════════════════════ -->
+  <script>
+    // Progress bar
+    const bar = document.getElementById('csProgress');
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement;
+      const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+      bar.style.width = pct + '%';
+    }, { passive: true });
+
+    // Active section tracking
+    const navItems = document.querySelectorAll('.cs-scroll-nav__item');
+    const sections = [...navItems].map(el => {
+      const id = el.getAttribute('href').slice(1);
+      return document.getElementById(id);
+    }).filter(Boolean);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          navItems.forEach(item => {
+            item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Smooth scroll on nav click
+    navItems.forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(item.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+
+</body>
+</html>
