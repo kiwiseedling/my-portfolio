@@ -5,857 +5,924 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Plantment — Elena Qian</title>
   <link rel="stylesheet" href="css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --pm:        #6ec97a;
-      --pm2:       #a8dfa8;
-      --pm-dark:   #2a5c35;
-      --pm-deep:   #0d1f10;
-      --pm-warm:   rgba(110,201,122,0.07);
-      --pm-border: rgba(110,201,122,0.18);
-      --pm-text:   #b8e0ba;
-      --pm-bright: #39d353;
-      --mono:      'JetBrains Mono', monospace;
+      --n:      #c8ffb8;        /* very light green — accent only */
+      --n-dim:  rgba(200,255,184,0.18);
+      --n-glow: rgba(200,255,184,0.22);
+      --bg:     #0a0a0a;
+      --bg1:    #111111;
+      --panel:  rgba(255,255,255,0.035);
+      --border: rgba(255,255,255,0.08);
+      --txt:    #ffffff;
+      --soft:   rgba(255,255,255,0.88);
+      --dim:    rgba(255,255,255,0.65);
+      --mono:   'JetBrains Mono', monospace;
     }
 
-    /* grid bg */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
+
+    body {
+      background: var(--bg);
+      color: var(--txt);
+      font-family: var(--mono);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* scanline */
     body::before {
       content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(110,201,122,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(110,201,122,0.022) 1px, transparent 1px);
-      background-size: 48px 48px;
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 3px,
+        rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+      );
+    }
+
+    /* very faint ambient glow */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: radial-gradient(ellipse 50% 40% at 15% 20%, rgba(109,255,82,0.03) 0%, transparent 70%);
+    }
+
+    /* progress line */
+    #pm-bar {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      height: 1px; width: 0%;
+      background: var(--n);
+      box-shadow: 0 0 8px var(--n-glow);
+      transition: width 0.08s linear;
+    }
+
+    /* nav */
+    .pm-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: 22px 36px;
+      display: flex; align-items: center; justify-content: space-between;
       pointer-events: none;
-      z-index: 0;
     }
+    .pm-nav-back {
+      pointer-events: all;
+      font-size: 0.6rem; letter-spacing: 0.18em;
+      color: var(--dim); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .pm-nav-back:hover { color: var(--txt); gap: 16px; }
+    .pm-nav-id { font-size: 0.55rem; letter-spacing: 0.22em; color: rgba(255,255,255,0.18); }
 
-    /* progress bar */
-    .pm-progress {
-      position: fixed; top: 0; left: 0;
-      height: 2px; width: 0%;
-      background: linear-gradient(90deg, #2a5c35, #6ec97a, #a8dfa8);
-      z-index: 9999;
-      transition: width 0.1s linear;
+    /* side nav */
+    .pm-sidenav {
+      position: fixed; right: 30px; top: 50%;
+      transform: translateY(-50%); z-index: 100;
+      display: flex; flex-direction: column; gap: 0;
     }
-
-    /* back link */
-    .pm-back {
-      position: fixed; top: 28px; left: 32px; z-index: 200;
-      display: flex; align-items: center; gap: 8px;
-      font-family: var(--sans); font-size: 0.72rem;
-      letter-spacing: 0.08em; color: rgba(255,255,255,0.35);
-      text-decoration: none; transition: color 0.2s, gap 0.25s;
+    .pm-sn-item {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; padding: 5px 0;
+      text-decoration: none;
     }
-    .pm-back:hover { color: var(--pm); gap: 12px; }
-
-    /* scroll nav */
-    .pm-scroll-nav {
-      position: fixed; right: 32px; top: 50%;
-      transform: translateY(-50%);
-      z-index: 100;
-      display: flex; flex-direction: column; gap: 8px;
-      align-items: flex-end;
+    .pm-sn-lbl {
+      font-family: var(--mono);
+      font-size: 0.45rem; letter-spacing: 0.14em;
+      color: var(--soft);
+      opacity: 0; transform: translateX(6px);
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap; order: -1;
     }
-    .pm-nav-dot {
+    .pm-sn-item:hover .pm-sn-lbl { opacity: 0.7; transform: translateX(0); }
+    .pm-sn-item.active .pm-sn-lbl { opacity: 1; transform: translateX(0); color: var(--n); }
+    .pm-sn-dot {
       width: 5px; height: 5px; border-radius: 50%;
-      background: rgba(110,201,122,0.18);
-      cursor: pointer;
-      transition: background 0.3s, transform 0.3s, width 0.3s;
+      background: rgba(255,255,255,0.18);
+      transition: all 0.25s; flex-shrink: 0;
     }
-    .pm-nav-dot.active {
-      background: var(--pm);
-      transform: scale(1.6);
+    .pm-sn-item.active .pm-sn-dot {
+      background: var(--n);
+      box-shadow: 0 0 8px var(--n-glow);
+      width: 7px; height: 7px;
     }
+    .pm-sn-item:hover .pm-sn-dot { background: rgba(255,255,255,0.4); }
 
     /* page */
     .pm-page {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 48px 120px;
+      position: relative; z-index: 1;
+      max-width: 920px; margin: 0 auto;
+      padding: 0 52px 160px;
+    }
+
+    /* HUD corner-bracket panel */
+    .hud-panel {
       position: relative;
-      z-index: 1;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 4px;
+    }
+    .hud-panel::before, .hud-panel::after {
+      content: '';
+      position: absolute;
+      width: 10px; height: 10px;
+    }
+    .hud-panel::before {
+      top: -1px; left: -1px;
+      border-top: 1.5px solid var(--n);
+      border-left: 1.5px solid var(--n);
+    }
+    .hud-panel::after {
+      bottom: -1px; right: -1px;
+      border-bottom: 1.5px solid var(--n);
+      border-right: 1.5px solid var(--n);
     }
 
-    /* ── Hero ── */
-    .pm-hero {
-      padding-top: 130px;
-      padding-bottom: 80px;
-      position: relative;
+    /* level header */
+    .lvl-head { display: flex; align-items: center; gap: 14px; margin-bottom: 32px; }
+    .lvl-badge {
+      font-size: 0.55rem; font-weight: 700;
+      letter-spacing: 0.18em;
+      color: #f9c4d4;
+      background: transparent;
+      border: 1px solid rgba(249,196,212,0.35);
+      padding: 4px 10px; border-radius: 2px;
+      white-space: nowrap;
     }
-    .pm-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.63rem;
-      letter-spacing: 0.2em;
-      color: var(--pm);
-      margin-bottom: 22px;
-      display: flex; align-items: center; gap: 8px;
-      opacity: 0.85;
-    }
-    .pm-eyebrow::before { content: '> '; color: var(--pm-bright); }
+    .lvl-rule { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+    .lvl-name { font-size: 0.52rem; letter-spacing: 0.24em; color: #f9c4d4; white-space: nowrap; }
 
-    .pm-hero__title {
-      font-family: var(--serif);
-      font-size: clamp(3.5rem, 9vw, 7rem);
-      font-weight: 400;
-      letter-spacing: -0.045em;
-      line-height: 0.9;
-      color: var(--text);
-      margin-bottom: 22px;
-      display: flex; align-items: center; gap: 16px;
-    }
-    .pm-hero__leaf {
-      display: inline-block;
-      animation: leafSway 4s ease-in-out infinite;
-      transform-origin: bottom center;
-    }
-    @keyframes leafSway {
-      0%,100% { transform: rotate(-6deg); }
-      50%      { transform: rotate(9deg); }
-    }
-
-    .pm-hero__sub {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: clamp(1rem, 2vw, 1.4rem);
-      color: rgba(255,255,255,0.48);
-      max-width: 500px;
-      margin-bottom: 36px;
-      line-height: 1.55;
-    }
-    .pm-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 52px; }
-    .pm-pill {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      padding: 7px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--pm-border);
-      background: var(--pm-warm);
-      color: var(--pm-text);
-    }
-    .pm-pill--hi {
-      border-color: rgba(110,201,122,0.38);
-      background: rgba(110,201,122,0.11);
-      color: var(--pm);
-    }
-
-    .pm-hero__img {
-      border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid var(--pm-border);
-      background: #07120a;
-      box-shadow: 0 0 80px rgba(110,201,122,0.07), 0 0 1px rgba(110,201,122,0.3);
-    }
-    .pm-hero__img img { width: 100%; display: block; }
-
-    /* ── Sections ── */
-    .pm-section { margin-top: 96px; position: relative; }
-
-    .pm-label {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.24em;
-      color: var(--pm);
-      margin-bottom: 14px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .pm-label::after {
-      content: ''; flex: 1; height: 1px;
-      background: var(--pm-border);
-    }
-
-    .pm-title {
-      font-family: var(--serif);
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 400;
-      letter-spacing: -0.02em;
-      color: var(--text);
+    /* headings + body */
+    .pm-h2 {
+      font-size: clamp(1.55rem, 3.5vw, 2.5rem);
+      font-weight: 700; letter-spacing: -0.035em;
+      line-height: 1.1; color: var(--txt);
       margin-bottom: 18px;
-      line-height: 1.15;
     }
+    .pm-h2 em { color: var(--n); font-style: normal; }
+
     .pm-body {
-      font-family: var(--serif);
-      font-size: 1rem;
-      line-height: 1.85;
-      color: rgba(255,255,255,0.58);
-      max-width: 640px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.88rem; line-height: 1.8;
+      color: var(--soft); max-width: 640px;
     }
-    .pm-body + .pm-body { margin-top: 14px; }
+    .pm-body + .pm-body { margin-top: 12px; }
 
-    /* ── Pain list ── */
-    .pm-pain-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-top: 32px; }
-    .pm-pain-item {
-      display: flex; align-items: flex-start; gap: 14px;
-      padding: 14px 18px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.02);
-      font-family: var(--sans); font-size: 0.88rem;
-      color: rgba(255,255,255,0.6); line-height: 1.5;
-      transition: border-color 0.25s, background 0.25s, color 0.25s;
-    }
-    .pm-pain-item:hover { border-color: var(--pm-border); background: var(--pm-warm); color: rgba(255,255,255,0.85); }
-    .pm-pain-item::before { content: '✗'; color: rgba(220,100,100,0.55); font-size: 0.72rem; flex-shrink:0; margin-top:2px; }
+    .pm-level { margin-top: 110px; }
 
-    /* ── Solution grid ── */
-    .pm-sol-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 32px;
+    /* ── hero ── */
+    .pm-hero { padding-top: 130px; padding-bottom: 72px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+
+    .pm-hero-tag {
+      font-size: 0.55rem; letter-spacing: 0.26em;
+      color: var(--dim); margin-bottom: 22px;
+      display: flex; align-items: center; gap: 10px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .pm-hero-tag::before { content: '//'; color: var(--n); }
+
+    .pm-hero-title {
+      font-size: clamp(4.5rem, 12vw, 9rem);
+      font-weight: 700; letter-spacing: -0.05em; line-height: 0.85;
+      color: var(--n); margin-bottom: 6px;
+      text-shadow: 0 0 40px var(--n-glow);
+      animation: fadeUp 0.65s 0.1s ease both;
+    }
+    .pm-hero-title-accent {
+      color: var(--txt);
+      text-shadow: none;
+      animation: fadeUp 0.65s 0.15s ease both;
+    }
+
+    .pm-hero-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem; color: var(--soft); line-height: 1.7;
+      max-width: 480px; margin: 24px 0 30px;
+      animation: fadeUp 0.65s 0.25s ease both;
+    }
+
+    .pm-hero-chips {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 52px;
+      animation: fadeUp 0.65s 0.35s ease both;
+    }
+    .pm-chip {
+      font-size: 0.52rem; letter-spacing: 0.12em;
+      padding: 5px 12px; border-radius: 2px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--soft);
+    }
+    .pm-chip--lit {
+      border-color: rgba(109,255,82,0.3);
+      background: rgba(109,255,82,0.06);
+      color: var(--n);
+    }
+
+    /* project meta strip */
+    .pm-player-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; padding: 0; margin-bottom: 44px;
+      animation: fadeUp 0.65s 0.42s ease both;
+      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+    }
+    .pm-meta-item {
+      padding: 18px 22px;
+      border-right: 1px solid var(--border);
+    }
+    .pm-meta-item:last-child { border-right: none; }
+    .pm-meta-label {
+      font-size: 0.45rem; letter-spacing: 0.2em; color: var(--dim);
+      text-transform: lowercase; margin-bottom: 8px;
+    }
+    .pm-meta-value {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+      color: var(--txt); line-height: 1.4;
+    }
+
+    /* hero image */
+    .pm-hero-img-wrap {
+      border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: #030504;
+      animation: fadeUp 0.7s 0.5s ease both;
+      position: relative;
+    }
+    .pm-hero-img-wrap::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--n), transparent);
+      opacity: 0.35;
+    }
+    .pm-hero-img-wrap img { width: 100%; display: block; }
+
+    /* ── error list ── */
+    .pm-error-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 26px; }
+    .pm-err {
+      display: grid; grid-template-columns: 60px 1fr;
+      gap: 0; align-items: stretch; border-radius: 4px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.86rem; color: var(--soft); line-height: 1.5;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .pm-err:hover { border-color: rgba(239,68,68,0.2); background: rgba(239,68,68,0.04); }
+    .pm-err-code {
+      font-family: var(--mono); font-size: 0.48rem;
+      letter-spacing: 0.08em; color: rgba(239,68,68,0.55);
+      background: rgba(239,68,68,0.05);
+      border-right: 1px solid rgba(239,68,68,0.1);
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px 6px; text-align: center;
+    }
+    .pm-err-txt { padding: 12px 16px; }
+
+    /* ── solution grid ── */
+    .pm-sol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 26px; }
     .pm-sol-card {
-      padding: 22px 20px;
-      border-radius: 12px;
-      border: 1px solid var(--pm-border);
-      background: var(--pm-warm);
-      transition: background 0.25s, box-shadow 0.25s;
-    }
-    .pm-sol-card:hover { background: rgba(110,201,122,0.12); box-shadow: 0 0 18px rgba(110,201,122,0.07); }
-    .pm-sol-card:first-child { grid-column: 1 / -1; }
-    .pm-sol-num { font-family: var(--mono); font-size: 0.56rem; letter-spacing: 0.15em; color: var(--pm); margin-bottom: 8px; }
-    .pm-sol-text { font-family: var(--sans); font-size: 0.87rem; line-height: 1.6; color: rgba(255,255,255,0.68); }
-
-    /* ── Stats ── */
-    .pm-stat-row {
-      display: grid; grid-template-columns: repeat(3,1fr);
-      gap: 1px; background: var(--pm-border);
-      border-radius: 14px; overflow: hidden;
-      border: 1px solid var(--pm-border);
-      margin-top: 36px;
-    }
-    .pm-stat { background: var(--bg); padding: 28px 16px; text-align: center; }
-    .pm-stat__num {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      font-weight: 400; color: var(--pm);
-      letter-spacing: -0.04em; display: block; margin-bottom: 4px;
-    }
-    .pm-stat__pct { color: var(--pm); font-family: var(--serif); font-size: 1.3rem; }
-    .pm-stat__label { font-family: var(--sans); font-size: 0.68rem; line-height: 1.45; color: rgba(255,255,255,0.42); }
-    .pm-stat-secondary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-    .pm-stat-card {
-      padding: 18px 20px; border-radius: 10px;
-      border: 1px solid var(--pm-border); background: var(--pm-warm);
-      display: flex; align-items: center; gap: 14px;
-    }
-    .pm-stat-card__num { font-family: var(--serif); font-size: 1.5rem; color: var(--pm); letter-spacing: -0.03em; flex-shrink:0; }
-    .pm-stat-card__text { font-family: var(--sans); font-size: 0.76rem; color: rgba(255,255,255,0.48); line-height: 1.45; }
-
-    /* ── Insights ── */
-    .pm-insights { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
-    .pm-insight {
-      display: grid; grid-template-columns: 52px 1fr;
-      gap: 18px; align-items: start;
-      padding: 22px 22px 22px 18px;
-      border-radius: 12px;
-      border: 1px solid var(--pm-border);
-      background: var(--pm-warm);
+      padding: 18px 17px; border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--panel);
       position: relative; overflow: hidden;
+      transition: border-color 0.2s, background 0.2s;
     }
-    .pm-insight::before {
+    .pm-sol-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, var(--n), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .pm-sol-card:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); }
+    .pm-sol-card:hover::before { opacity: 0.4; }
+    .pm-sol-card:first-child { grid-column: 1 / -1; }
+    .pm-sol-id {
+      font-size: 0.5rem; letter-spacing: 0.18em;
+      color: var(--dim); margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pm-sol-id::before { content: '▸'; font-size: 0.5rem; color: var(--n); }
+    .pm-sol-body { font-family: 'Montserrat', sans-serif; font-size: 0.84rem; color: var(--soft); line-height: 1.65; }
+
+    /* ── research data grid ── */
+    .pm-data-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1px; margin-top: 26px;
+      background: var(--border);
+      border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .pm-data-cell {
+      background: var(--bg1); padding: 32px 22px; text-align: center;
+      position: relative;
+    }
+    .pm-data-cell::after {
+      content: attr(data-label);
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+      font-size: 0.44rem; letter-spacing: 0.18em;
+      color: var(--dim); white-space: nowrap;
+    }
+    .pm-data-num {
+      font-size: clamp(2.5rem,5.5vw,3.8rem); font-weight: 700;
+      letter-spacing: -0.045em; color: var(--n);
+      display: block; margin-bottom: 4px;
+      text-shadow: 0 0 24px var(--n-glow);
+    }
+    .pm-data-pct { font-size: 1.4rem; color: rgba(109,255,82,0.65); }
+    .pm-data-label { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--soft); line-height: 1.4; margin-top: 8px; }
+    .pm-data-secondary { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .pm-data-sec {
+      padding: 14px 16px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--panel);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .pm-data-sec-num { font-size: 1.35rem; font-weight: 700; color: var(--n); flex-shrink: 0; }
+    .pm-data-sec-txt { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: var(--soft); line-height: 1.45; }
+
+    /* ── findings ── */
+    .pm-findings { display: flex; flex-direction: column; gap: 10px; margin-top: 26px; }
+    .pm-finding {
+      display: grid; grid-template-columns: 48px 1fr; gap: 16px;
+      align-items: start; padding: 18px 18px 18px 16px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      position: relative; overflow: hidden;
+      transition: background 0.2s;
+    }
+    .pm-finding:hover { background: rgba(255,255,255,0.05); }
+    .pm-finding::before {
       content: ''; position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 3px; background: var(--pm);
+      left: 0; top: 0; bottom: 0; width: 1.5px;
+      background: linear-gradient(to bottom, var(--n), transparent);
     }
-    .pm-insight-n { font-family: var(--mono); font-size: 1.5rem; font-weight:500; color: rgba(110,201,122,0.18); line-height:1; padding-top:3px; }
-    .pm-insight-title { font-family: var(--sans); font-size: 0.84rem; font-weight:600; color: var(--pm-text); margin-bottom: 5px; }
-    .pm-insight-body { font-family: var(--serif); font-size: 0.9rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+    .pm-finding-icon {
+      width: 34px; height: 34px; border-radius: 4px;
+      background: var(--panel); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .pm-finding-unlock {
+      font-size: 0.48rem; letter-spacing: 0.18em;
+      color: var(--dim); margin-bottom: 4px;
+    }
+    .pm-finding-unlock::before { content: '▲ unlocked'; }
+    .pm-finding-title { font-size: 0.82rem; font-weight: 600; color: var(--txt); margin-bottom: 5px; }
+    .pm-finding-body { font-family: 'Montserrat', sans-serif; font-size: 0.84rem; color: var(--soft); line-height: 1.65; }
 
     /* north star */
     .pm-northstar {
-      margin-top: 32px; padding: 28px 32px;
-      border-radius: 14px;
-      border: 1px solid rgba(110,201,122,0.28);
-      background: linear-gradient(135deg, rgba(110,201,122,0.06), rgba(110,201,122,0.02));
+      margin-top: 22px; padding: 24px 28px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--panel);
       text-align: center; position: relative; overflow: hidden;
     }
-    .pm-northstar::before { content:'✦'; position:absolute; top:14px; left:18px; color:rgba(110,201,122,0.12); font-size:1.4rem; }
-    .pm-northstar::after  { content:'✦'; position:absolute; bottom:14px; right:18px; color:rgba(110,201,122,0.1); font-size:0.9rem; }
-    .pm-northstar__lbl { font-family:var(--mono); font-size:0.56rem; letter-spacing:0.2em; color:var(--pm); margin-bottom:10px; }
-    .pm-northstar__txt { font-family:var(--serif); font-style:italic; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text); line-height:1.4; }
-
-    /* ── Empathy grid ── */
-    .pm-empathy { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
-    .pm-emp-card {
-      padding: 22px; border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.05);
-      background: rgba(255,255,255,0.02);
-      transition: border-color 0.25s, background 0.25s;
+    .pm-northstar::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--n), transparent);
+      opacity: 0.3;
     }
-    .pm-emp-card:hover { border-color: var(--pm-border); background: var(--pm-warm); }
-    .pm-emp-lbl { font-family:var(--mono); font-size:0.56rem; letter-spacing:0.2em; color:var(--pm); margin-bottom:10px; }
-    .pm-emp-txt { font-family:var(--serif); font-style:italic; font-size:0.9rem; color:rgba(255,255,255,0.52); line-height:1.65; }
+    .pm-ns-label { font-size: 0.5rem; letter-spacing: 0.22em; color: var(--dim); margin-bottom: 10px; }
+    .pm-ns-quote { font-size: clamp(0.95rem,1.8vw,1.3rem); font-weight: 400; letter-spacing: -0.01em; color: var(--txt); line-height: 1.5; }
+    .pm-ns-quote em { color: var(--n); font-style: normal; }
 
-    /* ── Design features ── */
-    .pm-features { display: flex; flex-direction:column; gap: 72px; margin-top: 48px; }
-    .pm-feature { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
-    .pm-feature--flip { direction: rtl; }
-    .pm-feature--flip > * { direction: ltr; }
-    .pm-feat-lbl { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.18em; color:var(--pm); margin-bottom:10px; }
-    .pm-feat-title { font-family:var(--serif); font-size:clamp(1.25rem,2.2vw,1.85rem); font-weight:400; letter-spacing:-0.02em; color:var(--text); margin-bottom:14px; line-height:1.2; }
-    .pm-feat-body { font-family:var(--serif); font-size:0.95rem; color:rgba(255,255,255,0.52); line-height:1.8; }
+    /* ── empathy map ── */
+    .pm-em-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; margin-top: 26px;
+      background: var(--border);
+      border-radius: 6px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .pm-em-cell { background: var(--bg1); padding: 26px 22px; transition: background 0.2s; }
+    .pm-em-cell:hover { background: rgba(255,255,255,0.03); }
+    .pm-em-key {
+      font-size: 0.52rem; font-weight: 700; letter-spacing: 0.22em;
+      color: var(--n); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pm-em-key::before { content: '_'; animation: blink 1.4s step-end infinite; color: rgba(109,255,82,0.4); }
+    .pm-em-val { font-family: 'Montserrat', sans-serif; font-size: 0.86rem; color: var(--soft); line-height: 1.65; }
 
-    .pm-mockup {
-      border-radius: 16px; overflow:hidden;
-      border: 1px solid var(--pm-border);
-      background: #07120a;
-      aspect-ratio: 9/17;
-      display: flex; align-items:center; justify-content:center;
+    /* ── design system ── */
+    .pm-palette { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+    .pm-sw { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .pm-sw-dot { width: 40px; height: 40px; border-radius: 4px; border: 1px solid var(--border); }
+    .pm-sw-hex { font-size: 0.46rem; letter-spacing: 0.04em; color: var(--dim); }
+
+    .pm-wf-note {
+      margin-top: 22px; padding: 18px 20px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--panel);
+      display: flex; gap: 14px; align-items: flex-start;
+    }
+    .pm-wf-ico { font-size: 0.5rem; letter-spacing: 0.14em; color: var(--dim); flex-shrink: 0; padding-top: 3px; }
+    .pm-wf-txt { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: var(--soft); line-height: 1.72; }
+
+    /* features */
+    .pm-features { display: flex; flex-direction: column; gap: 88px; margin-top: 60px; }
+    .pm-feat { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .pm-feat--flip { direction: rtl; }
+    .pm-feat--flip > * { direction: ltr; }
+    .pm-feat-id {
+      font-size: 0.5rem; letter-spacing: 0.22em;
+      color: var(--dim); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pm-feat-id::before { content: ''; display: inline-block; width: 18px; height: 1px; background: var(--n); opacity: 0.5; }
+    .pm-feat-h3 { font-size: clamp(1.15rem,2.3vw,1.7rem); font-weight: 700; letter-spacing: -0.03em; color: var(--txt); margin-bottom: 14px; line-height: 1.2; }
+    .pm-feat-body { font-family: 'Montserrat', sans-serif; font-size: 0.86rem; color: var(--soft); line-height: 1.82; }
+
+    /* phone mockup */
+    .pm-phone {
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: #020603; aspect-ratio: 9/17;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* ── Plant game ── */
-    .pm-plant-game {
-      border: 1px solid var(--pm-border);
-      border-radius: 16px; padding: 28px;
-      background: linear-gradient(140deg, #07120a, #030a04);
+    /* plant game */
+    .pm-game {
+      border: 1px solid var(--border);
+      border-radius: 6px; padding: 18px;
+      background: var(--bg1);
       position: relative; overflow: hidden;
     }
-    .pm-plant-game::before {
-      content:'';position:absolute;inset:0;
-      background-image: linear-gradient(rgba(110,201,122,0.025) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(110,201,122,0.025) 1px, transparent 1px);
-      background-size: 24px 24px; pointer-events:none;
+    .pm-game::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+      background-size: 20px 20px; pointer-events: none;
     }
-    .pm-hud { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; position:relative; z-index:1; }
-    .pm-hud-lbl { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.15em; color:rgba(110,201,122,0.45); margin-bottom:5px; }
-    .pm-health-bar { width:110px; height:6px; border-radius:3px; background:rgba(255,255,255,0.07); overflow:hidden; }
-    .pm-health-fill { height:100%; width:75%; background:linear-gradient(90deg,#2a5c35,#6ec97a); border-radius:3px; transition:width 0.8s cubic-bezier(0.16,1,0.3,1); }
-    .pm-coins { font-family:var(--mono); font-size:0.75rem; color:rgba(255,200,50,0.85); display:flex; align-items:center; gap:5px; }
-    .pm-plant-stage { display:flex; align-items:flex-end; justify-content:center; height:155px; position:relative; z-index:1; }
+    .pm-game-hud { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; position: relative; z-index: 1; }
+    .pm-gh-lbl { font-size: 0.46rem; letter-spacing: 0.16em; color: var(--dim); margin-bottom: 4px; }
+    .pm-gh-bar { width: 96px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.07); overflow: hidden; }
+    .pm-gh-fill { height: 100%; width: 75%; background: var(--n); transition: width 0.8s cubic-bezier(0.16,1,0.3,1); }
+    .pm-gh-coins { font-size: 0.68rem; font-weight: 700; color: rgba(251,191,36,0.8); display: flex; align-items: center; gap: 5px; }
+    .pm-game-stage { display: flex; align-items: flex-end; justify-content: center; height: 140px; position: relative; z-index: 1; }
     .pm-water-btn {
-      display:block; width:100%; margin-top:16px;
-      padding:11px; border-radius:10px;
-      background:rgba(110,201,122,0.09); border:1px solid var(--pm-border);
-      color:var(--pm); font-family:var(--mono); font-size:0.7rem;
-      letter-spacing:0.12em; cursor:pointer; transition:background 0.2s,box-shadow 0.2s;
-      text-align:center; position:relative; z-index:1;
+      display: block; width: 100%; margin-top: 12px; padding: 10px;
+      border-radius: 4px; border: 1px solid var(--border);
+      background: var(--panel); color: var(--txt);
+      font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.14em;
+      cursor: pointer; transition: background 0.2s, border-color 0.2s;
+      text-align: center; position: relative; z-index: 1;
     }
-    .pm-water-btn:hover { background:rgba(110,201,122,0.16); box-shadow:0 0 14px rgba(110,201,122,0.12); }
-    .pm-water-btn:active { transform:scale(0.98); }
-    @keyframes coinFly {
-      0%   { transform:translate(0,0) scale(1); opacity:1; }
-      100% { transform:translate(var(--cx,0px),-80px) scale(0.4); opacity:0; }
+    .pm-water-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.14); }
+    .pm-water-btn:active { transform: scale(0.98); }
+    @keyframes coinRise {
+      0% { transform: translate(0,0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--cx,0px), -65px) scale(0.3); opacity: 0; }
     }
-    .pm-coin-anim { position:absolute; animation:coinFly 0.85s ease-out forwards; pointer-events:none; z-index:10; font-family:monospace; font-weight:bold; font-size:0.9rem; color:rgba(255,200,50,0.9); }
+    .pm-coin-rise { position: absolute; animation: coinRise 0.75s ease-out forwards; pointer-events: none; z-index: 10; font-family: var(--mono); font-weight: bold; font-size: 0.78rem; color: rgba(251,191,36,0.85); }
 
-    /* ── Terminal ── */
-    .pm-terminal {
-      background:#040c05; border-radius:10px;
-      border:1px solid var(--pm-border);
-      padding:16px 20px; margin-top:20px;
-      font-family:var(--mono); font-size:0.76rem;
-      line-height:1.8; color:rgba(110,201,122,0.75);
+    /* terminal */
+    .pm-term {
+      background: #020503; border-radius: 6px;
+      border: 1px solid var(--border); padding: 14px 16px; margin-top: 10px;
+      font-size: 0.7rem; line-height: 1.8; color: var(--soft);
     }
-    .pm-terminal::before { content:'● ● ●'; display:block; letter-spacing:5px; font-size:0.48rem; color:rgba(110,201,122,0.28); margin-bottom:10px; }
-    .pm-t-prompt { color:var(--pm-bright); }
-    .pm-t-cursor { display:inline-block; width:7px; height:1em; background:var(--pm-bright); vertical-align:text-bottom; animation:blink 1.1s step-end infinite; margin-left:2px; }
+    .pm-term-dots { display: flex; gap: 5px; margin-bottom: 10px; }
+    .pm-term-dot { width: 7px; height: 7px; border-radius: 50%; }
+    .pm-term-dot:nth-child(1) { background: rgba(239,68,68,0.4); }
+    .pm-term-dot:nth-child(2) { background: rgba(251,191,36,0.4); }
+    .pm-term-dot:nth-child(3) { background: rgba(109,255,82,0.4); }
+    .pm-t-prompt { color: var(--n); font-weight: 700; }
+    .pm-t-cur { display: inline-block; width: 6px; height: 0.9em; background: var(--n); vertical-align: text-bottom; animation: blink 1.1s step-end infinite; margin-left: 2px; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-    /* ── Diagnosis stepper ── */
-    .pm-diag-bar { display:flex; gap:6px; margin-bottom:14px; }
-    .pm-diag-seg { flex:1; height:3px; border-radius:2px; background:rgba(110,201,122,0.1); transition:background 0.35s; }
-    .pm-diag-seg.done { background:var(--pm); }
-    .pm-diag-panel {
-      padding:22px; border-radius:12px;
-      border:1px solid var(--pm-border); background:var(--pm-warm);
-      min-height:110px;
-    }
-    .pm-diag-step-lbl { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.14em; color:var(--pm); margin-bottom:8px; }
-    .pm-diag-step-txt { font-family:var(--sans); font-size:0.88rem; color:rgba(255,255,255,0.65); line-height:1.6; }
-    .pm-diag-nav { display:flex; justify-content:space-between; margin-top:10px; }
+    /* diagnosis */
+    .pm-diag-segs { display: flex; gap: 4px; margin-bottom: 10px; }
+    .pm-diag-seg { flex: 1; height: 2px; border-radius: 1px; background: rgba(255,255,255,0.07); transition: background 0.3s; }
+    .pm-diag-seg.done { background: var(--n); }
+    .pm-diag-panel { padding: 16px 18px; border-radius: 6px; min-height: 96px; border: 1px solid var(--border); background: var(--panel); }
+    .pm-diag-lbl { font-size: 0.48rem; letter-spacing: 0.16em; color: var(--dim); margin-bottom: 7px; }
+    .pm-diag-txt { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: var(--soft); line-height: 1.6; }
+    .pm-diag-nav { display: flex; justify-content: space-between; margin-top: 9px; }
     .pm-diag-btn {
-      font-family:var(--mono); font-size:0.66rem; color:var(--pm);
-      background:none; border:1px solid var(--pm-border);
-      border-radius:6px; padding:7px 14px; cursor:pointer; transition:background 0.2s;
+      font-family: var(--mono); font-size: 0.58rem; color: var(--soft);
+      background: none; border: 1px solid var(--border);
+      border-radius: 3px; padding: 6px 12px; cursor: pointer; transition: background 0.18s, color 0.18s;
     }
-    .pm-diag-btn:hover { background:var(--pm-warm); }
-    .pm-diag-btn:disabled { opacity:0.28; cursor:not-allowed; }
+    .pm-diag-btn:hover { background: var(--panel); color: var(--txt); }
+    .pm-diag-btn:disabled { opacity: 0.22; cursor: not-allowed; }
 
-    /* ── Coin shop ── */
-    .pm-shop { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .pm-shop-item {
-      padding:16px; border-radius:10px; text-align:center;
-      border:1px solid var(--pm-border); background:var(--pm-warm);
+    /* coin shop */
+    .pm-shop { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .pm-shop-item { padding: 13px 11px; border-radius: 4px; text-align: center; border: 1px solid var(--border); background: var(--panel); }
+    .pm-shop-item.locked { opacity: 0.3; }
+    .pm-shop-icon { font-size: 1.45rem; margin-bottom: 6px; }
+    .pm-shop-name { font-size: 0.5rem; letter-spacing: 0.12em; color: var(--soft); margin-bottom: 4px; }
+    .pm-shop-price { font-size: 0.6rem; color: rgba(251,191,36,0.75); }
+    .pm-earn {
+      margin-top: 8px; padding: 13px 15px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--panel);
     }
-    .pm-shop-item.locked { opacity:0.38; border-color:rgba(255,255,255,0.05); background:rgba(255,255,255,0.02); }
-    .pm-shop-icon { font-size:1.7rem; margin-bottom:7px; }
-    .pm-shop-name { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.1em; color:var(--pm); margin-bottom:4px; }
-    .pm-shop-price { font-family:var(--mono); font-size:0.66rem; color:rgba(255,200,50,0.78); }
-    .pm-earn-box {
-      margin-top:14px; padding:16px 18px;
-      border-radius:10px; border:1px solid var(--pm-border);
-      background:rgba(255,255,255,0.02);
-    }
-    .pm-earn-lbl { font-family:var(--mono); font-size:0.56rem; letter-spacing:0.16em; color:var(--pm); margin-bottom:10px; }
-    .pm-earn-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; }
-    .pm-earn-row + .pm-earn-row { border-top:1px solid rgba(255,255,255,0.04); }
-    .pm-earn-action { font-family:var(--sans); font-size:0.8rem; color:rgba(255,255,255,0.52); }
-    .pm-earn-val { font-family:var(--mono); font-size:0.68rem; color:rgba(255,200,50,0.7); }
+    .pm-earn-lbl { font-size: 0.48rem; letter-spacing: 0.18em; color: var(--dim); margin-bottom: 8px; }
+    .pm-earn-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+    .pm-earn-row + .pm-earn-row { border-top: 1px solid rgba(255,255,255,0.04); }
+    .pm-earn-action { font-family: 'Montserrat', sans-serif; font-size: 0.77rem; color: var(--soft); }
+    .pm-earn-val { font-size: 0.62rem; color: rgba(251,191,36,0.75); }
 
-    /* ── Palette ── */
-    .pm-palette { display:flex; gap:12px; flex-wrap:wrap; margin-top:24px; }
-    .pm-swatch { display:flex; flex-direction:column; align-items:center; gap:5px; }
-    .pm-swatch__dot { width:46px; height:46px; border-radius:50%; border:1px solid rgba(255,255,255,0.07); }
-    .pm-swatch__hex { font-family:var(--mono); font-size:0.48rem; color:rgba(255,255,255,0.3); letter-spacing:0.04em; }
+    /* takeaways */
+    .pm-xp-block { margin-bottom: 30px; }
+    .pm-xp-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .pm-xp-lbl { font-size: 0.52rem; letter-spacing: 0.2em; color: var(--dim); }
+    .pm-xp-num { font-size: 0.52rem; color: var(--dim); }
+    .pm-xp-track { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .pm-xp-fill { height: 100%; width: 0%; border-radius: 3px; background: var(--n); transition: width 1.5s cubic-bezier(0.16,1,0.3,1); }
 
-    /* ── Wireframe section ── */
-    .pm-wireframe-note {
-      padding: 22px 26px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.06);
-      background: rgba(255,255,255,0.02);
-      margin-top: 28px; display:flex; gap:16px; align-items:flex-start;
+    .pm-takeaways { display: flex; flex-direction: column; gap: 8px; }
+    .pm-tw {
+      display: grid; grid-template-columns: 56px 1fr;
+      gap: 18px; align-items: start;
+      padding: 18px 18px 18px 16px; border-radius: 4px;
+      border: 1px solid var(--border); background: var(--panel);
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s;
     }
-    .pm-wireframe-note__icon { font-size: 1.2rem; flex-shrink:0; margin-top:2px; }
-    .pm-wireframe-note__text { font-family:var(--serif); font-size:0.92rem; color:rgba(255,255,255,0.5); line-height:1.7; }
+    .pm-tw::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 0;
+      background: rgba(255,255,255,0.03);
+      transition: width 0.45s ease;
+    }
+    .pm-tw:hover { border-color: rgba(255,255,255,0.14); }
+    .pm-tw:hover::before { width: 100%; }
+    .pm-tw-num { font-size: 1.6rem; font-weight: 700; color: rgba(255,255,255,0.07); line-height: 1; position: relative; z-index: 1; }
+    .pm-tw-title { font-size: 0.82rem; font-weight: 600; color: var(--txt); margin-bottom: 5px; position: relative; z-index: 1; }
+    .pm-tw-body { font-family: 'Montserrat', sans-serif; font-size: 0.84rem; color: var(--soft); line-height: 1.72; position: relative; z-index: 1; }
 
-    /* ── XP bar ── */
-    .pm-xp-wrap { margin-bottom: 28px; }
-    .pm-xp-head { display:flex; justify-content:space-between; margin-bottom:7px; }
-    .pm-xp-lbl { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.16em; color:var(--pm); }
-    .pm-xp-val { font-family:var(--mono); font-size:0.58rem; color:rgba(110,201,122,0.38); }
-    .pm-xp-track { height:7px; border-radius:4px; background:rgba(255,255,255,0.05); overflow:hidden; }
-    .pm-xp-fill { height:100%; width:0%; background:linear-gradient(90deg,#2a5c35,#6ec97a,#a8dfa8); border-radius:4px; transition:width 1.4s cubic-bezier(0.16,1,0.3,1); }
+    /* footer */
+    .pm-footer { margin-top: 130px; padding-top: 52px; border-top: 1px solid var(--border); text-align: center; }
+    .pm-footer-lbl { font-size: 0.5rem; letter-spacing: 0.24em; color: var(--dim); margin-bottom: 14px; }
+    .pm-footer-next {
+      font-size: clamp(2rem,5.5vw,3.6rem); font-weight: 700;
+      letter-spacing: -0.04em; color: var(--txt);
+      display: inline-flex; align-items: center; gap: 20px;
+      text-decoration: none; transition: color 0.25s, gap 0.25s;
+    }
+    .pm-footer-next:hover { color: var(--n); gap: 32px; }
 
-    /* ── Takeaways ── */
-    .pm-takeaways { display:flex; flex-direction:column; gap:14px; margin-top:28px; }
-    .pm-takeaway {
-      display:grid; grid-template-columns:72px 1fr;
-      gap:20px; align-items:start; padding:24px 22px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.05);
-      background:rgba(255,255,255,0.02);
-      transition:border-color 0.25s,background 0.25s;
-    }
-    .pm-takeaway:hover { border-color:var(--pm-border); background:var(--pm-warm); }
-    .pm-takeaway__num { font-family:var(--mono); font-size:1.9rem; font-weight:500; color:rgba(110,201,122,0.16); line-height:1; }
-    .pm-takeaway__title { font-family:var(--sans); font-size:0.84rem; font-weight:600; color:var(--pm-text); margin-bottom:5px; }
-    .pm-takeaway__body { font-family:var(--serif); font-size:0.9rem; color:rgba(255,255,255,0.48); line-height:1.72; }
-
-    /* ── Footer ── */
-    .pm-footer {
-      margin-top:110px; padding-top:60px;
-      border-top:1px solid rgba(255,255,255,0.06);
-      text-align:center;
-    }
-    .pm-footer__lbl { font-family:var(--mono); font-size:0.56rem; letter-spacing:0.2em; color:rgba(255,255,255,0.28); margin-bottom:12px; }
-    .pm-footer__next {
-      font-family:var(--serif); font-size:clamp(2rem,5vw,3.5rem);
-      font-weight:400; letter-spacing:-0.025em; color:var(--text);
-      display:inline-flex; align-items:center; gap:16px;
-      text-decoration:none; transition:gap 0.3s,color 0.2s;
-    }
-    .pm-footer__next:hover { color:var(--pm); gap:28px; }
-
-    /* ── Floating leaf ambient ── */
-    @keyframes leafFloat {
-      0%   { transform:translateY(0) rotate(0deg); opacity:0; }
-      10%  { opacity:0.3; }
-      90%  { opacity:0.15; }
-      100% { transform:translateY(-100px) rotate(20deg); opacity:0; }
-    }
-    .pm-leaf { position:fixed; pointer-events:none; z-index:0; animation:leafFloat var(--d,7s) var(--dl,0s) ease-in-out infinite; opacity:0; font-size:0.9rem; }
-
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .pm-scroll-nav { display:none; }
-    }
+    /* responsive */
+    @media (max-width: 900px) { .pm-sidenav { display: none; } }
     @media (max-width: 768px) {
       .pm-page { padding: 0 24px 80px; }
-      .pm-hero { padding-top: 88px; }
-      .pm-feature, .pm-feature--flip { grid-template-columns: 1fr; gap: 28px; direction: ltr; }
-      .pm-feature--flip > * { direction: ltr; }
+      .pm-hero { padding-top: 90px; }
+      .pm-player-strip { grid-template-columns: repeat(2, 1fr); }
+      .pm-meta-item:nth-child(1), .pm-meta-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+      .pm-meta-item:nth-child(2) { border-right: none; }
+      .pm-feat, .pm-feat--flip { grid-template-columns: 1fr; gap: 24px; direction: ltr; }
+      .pm-feat--flip > * { direction: ltr; }
       .pm-sol-grid { grid-template-columns: 1fr; }
       .pm-sol-grid .pm-sol-card:first-child { grid-column: 1; }
-      .pm-stat-row { grid-template-columns: 1fr; }
-      .pm-stat-secondary { grid-template-columns: 1fr; }
-      .pm-empathy { grid-template-columns: 1fr; }
-      .pm-takeaway { grid-template-columns: 1fr; gap: 6px; }
-      .pm-takeaway__num { font-size: 1.2rem; }
+      .pm-data-grid { grid-template-columns: 1fr; }
+      .pm-data-secondary { grid-template-columns: 1fr; }
+      .pm-em-grid { grid-template-columns: 1fr; }
+      .pm-tw { grid-template-columns: 1fr; gap: 4px; }
+      .pm-tw-num { font-size: 1.1rem; }
     }
     @media (max-width: 540px) {
       .pm-page { padding: 0 16px 60px; }
-      .pm-hero { padding-top: 70px; }
-      .pm-back { display: none; }
-      .pm-shop { grid-template-columns: 1fr 1fr; }
+      .pm-hero { padding-top: 68px; }
+      .pm-nav-back { display: none; }
+      .pm-hero-title { font-size: 3.2rem; }
     }
   </style>
 </head>
 <body>
 
-  <div class="pm-progress" id="pmProgress"></div>
+  <div id="pm-bar"></div>
 
-  <a href="index.html#work" class="pm-back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
-    back
-  </a>
-
-  <nav class="pm-scroll-nav" aria-hidden="true">
-    <div class="pm-nav-dot active" data-sec="pm-overview"></div>
-    <div class="pm-nav-dot" data-sec="pm-problem"></div>
-    <div class="pm-nav-dot" data-sec="pm-research"></div>
-    <div class="pm-nav-dot" data-sec="pm-insights"></div>
-    <div class="pm-nav-dot" data-sec="pm-design"></div>
-    <div class="pm-nav-dot" data-sec="pm-takeaways"></div>
+  <nav class="pm-nav">
+    <a href="index.html#work" class="pm-nav-back">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+      back
+    </a>
+    <div class="pm-nav-id">plantment.case_study</div>
   </nav>
 
-  <!-- ambient leaves -->
-  <div class="pm-leaf" style="left:4%;top:75%;--d:8s;--dl:0s">🌿</div>
-  <div class="pm-leaf" style="left:93%;top:55%;--d:10s;--dl:2.5s">🍃</div>
-  <div class="pm-leaf" style="left:18%;top:35%;--d:12s;--dl:5s">🌿</div>
-  <div class="pm-leaf" style="left:78%;top:88%;--d:9s;--dl:1s">🍃</div>
+  <nav class="pm-sidenav" aria-hidden="true">
+    <div class="pm-sn-item active" data-s="pm-hero"><span class="pm-sn-lbl">overview</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l1"><span class="pm-sn-lbl">problem brief</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l2"><span class="pm-sn-lbl">solution build</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l3"><span class="pm-sn-lbl">field research</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l4"><span class="pm-sn-lbl">key findings</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l5"><span class="pm-sn-lbl">empathy map</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l6"><span class="pm-sn-lbl">system design</span><div class="pm-sn-dot"></div></div>
+    <div class="pm-sn-item" data-s="pm-l7"><span class="pm-sn-lbl">xp earned</span><div class="pm-sn-dot"></div></div>
+  </nav>
 
   <div class="pm-page">
 
-    <!-- ══════════ HERO ══════════ -->
-    <section class="pm-hero" id="pm-overview">
-      <div class="pm-eyebrow">student project · bootcamp · 2 weeks · team of 4</div>
-
-      <h1 class="pm-hero__title">
-        plantment
-        <span class="pm-hero__leaf">
-          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
-            <path d="M8 44 C8 44 13 30 26 21 C39 12 47 17 47 17 C47 17 42 31 29 40 C16 49 8 44 8 44Z" fill="rgba(110,201,122,0.65)" stroke="rgba(110,201,122,0.35)" stroke-width="1"/>
-            <path d="M8 44 C15 38 22 30 30 22" stroke="rgba(255,255,255,0.22)" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
-        </span>
-      </h1>
-
-      <p class="pm-hero__sub">gamifying plant care with ai</p>
-
-      <div class="pm-meta">
-        <span class="pm-pill pm-pill--hi">ux designer</span>
-        <span class="pm-pill pm-pill--hi">user researcher</span>
-        <span class="pm-pill">bootcamp · student project</span>
-        <span class="pm-pill">2 weeks · team of 4</span>
+    <!-- hero -->
+    <section class="pm-hero" id="pm-hero">
+      <div class="pm-hero-tag">final project · bootcamp · 2 weeks · team of 4</div>
+      <div class="pm-hero-title">plant</div>
+      <div class="pm-hero-title pm-hero-title-accent">ment</div>
+      <p class="pm-hero-sub">gamifying plant care with ai — webkinz for your windowsill. real plants, virtual rewards, and a companion that actually knows what your monstera needs.</p>
+      <div class="pm-hero-chips">
+        <span class="pm-chip pm-chip--lit">ux designer</span>
+        <span class="pm-chip pm-chip--lit">user researcher</span>
+        <span class="pm-chip">bootcamp</span>
+        <span class="pm-chip">2 weeks · team of 4</span>
+        <span class="pm-chip">2024</span>
       </div>
-
-      <div class="pm-hero__img">
+      <div class="pm-player-strip">
+        <div class="pm-meta-item">
+          <div class="pm-meta-label">client</div>
+          <div class="pm-meta-value">bootcamp student project</div>
+        </div>
+        <div class="pm-meta-item">
+          <div class="pm-meta-label">my role</div>
+          <div class="pm-meta-value">user researcher<br>ux designer</div>
+        </div>
+        <div class="pm-meta-item">
+          <div class="pm-meta-label">project time</div>
+          <div class="pm-meta-value">2 weeks</div>
+        </div>
+        <div class="pm-meta-item">
+          <div class="pm-meta-label">collaborators</div>
+          <div class="pm-meta-value">team of 4</div>
+        </div>
+      </div>
+      <div class="pm-hero-img-wrap">
         <img src="images/plantment.png" alt="Plantment app screens" />
       </div>
     </section>
 
-    <!-- ══════════ PROBLEM ══════════ -->
-    <section class="pm-section" id="pm-problem">
-      <div class="pm-label">understanding the problem</div>
-      <h2 class="pm-title">why is plant care so hard to get right?</h2>
+    <!-- lvl.01 — problem -->
+    <section class="pm-level" id="pm-l1">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.01</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">problem brief</div>
+      </div>
+      <h2 class="pm-h2">why is plant care so <em>hard to get right?</em></h2>
       <p class="pm-body">"why is it so easy to forget to water your plants and so hard to know what they actually need?" — this question kicked off our research. we mapped every recurring frustration plant owners face to understand what was actually broken.</p>
-
-      <ul class="pm-pain-list">
-        <li class="pm-pain-item">figuring out where to place plants for the right light</li>
-        <li class="pm-pain-item">forgetting to water or accidentally overwatering</li>
-        <li class="pm-pain-item">dealing with pests, mites, and other unwelcome visitors</li>
-        <li class="pm-pain-item">diagnosing what's wrong when a plant starts to look unhealthy</li>
-        <li class="pm-pain-item">finding reliable information tailored to their specific plant</li>
-        <li class="pm-pain-item">time and attention constraints making consistent care difficult</li>
+      <ul class="pm-error-list">
+        <li class="pm-err"><div class="pm-err-code">err_01</div><div class="pm-err-txt">figuring out where to place plants for the right light</div></li>
+        <li class="pm-err"><div class="pm-err-code">err_02</div><div class="pm-err-txt">forgetting to water or accidentally overwatering</div></li>
+        <li class="pm-err"><div class="pm-err-code">err_03</div><div class="pm-err-txt">dealing with pests, mites, and other unwelcome visitors</div></li>
+        <li class="pm-err"><div class="pm-err-code">err_04</div><div class="pm-err-txt">diagnosing what's wrong when a plant starts to look unhealthy</div></li>
+        <li class="pm-err"><div class="pm-err-code">err_05</div><div class="pm-err-txt">finding reliable information tailored to their specific plant</div></li>
+        <li class="pm-err"><div class="pm-err-code">err_06</div><div class="pm-err-txt">time and attention constraints making consistent care difficult</div></li>
       </ul>
     </section>
 
-    <!-- ══════════ SOLUTION ══════════ -->
-    <section class="pm-section">
-      <div class="pm-label">solution</div>
-      <h2 class="pm-title">one platform. real plants, virtual rewards.</h2>
+    <!-- lvl.02 — solution -->
+    <section class="pm-level" id="pm-l2">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.02</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">solution build</div>
+      </div>
+      <h2 class="pm-h2">one platform. <em>real plants, virtual rewards.</em></h2>
       <p class="pm-body">the answer wasn't another reminder app. it was a system that made caring feel like play — an ai-assisted care platform where real healthy plants grow a digital world alongside them.</p>
-
       <div class="pm-sol-grid">
-        <div class="pm-sol-card">
-          <div class="pm-sol-num">01 — core platform</div>
-          <div class="pm-sol-text">create one easy-to-use platform where users can see and manage all their plants — tracking care schedules, health, and history in one unified place</div>
-        </div>
-        <div class="pm-sol-card">
-          <div class="pm-sol-num">02 — virtual space</div>
-          <div class="pm-sol-text">a virtual care space accessible anytime, mirroring the health of real plants with digital companions that respond to how well you care for them</div>
-        </div>
-        <div class="pm-sol-card">
-          <div class="pm-sol-num">03 — game loop</div>
-          <div class="pm-sol-text">game-like features — coins, rewards, and level-ups — that keep engagement high and turn routine care into a rewarding daily habit</div>
-        </div>
-        <div class="pm-sol-card">
-          <div class="pm-sol-num">04 — ai companion</div>
-          <div class="pm-sol-text">a personalized ai for diagnosing plant issues, answering care questions, and providing placement suggestions tailored to each specific plant</div>
-        </div>
-        <div class="pm-sol-card">
-          <div class="pm-sol-num">05 — placement + tips</div>
-          <div class="pm-sol-text">smart placement suggestions and tailored care tips based on the user's environment, plant species, and historical care patterns</div>
-        </div>
+        <div class="pm-sol-card"><div class="pm-sol-id">01 — core platform</div><div class="pm-sol-body">create one easy-to-use platform where users can see and manage all their plants — tracking care schedules, health, and history in one unified place</div></div>
+        <div class="pm-sol-card"><div class="pm-sol-id">02 — virtual space</div><div class="pm-sol-body">a virtual care space accessible anytime, mirroring the health of real plants with digital companions that respond to how well you care for them</div></div>
+        <div class="pm-sol-card"><div class="pm-sol-id">03 — game loop</div><div class="pm-sol-body">game-like features — coins, rewards, and level-ups — that keep engagement high and turn routine care into a rewarding daily habit</div></div>
+        <div class="pm-sol-card"><div class="pm-sol-id">04 — ai companion</div><div class="pm-sol-body">a personalized ai for diagnosing plant issues, answering care questions, and providing placement suggestions tailored to each specific plant</div></div>
+        <div class="pm-sol-card"><div class="pm-sol-id">05 — smart placement</div><div class="pm-sol-body">smart placement suggestions and tailored care tips based on the user's environment, plant species, and historical care patterns</div></div>
       </div>
     </section>
 
-    <!-- ══════════ RESEARCH ══════════ -->
-    <section class="pm-section" id="pm-research">
-      <div class="pm-label">user research</div>
-      <h2 class="pm-title">12 interviews. 37 survey responses. clear signal.</h2>
+    <!-- lvl.03 — research -->
+    <section class="pm-level" id="pm-l3">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.03</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">field research</div>
+      </div>
+      <h2 class="pm-h2">12 interviews. 37 responses. <em>clear signal.</em></h2>
       <p class="pm-body">our team conducted 12 in-depth interviews and distributed an online survey that gathered 37 responses. the data told a consistent story: people want to care for plants and don't have the tools to do it well.</p>
-
-      <div class="pm-stat-row">
-        <div class="pm-stat">
-          <span class="pm-stat__num" data-count="89">0</span><span class="pm-stat__pct">%</span>
-          <span class="pm-stat__label">were already plant owners or intended to become one</span>
+      <div class="pm-data-grid">
+        <div class="pm-data-cell" data-label="plant owners">
+          <span class="pm-data-num" data-count="89">0</span><span class="pm-data-pct">%</span>
+          <div class="pm-data-label">were already plant owners or intended to become one</div>
         </div>
-        <div class="pm-stat">
-          <span class="pm-stat__num" data-count="65">0</span><span class="pm-stat__pct">%</span>
-          <span class="pm-stat__label">would buy more plants if they had better guidance</span>
+        <div class="pm-data-cell" data-label="want guidance">
+          <span class="pm-data-num" data-count="65">0</span><span class="pm-data-pct">%</span>
+          <div class="pm-data-label">would buy more plants if they had better guidance</div>
         </div>
-        <div class="pm-stat">
-          <span class="pm-stat__num" data-count="27">0</span><span class="pm-stat__pct">%</span>
-          <span class="pm-stat__label">said their plants "always" die</span>
+        <div class="pm-data-cell" data-label="high mortality">
+          <span class="pm-data-num" data-count="27">0</span><span class="pm-data-pct">%</span>
+          <div class="pm-data-label">said their plants "always" die</div>
         </div>
       </div>
-
-      <div class="pm-stat-secondary">
-        <div class="pm-stat-card">
-          <span class="pm-stat-card__num">54%</span>
-          <span class="pm-stat-card__text">owned 1–3 plants; 43% had four or more</span>
-        </div>
-        <div class="pm-stat-card">
-          <span class="pm-stat-card__num">62%</span>
-          <span class="pm-stat-card__text">were also pet owners — already accustomed to daily care routines</span>
-        </div>
+      <div class="pm-data-secondary">
+        <div class="pm-data-sec"><span class="pm-data-sec-num">54%</span><span class="pm-data-sec-txt">owned 1–3 plants; 43% had four or more</span></div>
+        <div class="pm-data-sec"><span class="pm-data-sec-num">62%</span><span class="pm-data-sec-txt">were also pet owners — already used to daily care routines</span></div>
       </div>
     </section>
 
-    <!-- ══════════ INSIGHTS ══════════ -->
-    <section class="pm-section" id="pm-insights">
-      <div class="pm-label">insights</div>
-      <h2 class="pm-title">three things research kept telling us</h2>
-
-      <div class="pm-insights">
-        <div class="pm-insight">
-          <div class="pm-insight-n">01</div>
+    <!-- lvl.04 — insights -->
+    <section class="pm-level" id="pm-l4">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.04</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">key findings</div>
+      </div>
+      <h2 class="pm-h2">three things research <em>kept telling us</em></h2>
+      <div class="pm-findings">
+        <div class="pm-finding">
+          <div class="pm-finding-icon">🧠</div>
           <div>
-            <div class="pm-insight-title">knowledge gaps cause stress</div>
-            <div class="pm-insight-body">most users wanted to do better but did not know how. they felt guilty when plants died, not indifferent — the gap was information, not motivation</div>
+            <div class="pm-finding-unlock"></div>
+            <div class="pm-finding-title">knowledge gaps cause stress</div>
+            <div class="pm-finding-body">most users wanted to do better but did not know how. they felt guilty when plants died, not indifferent — the gap was information, not motivation</div>
           </div>
         </div>
-        <div class="pm-insight">
-          <div class="pm-insight-n">02</div>
+        <div class="pm-finding">
+          <div class="pm-finding-icon">📉</div>
           <div>
-            <div class="pm-insight-title">motivation fades without feedback</div>
-            <div class="pm-insight-body">people felt good when they saw progress. without visible signs of improvement — a new leaf, a healthier color — care routines fell apart within weeks</div>
+            <div class="pm-finding-unlock"></div>
+            <div class="pm-finding-title">motivation fades without feedback</div>
+            <div class="pm-finding-body">people felt good when they saw progress. without visible signs of improvement — a new leaf, a healthier color — care routines fell apart within weeks</div>
           </div>
         </div>
-        <div class="pm-insight">
-          <div class="pm-insight-n">03</div>
+        <div class="pm-finding">
+          <div class="pm-finding-icon">🔇</div>
           <div>
-            <div class="pm-insight-title">plant care feels solitary</div>
-            <div class="pm-insight-body">unlike fitness apps or games, plant care does not usually offer social or interactive experiences. there's no streak, no reward, no feedback loop that keeps you coming back</div>
+            <div class="pm-finding-unlock"></div>
+            <div class="pm-finding-title">plant care feels solitary</div>
+            <div class="pm-finding-body">unlike fitness apps or games, plant care does not usually offer social or interactive experiences. there's no streak, no reward, no feedback loop that keeps you coming back</div>
           </div>
         </div>
       </div>
-
       <div class="pm-northstar">
-        <div class="pm-northstar__lbl">✦ north star</div>
-        <div class="pm-northstar__txt">"make plant care feel rewarding, understandable, and alive"</div>
+        <div class="pm-ns-label">✦ north star</div>
+        <div class="pm-ns-quote">"make plant care feel <em>rewarding</em>, understandable, and <em>alive</em>"</div>
       </div>
     </section>
 
-    <!-- ══════════ EMPATHY ══════════ -->
-    <section class="pm-section">
-      <div class="pm-label">building empathy</div>
-      <h2 class="pm-title">understanding the gap between intent and action</h2>
+    <!-- lvl.05 — empathy -->
+    <section class="pm-level" id="pm-l5">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.05</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">empathy map</div>
+      </div>
+      <h2 class="pm-h2">understanding the gap between <em>intent and action</em></h2>
       <p class="pm-body">we used a pains and gains map alongside a think-feel-say-do analysis to understand why users who cared about their plants still let them die. the pattern was consistent across every interview.</p>
-
-      <div class="pm-empathy">
-        <div class="pm-emp-card">
-          <div class="pm-emp-lbl">THINK</div>
-          <div class="pm-emp-txt">"i should already know how to care for plants. it shouldn't be this hard."</div>
-        </div>
-        <div class="pm-emp-card">
-          <div class="pm-emp-lbl">FEEL</div>
-          <div class="pm-emp-txt">guilty or frustrated when things go wrong. embarrassed when plants die despite trying.</div>
-        </div>
-        <div class="pm-emp-card">
-          <div class="pm-emp-lbl">SAY</div>
-          <div class="pm-emp-txt">"i want to learn more and get better at this. i just need the right resources."</div>
-        </div>
-        <div class="pm-emp-card">
-          <div class="pm-emp-lbl">DO</div>
-          <div class="pm-emp-txt">often nothing. searches for advice, gets overwhelmed, closes the tab, forgets.</div>
-        </div>
+      <div class="pm-em-grid">
+        <div class="pm-em-cell"><div class="pm-em-key">think</div><div class="pm-em-val">"i should already know how to care for plants. it shouldn't be this hard."</div></div>
+        <div class="pm-em-cell"><div class="pm-em-key">feel</div><div class="pm-em-val">guilty or frustrated when things go wrong. embarrassed when plants die despite trying.</div></div>
+        <div class="pm-em-cell"><div class="pm-em-key">say</div><div class="pm-em-val">"i want to learn more and get better at this. i just need the right resources."</div></div>
+        <div class="pm-em-cell"><div class="pm-em-key">do</div><div class="pm-em-val">often nothing. searches for advice, gets overwhelmed, closes the tab, forgets.</div></div>
       </div>
     </section>
 
-    <!-- ══════════ DESIGN ══════════ -->
-    <section class="pm-section" id="pm-design">
-      <div class="pm-label">design</div>
-      <h2 class="pm-title">soft, alive, and slightly addictive</h2>
+    <!-- lvl.06 — design -->
+    <section class="pm-level" id="pm-l6">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.06</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">system design</div>
+      </div>
+      <h2 class="pm-h2">soft, alive, <em>and slightly addictive</em></h2>
       <p class="pm-body">soft greens, muted neutrals, and rounded shapes became the foundation. nothing should feel sharp or clinical. everything should feel like a space you could return to daily — calm but quietly engaging.</p>
 
-      <!-- Palette -->
       <div class="pm-palette">
-        <div class="pm-swatch"><div class="pm-swatch__dot" style="background:#a8dfa8"></div><span class="pm-swatch__hex">#a8dfa8</span></div>
-        <div class="pm-swatch"><div class="pm-swatch__dot" style="background:#6ec97a"></div><span class="pm-swatch__hex">#6ec97a</span></div>
-        <div class="pm-swatch"><div class="pm-swatch__dot" style="background:#4a9e5c"></div><span class="pm-swatch__hex">#4a9e5c</span></div>
-        <div class="pm-swatch"><div class="pm-swatch__dot" style="background:#2a5c35"></div><span class="pm-swatch__hex">#2a5c35</span></div>
-        <div class="pm-swatch"><div class="pm-swatch__dot" style="background:#0d1f10"></div><span class="pm-swatch__hex">#0d1f10</span></div>
-        <div class="pm-swatch"><div class="pm-swatch__dot" style="background:#f5f0e8;border-color:rgba(255,255,255,0.15)"></div><span class="pm-swatch__hex">neutral</span></div>
+        <div class="pm-sw"><div class="pm-sw-dot" style="background:#a8dfa8"></div><span class="pm-sw-hex">#a8dfa8</span></div>
+        <div class="pm-sw"><div class="pm-sw-dot" style="background:#6ec97a"></div><span class="pm-sw-hex">#6ec97a</span></div>
+        <div class="pm-sw"><div class="pm-sw-dot" style="background:#4a9e5c"></div><span class="pm-sw-hex">#4a9e5c</span></div>
+        <div class="pm-sw"><div class="pm-sw-dot" style="background:#2a5c35"></div><span class="pm-sw-hex">#2a5c35</span></div>
+        <div class="pm-sw"><div class="pm-sw-dot" style="background:#0d1f10"></div><span class="pm-sw-hex">#0d1f10</span></div>
+        <div class="pm-sw"><div class="pm-sw-dot" style="background:#f5f0e8;border-color:rgba(255,255,255,0.15)"></div><span class="pm-sw-hex">neutral</span></div>
       </div>
 
-      <!-- Wireframes note -->
-      <div class="pm-label" style="margin-top:56px">low-fidelity wireframes</div>
-      <div class="pm-wireframe-note">
-        <div class="pm-wireframe-note__icon">🖊</div>
-        <div class="pm-wireframe-note__text">wireframes focused on establishing the core information architecture before adding any visual polish. the goal was to test the flow — from onboarding a plant, to viewing its profile, to diagnosing an issue — with real users before committing to high-fidelity design. every screen was tested and iterated before we reached finals.</div>
+      <div class="pm-wf-note">
+        <div class="pm-wf-ico">note //</div>
+        <div class="pm-wf-txt">wireframes focused on establishing the core information architecture before adding visual polish. the goal was to test the flow — onboarding a plant, viewing its profile, diagnosing an issue — with real users before committing to high-fidelity design. every screen was tested and iterated before finals.</div>
       </div>
 
       <div class="pm-features">
 
-        <!-- Plant profiles -->
-        <div class="pm-feature">
+        <div class="pm-feat">
           <div>
-            <div class="pm-feat-lbl">feature 01 — plant profiles</div>
-            <h3 class="pm-feat-title">a dedicated page for every plant</h3>
+            <div class="pm-feat-id">feature_01 — plant profiles</div>
+            <h3 class="pm-feat-h3">a dedicated page for every plant</h3>
             <p class="pm-feat-body">each plant gets a dedicated page where users can see watering needs, sunlight status, care tips, and their plant's progress over time. the profile becomes a living record — not just a reminder, but a relationship.</p>
           </div>
-          <div class="pm-mockup">
-            <svg viewBox="0 0 190 330" width="90%" fill="none">
-              <rect x="8" y="8" width="174" height="314" rx="22" fill="#0a1a0b" stroke="rgba(110,201,122,0.22)" stroke-width="1.5"/>
-              <rect x="65" y="18" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.07)"/>
-              <rect x="18" y="36" width="154" height="108" rx="12" fill="rgba(110,201,122,0.05)" stroke="rgba(110,201,122,0.14)" stroke-width="1"/>
-              <path d="M75 95 C75 95 88 73 110 68 C132 63 143 79 143 79 C143 79 130 101 108 106 C86 111 75 95 75 95Z" fill="rgba(110,201,122,0.38)"/>
-              <path d="M75 95 C84 87 93 78 104 71" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="round"/>
-              <rect x="18" y="155" width="85" height="7" rx="2" fill="rgba(255,255,255,0.68)"/>
-              <rect x="18" y="168" width="56" height="4" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+          <div class="pm-phone">
+            <svg viewBox="0 0 190 330" width="82%" fill="none">
+              <rect x="8" y="8" width="174" height="314" rx="22" fill="#080f09" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
+              <rect x="65" y="18" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.06)"/>
+              <rect x="18" y="36" width="154" height="108" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+              <path d="M75 95 C75 95 88 73 110 68 C132 63 143 79 143 79 C143 79 130 101 108 106 C86 111 75 95 75 95Z" fill="rgba(109,255,82,0.32)"/>
+              <path d="M75 95 C84 87 93 78 104 71" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-linecap="round"/>
+              <rect x="18" y="156" width="85" height="7" rx="2" fill="rgba(255,255,255,0.62)"/>
+              <rect x="18" y="169" width="56" height="3.5" rx="1.5" fill="rgba(255,255,255,0.16)"/>
               <rect x="18" y="184" width="154" height="5" rx="2.5" fill="rgba(255,255,255,0.06)"/>
-              <rect x="18" y="184" width="110" height="5" rx="2.5" fill="rgba(110,201,122,0.65)"/>
-              <rect x="18" y="200" width="46" height="34" rx="6" fill="rgba(110,201,122,0.06)" stroke="rgba(110,201,122,0.14)" stroke-width="1"/>
-              <rect x="72" y="200" width="46" height="34" rx="6" fill="rgba(110,201,122,0.06)" stroke="rgba(110,201,122,0.14)" stroke-width="1"/>
-              <rect x="126" y="200" width="46" height="34" rx="6" fill="rgba(110,201,122,0.06)" stroke="rgba(110,201,122,0.14)" stroke-width="1"/>
-              <rect x="24" y="208" width="34" height="4" rx="1" fill="rgba(110,201,122,0.4)"/>
-              <rect x="24" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.18)"/>
-              <rect x="78" y="208" width="34" height="4" rx="1" fill="rgba(110,201,122,0.4)"/>
-              <rect x="78" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.18)"/>
-              <rect x="132" y="208" width="34" height="4" rx="1" fill="rgba(110,201,122,0.4)"/>
-              <rect x="132" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.18)"/>
-              <rect x="18" y="246" width="154" height="28" rx="6" fill="rgba(255,255,255,0.02)" stroke="rgba(110,201,122,0.1)" stroke-width="1"/>
-              <rect x="26" y="254" width="75" height="4" rx="1" fill="rgba(255,255,255,0.22)"/>
-              <rect x="26" y="262" width="95" height="3" rx="1" fill="rgba(255,255,255,0.1)"/>
-              <rect x="18" y="282" width="154" height="28" rx="8" fill="rgba(110,201,122,0.12)" stroke="rgba(110,201,122,0.25)" stroke-width="1"/>
-              <rect x="60" y="292" width="70" height="8" rx="2" fill="rgba(110,201,122,0.55)"/>
+              <rect x="18" y="184" width="118" height="5" rx="2.5" fill="rgba(109,255,82,0.5)"/>
+              <rect x="18" y="200" width="46" height="32" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+              <rect x="72" y="200" width="46" height="32" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+              <rect x="126" y="200" width="46" height="32" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+              <rect x="24" y="208" width="34" height="3.5" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="24" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
+              <rect x="78" y="208" width="34" height="3.5" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="78" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
+              <rect x="132" y="208" width="34" height="3.5" rx="1" fill="rgba(255,255,255,0.35)"/>
+              <rect x="132" y="216" width="22" height="3" rx="1" fill="rgba(255,255,255,0.14)"/>
+              <rect x="18" y="244" width="154" height="26" rx="4" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+              <rect x="26" y="252" width="75" height="3.5" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <rect x="26" y="260" width="95" height="3" rx="1" fill="rgba(255,255,255,0.09)"/>
+              <rect x="18" y="280" width="154" height="26" rx="5" fill="rgba(109,255,82,0.08)" stroke="rgba(109,255,82,0.18)" stroke-width="1"/>
+              <rect x="58" y="289" width="74" height="8" rx="2" fill="rgba(109,255,82,0.45)"/>
             </svg>
           </div>
         </div>
 
-        <!-- AI Diagnosis -->
-        <div class="pm-feature pm-feature--flip">
+        <div class="pm-feat pm-feat--flip">
           <div>
-            <div class="pm-feat-lbl">feature 02 — ai diagnosis</div>
-            <h3 class="pm-feat-title">a calm companion, not a chatbot</h3>
+            <div class="pm-feat-id">feature_02 — ai diagnosis</div>
+            <h3 class="pm-feat-h3">a calm companion, not a chatbot</h3>
             <p class="pm-feat-body">the ai assistant was designed to feel like a calm companion rather than a technical chatbot. it asks questions the way a knowledgeable friend would — without jargon — and guides users from symptom to solution in a few taps.</p>
           </div>
           <div>
-            <div class="pm-diag-bar" id="pmDiagBar">
-              <div class="pm-diag-seg done"></div>
-              <div class="pm-diag-seg"></div>
-              <div class="pm-diag-seg"></div>
-              <div class="pm-diag-seg"></div>
+            <div class="pm-diag-segs" id="pmDiagSegs">
+              <div class="pm-diag-seg done"></div><div class="pm-diag-seg"></div>
+              <div class="pm-diag-seg"></div><div class="pm-diag-seg"></div>
             </div>
             <div class="pm-diag-panel">
-              <div class="pm-diag-step-lbl" id="pmDiagLbl">STEP 1 OF 4</div>
-              <div class="pm-diag-step-txt" id="pmDiagTxt">hi 🌿 — which plant are you concerned about today?</div>
+              <div class="pm-diag-lbl" id="pmDiagLbl">step 1 of 4</div>
+              <div class="pm-diag-txt" id="pmDiagTxt">hi 🌿 — which plant are you concerned about today?</div>
             </div>
             <div class="pm-diag-nav">
               <button class="pm-diag-btn" id="pmDiagPrev" disabled>← back</button>
               <button class="pm-diag-btn" id="pmDiagNext">next →</button>
             </div>
-            <div class="pm-terminal">
+            <div class="pm-term">
+              <div class="pm-term-dots"><div class="pm-term-dot"></div><div class="pm-term-dot"></div><div class="pm-term-dot"></div></div>
               <div style="display:flex;gap:8px">
-                <span class="pm-t-prompt">ai ></span>
+                <span class="pm-t-prompt">ai &gt;</span>
                 <span id="pmTermTxt">awaiting plant selection...</span>
-                <span class="pm-t-cursor"></span>
+                <span class="pm-t-cur"></span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- My Room -->
-        <div class="pm-feature">
+        <div class="pm-feat">
           <div>
-            <div class="pm-feat-lbl">feature 03 — my room</div>
-            <h3 class="pm-feat-title">creating a little world</h3>
+            <div class="pm-feat-id">feature_03 — my room</div>
+            <h3 class="pm-feat-h3">creating a little world</h3>
             <p class="pm-feat-body">healthy plants result in happy virtual plants. neglected plants show subtle signs like slight drooping or low energy. the virtual room wasn't just decoration — it became an emotional mirror that reflected your real-world care habits back at you.</p>
           </div>
-          <!-- Interactive plant game -->
-          <div class="pm-plant-game" id="pmPlantGame">
-            <div class="pm-hud">
+          <div class="pm-game" id="pmPlantGame">
+            <div class="pm-game-hud">
               <div>
-                <div class="pm-hud-lbl">PLANT HEALTH</div>
-                <div class="pm-health-bar">
-                  <div class="pm-health-fill" id="pmHealthFill"></div>
-                </div>
+                <div class="pm-gh-lbl">plant health</div>
+                <div class="pm-gh-bar"><div class="pm-gh-fill" id="pmHealthFill"></div></div>
               </div>
-              <div class="pm-coins">
-                <svg width="13" height="13" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="rgba(255,200,50,0.22)" stroke="rgba(255,200,50,0.55)" stroke-width="1.2"/><text x="8" y="12" text-anchor="middle" fill="rgba(255,200,50,0.9)" font-size="8" font-weight="bold">¢</text></svg>
+              <div class="pm-gh-coins">
+                <svg width="11" height="11" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="rgba(251,191,36,0.16)" stroke="rgba(251,191,36,0.5)" stroke-width="1.2"/><text x="8" y="12" text-anchor="middle" fill="rgba(251,191,36,0.9)" font-size="8" font-weight="bold">¢</text></svg>
                 <span id="pmCoins">120</span>
               </div>
             </div>
-            <div class="pm-plant-stage" id="pmStage">
-              <svg id="pmPlantSvg" width="110" height="150" viewBox="0 0 110 150" fill="none" style="transition:filter 0.5s">
-                <path d="M38 130 L72 130 L68 150 L42 150Z" fill="rgba(180,120,60,0.55)" stroke="rgba(180,120,60,0.28)" stroke-width="1"/>
-                <rect x="32" y="122" width="46" height="11" rx="3" fill="rgba(180,120,60,0.65)" stroke="rgba(180,120,60,0.28)" stroke-width="1"/>
-                <ellipse cx="55" cy="122" rx="20" ry="4" fill="rgba(70,38,16,0.8)"/>
-                <path d="M55 122 C55 110 53 95 55 80" stroke="rgba(110,201,122,0.68)" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M55 100 C45 92 31 90 27 82 C35 78 49 84 55 94Z" fill="rgba(110,201,122,0.72)"/>
-                <path d="M55 90 C65 80 79 76 85 68 C79 62 65 70 55 82Z" fill="rgba(110,201,122,0.72)"/>
-                <path d="M55 80 C51 68 47 55 51 46 C59 52 63 66 57 78Z" fill="rgba(168,223,168,0.78)"/>
-                <path d="M49 86 C43 82 39 84 37 88 C41 90 47 90 49 86Z" fill="rgba(110,201,122,0.38)"/>
-                <path d="M61 78 C67 72 71 73 73 77 C69 80 63 80 61 78Z" fill="rgba(110,201,122,0.38)"/>
+            <div class="pm-game-stage" id="pmStage">
+              <svg id="pmPlantSvg" width="110" height="142" viewBox="0 0 110 150" fill="none" style="transition:filter 0.5s">
+                <path d="M38 130 L72 130 L68 150 L42 150Z" fill="rgba(160,100,50,0.5)" stroke="rgba(160,100,50,0.25)" stroke-width="1"/>
+                <rect x="32" y="122" width="46" height="11" rx="3" fill="rgba(160,100,50,0.6)" stroke="rgba(160,100,50,0.25)" stroke-width="1"/>
+                <ellipse cx="55" cy="122" rx="20" ry="4" fill="rgba(60,32,12,0.75)"/>
+                <path d="M55 122 C55 110 53 95 55 80" stroke="rgba(109,255,82,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M55 100 C45 92 31 90 27 82 C35 78 49 84 55 94Z" fill="rgba(109,255,82,0.6)"/>
+                <path d="M55 90 C65 80 79 76 85 68 C79 62 65 70 55 82Z" fill="rgba(109,255,82,0.6)"/>
+                <path d="M55 80 C51 68 47 55 51 46 C59 52 63 66 57 78Z" fill="rgba(180,255,160,0.7)"/>
+                <path d="M49 86 C43 82 39 84 37 88 C41 90 47 90 49 86Z" fill="rgba(109,255,82,0.3)"/>
+                <path d="M61 78 C67 72 71 73 73 77 C69 80 63 80 61 78Z" fill="rgba(109,255,82,0.3)"/>
               </svg>
             </div>
             <button class="pm-water-btn" id="pmWaterBtn">💧 water plant</button>
           </div>
         </div>
 
-        <!-- Coin Economy -->
-        <div class="pm-feature pm-feature--flip">
+        <div class="pm-feat pm-feat--flip">
           <div>
-            <div class="pm-feat-lbl">feature 04 — coin economy</div>
-            <h3 class="pm-feat-title">real actions. virtual rewards.</h3>
+            <div class="pm-feat-id">feature_04 — coin economy</div>
+            <h3 class="pm-feat-h3">real actions. virtual rewards.</h3>
             <p class="pm-feat-body">the coin system connects real actions — like watering plants and completing care tasks — with in-app motivation. coins unlock decorations, new plant companions, and themes for your virtual room, keeping the habit loop alive.</p>
           </div>
           <div>
             <div class="pm-shop">
-              <div class="pm-shop-item">
-                <div class="pm-shop-icon">🌵</div>
-                <div class="pm-shop-name">NEW PLANT</div>
-                <div class="pm-shop-price">¢ 200</div>
-              </div>
-              <div class="pm-shop-item">
-                <div class="pm-shop-icon">🪴</div>
-                <div class="pm-shop-name">PLANTER</div>
-                <div class="pm-shop-price">¢ 80</div>
-              </div>
-              <div class="pm-shop-item locked">
-                <div class="pm-shop-icon">🌸</div>
-                <div class="pm-shop-name">BLOOM THEME</div>
-                <div class="pm-shop-price">¢ 350 🔒</div>
-              </div>
-              <div class="pm-shop-item locked">
-                <div class="pm-shop-icon">🏆</div>
-                <div class="pm-shop-name">GOLDEN POT</div>
-                <div class="pm-shop-price">¢ 500 🔒</div>
-              </div>
+              <div class="pm-shop-item"><div class="pm-shop-icon">🌵</div><div class="pm-shop-name">new plant</div><div class="pm-shop-price">¢ 200</div></div>
+              <div class="pm-shop-item"><div class="pm-shop-icon">🪴</div><div class="pm-shop-name">planter</div><div class="pm-shop-price">¢ 80</div></div>
+              <div class="pm-shop-item locked"><div class="pm-shop-icon">🌸</div><div class="pm-shop-name">bloom theme</div><div class="pm-shop-price">¢ 350 🔒</div></div>
+              <div class="pm-shop-item locked"><div class="pm-shop-icon">🏆</div><div class="pm-shop-name">golden pot</div><div class="pm-shop-price">¢ 500 🔒</div></div>
             </div>
-            <div class="pm-earn-box">
-              <div class="pm-earn-lbl">EARN COINS BY</div>
-              <div class="pm-earn-row">
-                <span class="pm-earn-action">💧 watering a plant</span>
-                <span class="pm-earn-val">+10 ¢</span>
-              </div>
-              <div class="pm-earn-row">
-                <span class="pm-earn-action">✅ completing a care task</span>
-                <span class="pm-earn-val">+15 ¢</span>
-              </div>
-              <div class="pm-earn-row">
-                <span class="pm-earn-action">🌱 logging a new leaf</span>
-                <span class="pm-earn-val">+25 ¢</span>
-              </div>
-              <div class="pm-earn-row">
-                <span class="pm-earn-action">🔥 7-day care streak</span>
-                <span class="pm-earn-val">+100 ¢</span>
-              </div>
+            <div class="pm-earn">
+              <div class="pm-earn-lbl">earn coins by</div>
+              <div class="pm-earn-row"><span class="pm-earn-action">💧 watering a plant</span><span class="pm-earn-val">+10 ¢</span></div>
+              <div class="pm-earn-row"><span class="pm-earn-action">✅ completing a care task</span><span class="pm-earn-val">+15 ¢</span></div>
+              <div class="pm-earn-row"><span class="pm-earn-action">🌱 logging a new leaf</span><span class="pm-earn-val">+25 ¢</span></div>
+              <div class="pm-earn-row"><span class="pm-earn-action">🔥 7-day care streak</span><span class="pm-earn-val">+100 ¢</span></div>
             </div>
           </div>
         </div>
@@ -863,109 +930,102 @@
       </div>
     </section>
 
-    <!-- ══════════ TAKEAWAYS ══════════ -->
-    <section class="pm-section" id="pm-takeaways">
-      <div class="pm-label">takeaway & learnings</div>
-      <h2 class="pm-title">what this project taught us</h2>
-
-      <div class="pm-xp-wrap">
-        <div class="pm-xp-head">
-          <span class="pm-xp-lbl">DESIGNER XP</span>
-          <span class="pm-xp-val" id="pmXpVal">0 / 400</span>
-        </div>
-        <div class="pm-xp-track">
-          <div class="pm-xp-fill" id="pmXpFill"></div>
-        </div>
+    <!-- lvl.07 — takeaways -->
+    <section class="pm-level" id="pm-l7">
+      <div class="lvl-head">
+        <div class="lvl-badge">lvl.07</div>
+        <div class="lvl-rule"></div>
+        <div class="lvl-name">xp earned</div>
       </div>
-
+      <h2 class="pm-h2">what this project <em>taught us</em></h2>
+      <div class="pm-xp-block">
+        <div class="pm-xp-top">
+          <span class="pm-xp-lbl">designer xp</span>
+          <span class="pm-xp-num" id="pmXpVal">0 / 400</span>
+        </div>
+        <div class="pm-xp-track"><div class="pm-xp-fill" id="pmXpFill"></div></div>
+      </div>
       <div class="pm-takeaways">
-        <div class="pm-takeaway">
-          <div class="pm-takeaway__num">#1</div>
+        <div class="pm-tw">
+          <div class="pm-tw-num">#1</div>
           <div>
-            <div class="pm-takeaway__title">simplicity is the hardest part to design</div>
-            <div class="pm-takeaway__body">our first instinct was to add more — more features, more information, more options. testing early and often forced us to cut back. the final design was better because of what we removed, not what we added.</div>
+            <div class="pm-tw-title">simplicity is the hardest part to design</div>
+            <div class="pm-tw-body">our first instinct was to add more — more features, more information, more options. testing early and often forced us to cut back. the final design was better because of what we removed, not what we added.</div>
           </div>
         </div>
-        <div class="pm-takeaway">
-          <div class="pm-takeaway__num">#2</div>
+        <div class="pm-tw">
+          <div class="pm-tw-num">#2</div>
           <div>
-            <div class="pm-takeaway__title">small emotional cues can change long-term behavior</div>
-            <div class="pm-takeaway__body">the subtle reactions of virtual plants, gentle task animations, and calm ai responses created a positive feedback loop. users reported feeling more connected to their plants after a single session.</div>
+            <div class="pm-tw-title">small emotional cues can change long-term behavior</div>
+            <div class="pm-tw-body">the subtle reactions of virtual plants, gentle task animations, and calm ai responses created a positive feedback loop. users reported feeling more connected to their plants after a single session.</div>
           </div>
         </div>
-        <div class="pm-takeaway">
-          <div class="pm-takeaway__num">#3</div>
+        <div class="pm-tw">
+          <div class="pm-tw-num">#3</div>
           <div>
-            <div class="pm-takeaway__title">motivation grows when progress is visible</div>
-            <div class="pm-takeaway__body">visual feedback — a growing plant, a filling health bar, new coins — maintained engagement far better than reminders alone. people came back not because they were told to, but because they wanted to see what changed.</div>
+            <div class="pm-tw-title">motivation grows when progress is visible</div>
+            <div class="pm-tw-body">visual feedback — a growing plant, a filling health bar, new coins — maintained engagement far better than reminders alone. people came back not because they were told to, but because they wanted to see what changed.</div>
           </div>
         </div>
-        <div class="pm-takeaway">
-          <div class="pm-takeaway__num">#4</div>
+        <div class="pm-tw">
+          <div class="pm-tw-num">#4</div>
           <div>
-            <div class="pm-takeaway__title">bridging real and virtual strengthens behavior change</div>
-            <div class="pm-takeaway__body">the virtual room wasn't just decoration; it became an emotional mirror. when users saw their digital plant drooping, they went and watered their real one. the bridge between digital and physical made care feel consequential.</div>
+            <div class="pm-tw-title">bridging real and virtual strengthens behavior change</div>
+            <div class="pm-tw-body">the virtual room wasn't just decoration; it became an emotional mirror. when users saw their digital plant drooping, they went and watered their real one. the bridge between digital and physical made care feel consequential.</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ══════════ FOOTER ══════════ -->
     <div class="pm-footer">
-      <div class="pm-footer__lbl">next project</div>
-      <a href="greekclean.html" class="pm-footer__next">
+      <div class="pm-footer-lbl">next project</div>
+      <a href="greekclean.html" class="pm-footer-next">
         greek clean
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
     </div>
 
-  </div><!-- /pm-page -->
+  </div>
 
   <script>
-    // progress bar
     window.addEventListener('scroll', () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      document.getElementById('pmProgress').style.width = (window.scrollY / max * 100) + '%';
+      document.getElementById('pm-bar').style.width = (window.scrollY / max * 100) + '%';
     });
 
-    // scroll nav
-    const secs = ['pm-overview','pm-problem','pm-research','pm-insights','pm-design','pm-takeaways'];
-    const dots = document.querySelectorAll('.pm-nav-dot');
-    const secObs = new IntersectionObserver(entries => {
+    const secs = ['pm-hero','pm-l1','pm-l2','pm-l3','pm-l4','pm-l5','pm-l6','pm-l7'];
+    const items = document.querySelectorAll('.pm-sn-item');
+    const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
           const i = secs.indexOf(e.target.id);
-          if (i !== -1) dots.forEach((d,j) => d.classList.toggle('active', j === i));
+          if (i !== -1) items.forEach((el,j) => el.classList.toggle('active', j === i));
         }
       });
-    }, { threshold: 0.35 });
-    secs.forEach(id => { const el = document.getElementById(id); if (el) secObs.observe(el); });
-    dots.forEach((d,i) => d.addEventListener('click', () => {
+    }, { threshold: 0.3 });
+    secs.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+    items.forEach((item,i) => item.addEventListener('click', () => {
       const el = document.getElementById(secs[i]);
-      if (el) el.scrollIntoView({ behavior:'smooth' });
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }));
 
-    // stat counter
-    const countEls = document.querySelectorAll('[data-count]');
-    const countObs = new IntersectionObserver(entries => {
+    const cObs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting && !e.target.dataset.done) {
           e.target.dataset.done = '1';
           const target = +e.target.dataset.count;
           let cur = 0;
-          const step = Math.max(1, Math.floor(target / 40));
+          const step = Math.max(1, Math.floor(target / 36));
           const t = setInterval(() => {
             cur = Math.min(cur + step, target);
             e.target.textContent = cur;
             if (cur >= target) clearInterval(t);
-          }, 28);
+          }, 25);
         }
       });
     }, { threshold: 0.5 });
-    countEls.forEach(n => countObs.observe(n));
+    document.querySelectorAll('[data-count]').forEach(n => cObs.observe(n));
 
-    // XP bar
-    const xpSec = document.getElementById('pm-takeaways');
     const xpObs = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         document.getElementById('pmXpFill').style.width = '78%';
@@ -973,55 +1033,49 @@
         xpObs.disconnect();
       }
     }, { threshold: 0.25 });
-    if (xpSec) xpObs.observe(xpSec);
+    const xpEl = document.getElementById('pm-l7');
+    if (xpEl) xpObs.observe(xpEl);
 
-    // water plant game
     let health = 75, coins = 120;
     document.getElementById('pmWaterBtn').addEventListener('click', function() {
       health = Math.min(100, health + 9);
       coins += 10;
       document.getElementById('pmHealthFill').style.width = health + '%';
       document.getElementById('pmCoins').textContent = coins;
-
-      // coin particles
       const stage = document.getElementById('pmStage');
       for (let i = 0; i < 3; i++) {
         const c = document.createElement('div');
-        c.className = 'pm-coin-anim';
-        c.textContent = '¢';
-        c.style.cssText = `left:${35+Math.random()*30}%;bottom:${20+Math.random()*15}px;--cx:${(Math.random()-.5)*36}px;`;
+        c.className = 'pm-coin-rise';
+        c.textContent = '+¢';
+        c.style.cssText = `left:${30+Math.random()*40}%;bottom:${16+Math.random()*14}px;--cx:${(Math.random()-.5)*30}px;`;
         stage.appendChild(c);
-        setTimeout(() => c.remove(), 900);
+        setTimeout(() => c.remove(), 800);
       }
-
-      // plant glow
       const svg = document.getElementById('pmPlantSvg');
-      svg.style.filter = 'brightness(1.45) drop-shadow(0 0 10px rgba(110,201,122,0.65))';
-      setTimeout(() => svg.style.filter = 'none', 650);
-
+      svg.style.filter = 'brightness(1.5) drop-shadow(0 0 12px rgba(109,255,82,0.6))';
+      setTimeout(() => svg.style.filter = 'none', 580);
       this.textContent = '✨ watered!';
       setTimeout(() => this.textContent = '💧 water plant', 1100);
     });
 
-    // diagnosis stepper
-    const diagData = [
-      { lbl:'STEP 1 OF 4', txt:'hi 🌿 — which plant are you concerned about today?', term:'awaiting plant selection...' },
-      { lbl:'STEP 2 OF 4', txt:'what are you noticing? yellowing leaves, drooping, spots, or something else?', term:'analyzing symptom keywords...' },
-      { lbl:'STEP 3 OF 4', txt:'when did you last water it, and where does it live — near a window or inside?', term:'cross-referencing care patterns...' },
-      { lbl:'STEP 4 OF 4', txt:'🌿 diagnosis: likely overwatering. let the soil dry out completely before the next water. you\'ve got this.', term:'diagnosis complete · confidence: 92%' },
+    const steps = [
+      { lbl:'step 1 of 4', txt:'hi 🌿 — which plant are you concerned about today?', term:'awaiting plant selection...' },
+      { lbl:'step 2 of 4', txt:'what are you noticing? yellowing leaves, drooping, spots, or something else?', term:'analyzing symptom keywords...' },
+      { lbl:'step 3 of 4', txt:'when did you last water it, and where does it live — near a window or inside?', term:'cross-referencing care patterns...' },
+      { lbl:'step 4 of 4', txt:'🌿 diagnosis: likely overwatering. let the soil dry out completely before the next water. you\'ve got this.', term:'diagnosis complete · confidence: 92%' },
     ];
     let diagIdx = 0;
     function renderDiag() {
-      const d = diagData[diagIdx];
+      const d = steps[diagIdx];
       document.getElementById('pmDiagLbl').textContent = d.lbl;
       document.getElementById('pmDiagTxt').textContent = d.txt;
       document.getElementById('pmTermTxt').textContent = d.term;
-      const segs = document.getElementById('pmDiagBar').children;
+      const segs = document.getElementById('pmDiagSegs').children;
       for (let i = 0; i < segs.length; i++) segs[i].classList.toggle('done', i <= diagIdx);
       document.getElementById('pmDiagPrev').disabled = diagIdx === 0;
-      document.getElementById('pmDiagNext').disabled = diagIdx === diagData.length - 1;
+      document.getElementById('pmDiagNext').disabled = diagIdx === steps.length - 1;
     }
-    document.getElementById('pmDiagNext').addEventListener('click', () => { if (diagIdx < diagData.length-1) { diagIdx++; renderDiag(); } });
+    document.getElementById('pmDiagNext').addEventListener('click', () => { if (diagIdx < steps.length-1) { diagIdx++; renderDiag(); } });
     document.getElementById('pmDiagPrev').addEventListener('click', () => { if (diagIdx > 0) { diagIdx--; renderDiag(); } });
   </script>
 

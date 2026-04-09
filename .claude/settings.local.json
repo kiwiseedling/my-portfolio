@@ -20,7 +20,10 @@
       "WebFetch(domain:elenaqianportfolio.framer.website)",
       "Bash(python3 -c \"import pdfminer\")",
       "Bash(pip3 install:*)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(git commit -m ':*)",
+      "Bash(ls /mnt/c/Users/elena/my-portfolio/*.html)",
+      "Bash(ls /mnt/c/Users/elena/my-portfolio/*.png)"
     ]
   }
 }

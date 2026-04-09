@@ -498,6 +498,19 @@ video.project-img {
   line-height: 1.75;
 }
 
+/* Desktop: desc slides in on hover */
+@media (min-width: 769px) {
+  .project-card--ghost .project-desc {
+    opacity:    0;
+    transform:  translateY(10px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+  .project-card--ghost:hover .project-desc {
+    opacity:   1;
+    transform: translateY(0);
+  }
+}
+
 /* Placeholder */
 .project-img-placeholder {
   width:           100%;
