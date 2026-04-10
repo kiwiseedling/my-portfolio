@@ -3,6 +3,45 @@
    GSAP + ScrollTrigger animations
    ═══════════════════════════════════════════════ */
 
+/* ─────────────────────────────────────────────
+   GREETING STAR — follow mouse with parallax
+───────────────────────────────────────────── */
+(function() {
+  const star = document.querySelector('.hero-greeting-star');
+  if (!star) return;
+  let tx = 0, ty = 0, cx = 0, cy = 0;
+  window.addEventListener('mousemove', e => {
+    const rect = star.getBoundingClientRect();
+    const ox = rect.left + rect.width  / 2;
+    const oy = rect.top  + rect.height / 2;
+    tx = (e.clientX - ox) * 0.18;
+    ty = (e.clientY - oy) * 0.18;
+  }, { passive: true });
+  function animate() {
+    cx += (tx - cx) * 0.08;
+    cy += (ty - cy) * 0.08;
+    star.style.transform = `translate(${cx}px, ${cy}px)`;
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ─────────────────────────────────────────────
+   SKETCH — tilt left-side-down on scroll
+   (runs immediately, no loader dependency)
+───────────────────────────────────────────── */
+(function() {
+  const sketch = document.querySelector('.hero-sketch');
+  if (!sketch) return;
+  window.addEventListener('scroll', () => {
+    const maxTilt   = 22;
+    const maxScroll = window.innerHeight * 0.85;
+    const tilt = Math.min(window.scrollY / maxScroll * maxTilt, maxTilt);
+    // translateX(-50%) keeps it centered; rotate tilts left side down
+    sketch.style.transform = `translateX(-50%) rotate(-${tilt}deg)`;
+  }, { passive: true });
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ─────────────────────────────────────────────
@@ -37,6 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 60);
   }, { passive: true });
+
+
 
 
   /* ─────────────────────────────────────────────

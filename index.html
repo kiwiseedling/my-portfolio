@@ -56,7 +56,16 @@
     <img src="images/sketch.png" alt="" class="hero-sketch" aria-hidden="true" />
 
     <!-- top-left greeting -->
-    <h1 class="hero-greeting">hi!</h1>
+    <h1 class="hero-greeting">hi!<svg class="hero-greeting-star" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
+            stroke="url(#sg-m)" stroke-width="1.5" fill="none"/>
+      <defs>
+        <linearGradient id="sg-m" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient>
+      </defs>
+    </svg></h1>
 
     <!-- centered name + pronunciation + sub -->
     <div class="hero-center">
@@ -233,6 +242,13 @@
       #pg-embed-overlay  { display: none; }
     }
 
+    @media (max-width: 540px) {
+      .pg-preview-section { padding: 36px 16px 0 !important; }
+    }
+    @media (max-width: 900px) and (min-width: 541px) {
+      .pg-preview-section { padding: 36px 24px 0 !important; }
+    }
+
     @keyframes pgBounceIn {
       0%   { opacity:0; transform: translateY(28px) scale(0.88) rotate(-1.5deg); }
       55%  { opacity:1; transform: translateY(-8px)  scale(1.06) rotate(1deg); }
@@ -249,7 +265,7 @@
                  pgPulse 2.8s ease-in-out 0.8s infinite;
     }
   </style>
-  <section style="padding: 36px 87px 0; max-width: 1100px; margin: 0 auto;">
+  <section class="pg-preview-section" style="padding: 36px 87px 0; max-width: 1100px; margin: 0 auto;">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
       <div>
         <p id="pg-preview-label" style="font-family:var(--serif); font-style:italic; font-size:1.05rem; letter-spacing:0.02em; color:rgba(255,192,203,0.85); margin:0; opacity:0;">drag to move</p>
@@ -259,7 +275,7 @@
          style="font-family:var(--sans); font-size:0.82rem; letter-spacing:0.06em; color:rgba(255,255,255,0.82); text-decoration:none; border:1px solid rgba(255,255,255,0.2); border-radius:999px; padding:6px 18px; transition:color 0.2s, border-color 0.2s, background 0.2s;"
          onmouseover="this.style.color='rgba(255,255,255,1)';this.style.borderColor='rgba(255,255,255,0.4)';this.style.background='rgba(255,255,255,0.06)'"
          onmouseout="this.style.color='rgba(255,255,255,0.82)';this.style.borderColor='rgba(255,255,255,0.2)';this.style.background='transparent'">
-        explore entire playground ↗
+        expand playground ↗
       </a>
     </div>
     <div style="position:relative; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 48px rgba(0,0,0,0.5);">
