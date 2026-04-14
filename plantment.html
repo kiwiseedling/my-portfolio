@@ -172,7 +172,38 @@
     .pm-level { margin-top: 96px; }
 
     /* ── hero ── */
-    .pm-hero { padding-top: 130px; padding-bottom: 0; }
+    .pm-hero {
+      padding-top: 130px;
+      padding-bottom: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 48px;
+    }
+    .pm-hero-left {
+      flex: 0 0 auto;
+      max-width: 420px;
+      min-width: 260px;
+      overflow: visible;
+    }
+
+    /* game canvas — transparent, no border */
+    #pm-seeds {
+      flex: 1 1 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 420px;
+      cursor: none;
+      background: transparent;
+      border: none;
+    }
+
+    @media (max-width: 760px) {
+      .pm-hero { flex-direction: column; gap: 24px; }
+      .pm-hero-left { max-width: 100%; }
+      #pm-seeds { display: none; }
+    }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
@@ -226,30 +257,36 @@
 
     /* project meta strip */
     .pm-player-strip {
-      display: grid; grid-template-columns: repeat(4, 1fr);
+      display: flex;
       gap: 0; padding: 0; margin-bottom: 44px;
       animation: fadeUp 0.65s 0.42s ease both;
-      border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+      border: 1px solid var(--border); border-radius: 4px; overflow: visible;
+      width: max-content;
+      position: relative; z-index: 2;
     }
     .pm-meta-item {
-      padding: 18px 22px;
+      flex: 1;
+      min-width: max-content;
+      padding: 18px 24px;
       border-right: 1px solid var(--border);
+      white-space: nowrap;
     }
     .pm-meta-item:last-child { border-right: none; }
     .pm-meta-label {
       font-size: 0.45rem; letter-spacing: 0.2em; color: var(--dim);
       text-transform: lowercase; margin-bottom: 8px;
+      white-space: nowrap;
     }
     .pm-meta-value {
       font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
       color: var(--txt); line-height: 1.4;
+      white-space: nowrap;
     }
 
     /* hero image */
     .pm-hero-img-wrap {
       border-radius: 6px; overflow: hidden;
-      border: 1px solid var(--border);
-      background: #030504;
+      background: transparent;
       animation: fadeUp 0.7s 0.5s ease both;
       position: relative;
     }
@@ -791,39 +828,26 @@
 
     <!-- hero -->
     <section class="pm-hero" id="pm-hero">
-      <div class="pm-hero-tag">final project · bootcamp · 2 weeks · team of 4</div>
-      <div class="pm-hero-title">plant</div>
-      <div class="pm-hero-title pm-hero-title-accent">ment</div>
-      <p class="pm-hero-sub">a gamified ai-assisted plant care app inspired by webkinz</p>
-      <div class="pm-hero-chips">
-        <span class="pm-chip pm-chip--lit">ux designer</span>
-        <span class="pm-chip pm-chip--lit">user researcher</span>
-        <span class="pm-chip">bootcamp</span>
-        <span class="pm-chip">2 weeks · team of 4</span>
-        <span class="pm-chip">2024</span>
+      <div class="pm-hero-left">
+        <div class="pm-hero-tag">final project · bootcamp · 2 weeks · team of 4</div>
+        <div class="pm-hero-title">plant</div>
+        <div class="pm-hero-title pm-hero-title-accent">ment</div>
+        <p class="pm-hero-sub">a gamified ai-assisted plant care app inspired by webkinz</p>
+        <div class="pm-hero-chips">
+          <span class="pm-chip pm-chip--lit">ux designer</span>
+          <span class="pm-chip pm-chip--lit">user researcher</span>
+          <span class="pm-chip">bootcamp</span>
+          <span class="pm-chip">2 weeks · team of 4</span>
+          <span class="pm-chip">2024</span>
+        </div>
+
       </div>
-      <div class="pm-player-strip">
-        <div class="pm-meta-item">
-          <div class="pm-meta-label">client</div>
-          <div class="pm-meta-value">bootcamp student project</div>
-        </div>
-        <div class="pm-meta-item">
-          <div class="pm-meta-label">my role</div>
-          <div class="pm-meta-value">user researcher<br>ux designer</div>
-        </div>
-        <div class="pm-meta-item">
-          <div class="pm-meta-label">project time</div>
-          <div class="pm-meta-value">2 weeks</div>
-        </div>
-        <div class="pm-meta-item">
-          <div class="pm-meta-label">collaborators</div>
-          <div class="pm-meta-value">team of 4</div>
-        </div>
-      </div>
-      <div class="pm-hero-img-wrap">
-        <img src="images/plantment.png" alt="Plantment app screens" />
-      </div>
+      <canvas id="pm-seeds" aria-hidden="true"></canvas>
     </section>
+
+    <div class="pm-hero-img-wrap" style="margin-top: 48px;">
+      <img src="images/plantment.png" alt="Plantment app screens" />
+    </div>
 
     <!-- lvl.01 — problem -->
     <section class="pm-level" id="pm-l1">
@@ -1267,6 +1291,222 @@
         item.addEventListener('click', () => { if (el) el.scrollIntoView({ behavior: 'smooth' }); });
       });
     })();
+  </script>
+
+  <!-- ── Plant Shooter Game ── -->
+  <script>
+  (function () {
+    const canvas = document.getElementById('pm-seeds');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const GREEN  = '#c8ffb8';
+    const GREEN2 = '#6dff52';
+    const WATER  = '#7dd3fc';
+    const PX     = 4;
+
+    let W, H, score = 0, hiScore = 0, frame = 0;
+    let mouse    = { x: 200, y: 170 };
+    let mouseActive = false;
+    let plants   = [], drops = [], particles = [];
+    const SHOOT_INTERVAL = 14;   /* frames between auto-shots */
+    const SPAWN_INTERVAL = 80;   /* frames between plant spawns */
+
+    /* ── emoji per growth stage ── */
+    const EMOJIS    = ['🌱', '🌿', '🪴', '🌸'];
+    const EMOJI_SZ  = [18,   24,   30,   36];    /* font-size px per stage */
+    const HIT_R     = [12,   16,   20,   24];
+
+    /* ── Plant (enters from right, moves left) ── */
+    function Plant() {
+      this.x     = W + 16;
+      this.y     = 30 + Math.random() * (H - 60);
+      this.vx    = -(0.7 + Math.random() * 0.9);
+      this.vy    = (Math.random() - 0.5) * 0.6;
+      this.stage = 0;
+      this.flash = 0;
+    }
+    Plant.prototype.update = function () {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.y < 20)     { this.y = 20;     this.vy *= -1; }
+      if (this.y > H - 20) { this.y = H - 20; this.vy *= -1; }
+      if (this.flash > 0) this.flash--;
+    };
+    Plant.prototype.offscreen = function () { return this.x < -40; };
+    Plant.prototype.draw = function () {
+      const sz = EMOJI_SZ[this.stage];
+      ctx.save();
+      if (this.flash > 0) {
+        ctx.filter = 'brightness(3) saturate(0)';
+      }
+      ctx.font = sz + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.globalAlpha = 0.92;
+      ctx.fillText(EMOJIS[this.stage], Math.round(this.x), Math.round(this.y));
+      ctx.restore();
+      /* faint aim ring */
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, HIT_R[this.stage] + 3, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(200,255,184,0.10)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    };
+    Plant.prototype.hit = function () {
+      this.flash = 8;
+      if (this.stage < 3) {
+        this.stage++;
+        this.vx *= 0.82;
+      } else {
+        for (let i = 0; i < 12; i++) particles.push(new Particle(this.x, this.y));
+        score++;
+        if (score > hiScore) hiScore = score;
+        return true; /* remove */
+      }
+      return false;
+    };
+
+    /* ── Water drop ── */
+    function Drop(tx, ty) {
+      /* gun sits on the left, vertically tracks mouse */
+      const gx = 18, gy = Math.max(10, Math.min(H - 10, mouse.y));
+      const a  = Math.atan2(ty - gy, tx - gx);
+      const sp = 8;
+      this.x     = gx; this.y = gy;
+      this.vx    = Math.cos(a) * sp;
+      this.vy    = Math.sin(a) * sp;
+      this.trail = [];
+      this.alive = true;
+    }
+    Drop.prototype.update = function () {
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 7) this.trail.shift();
+      this.x += this.vx; this.y += this.vy;
+      if (this.x > W + 10 || this.y < -10 || this.y > H + 10) this.alive = false;
+    };
+    Drop.prototype.draw = function () {
+      for (let i = 0; i < this.trail.length; i++) {
+        ctx.fillStyle = `rgba(125,211,252,${(i / this.trail.length * 0.5).toFixed(2)})`;
+        ctx.fillRect(Math.round(this.trail[i].x) - 1, Math.round(this.trail[i].y) - 1, 3, 3);
+      }
+      ctx.fillStyle = WATER;
+      ctx.fillRect(Math.round(this.x) - 2, Math.round(this.y) - 2, 5, 5);
+    };
+
+    /* ── Bloom particle ── */
+    function Particle(x, y) {
+      this.x = x; this.y = y;
+      this.vx = (Math.random() - 0.5) * 5;
+      this.vy = -1.5 - Math.random() * 3;
+      this.life = 1;
+      this.d = 0.035 + Math.random() * 0.04;
+    }
+    Particle.prototype.update = function () {
+      this.x += this.vx; this.y += this.vy; this.vy += 0.1; this.life -= this.d;
+    };
+    Particle.prototype.draw = function () {
+      ctx.fillStyle = `rgba(200,255,184,${this.life.toFixed(2)})`;
+      ctx.fillRect(Math.round(this.x), Math.round(this.y), 3, 3);
+    };
+
+    /* ── Gun sprite on left ── */
+    function drawGun() {
+      const gx = 18, gy = Math.max(10, Math.min(H - 10, mouse.y));
+      const angle = Math.atan2(mouse.y - gy, mouse.x - gx);
+      ctx.save();
+      ctx.translate(gx, gy);
+      ctx.rotate(angle);
+      /* barrel */
+      ctx.fillStyle = GREEN;
+      ctx.fillRect(0, -2, 20, 4);
+      /* body */
+      ctx.fillRect(-8, -5, 10, 10);
+      /* nozzle tip */
+      ctx.fillStyle = WATER;
+      ctx.fillRect(20, -1, 4, 3);
+      ctx.restore();
+      /* glow dot at base */
+      ctx.fillStyle = 'rgba(200,255,184,0.3)';
+      ctx.beginPath();
+      ctx.arc(gx, gy, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    /* ── HUD ── */
+    function drawHUD() {
+      ctx.font = '600 9px "JetBrains Mono", monospace';
+      ctx.fillStyle = 'rgba(200,255,184,0.45)';
+      ctx.fillText('SCORE ' + String(score).padStart(3, '0'), W - 100, 16);
+      ctx.fillStyle = 'rgba(200,255,184,0.20)';
+      ctx.fillText('BEST  ' + String(hiScore).padStart(3, '0'), W - 100, 30);
+    }
+
+    /* ── resize ── */
+    function resize() {
+      W = canvas.width  = canvas.offsetWidth;
+      H = canvas.height = canvas.offsetHeight;
+    }
+    function init() {
+      resize();
+      plants = []; drops = []; particles = []; frame = 0;
+    }
+
+    /* ── loop ── */
+    function loop() {
+      frame++;
+      ctx.clearRect(0, 0, W, H);
+
+      /* auto-spawn plants from right */
+      if (frame % SPAWN_INTERVAL === 0) plants.push(new Plant());
+
+      /* auto-shoot toward mouse — only while cursor is inside canvas */
+      if (mouseActive && frame % SHOOT_INTERVAL === 0) {
+        drops.push(new Drop(mouse.x, mouse.y));
+      }
+
+      /* plants */
+      for (const p of plants) p.update();
+      plants = plants.filter(p => !p.offscreen());
+      for (const p of plants) p.draw();
+
+      /* drops + collision */
+      drops = drops.filter(d => d.alive);
+      for (const d of drops) {
+        d.update();
+        d.draw();
+        plants = plants.filter(p => {
+          const dx = d.x - (p.x + PX / 2), dy = d.y - (p.y + PX / 2);
+          if (Math.sqrt(dx * dx + dy * dy) < HIT_R[p.stage]) {
+            d.alive = false;
+            return !p.hit();   /* hit() returns true when fully grown (remove) */
+          }
+          return true;
+        });
+      }
+
+      /* particles */
+      particles = particles.filter(p => p.life > 0);
+      for (const p of particles) { p.update(); p.draw(); }
+
+      drawGun();
+      drawHUD();
+      requestAnimationFrame(loop);
+    }
+
+    /* ── mouse tracking ── */
+    canvas.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    });
+    canvas.addEventListener('mouseenter', () => { mouseActive = true; });
+    canvas.addEventListener('mouseleave', () => { mouseActive = false; });
+
+    window.addEventListener('resize', resize);
+    init();
+    requestAnimationFrame(loop);
+  })();
   </script>
 
 </body>

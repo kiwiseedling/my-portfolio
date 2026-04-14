@@ -340,6 +340,9 @@
   padding:       32px 28px;
   transition:    border-color 0.25s, background 0.25s;
 }
+/* Ensure all cards in a cs-cards grid have uniform padding — no first-child override from external CSS */
+.cs-cards .cs-card { padding: 32px 28px; }
+
 .cs-card:hover {
   border-color: var(--border2);
   background:   var(--surface2);

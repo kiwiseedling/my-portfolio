@@ -148,6 +148,17 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    /* ── Plantment: image reveal on scroll enter ── */
+    const plantCardImg = document.querySelector('.plant-card-img');
+    if (plantCardImg) {
+      ScrollTrigger.create({
+        trigger: plantCardImg,
+        start:   'top 96%',
+        once:    true,
+        onEnter: () => plantCardImg.classList.add('visible'),
+      });
+    }
+
     /* ── Scroll reveal: chart overlay (fades in + out) ── */
     document.querySelectorAll('.cs-chart').forEach(el => {
       ScrollTrigger.create({
