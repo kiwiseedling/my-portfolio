@@ -1510,10 +1510,8 @@ footer {
 
   /* Plant stats: wrap + reset top offset */
   .plant-stats { flex-wrap: wrap; top: 0; }
-  .plant-card-img {
-    width:      min(100%, 220px);
-    max-width:  100%;
-  }
+  .plant-card-img,
+  .aiplant-img { display: none; }
 
   /* Oldies */
   .oldies { padding: 48px 16px; }

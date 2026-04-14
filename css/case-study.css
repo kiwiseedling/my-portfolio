@@ -24,7 +24,7 @@
   align-items: center;
   gap:         8px;
   font-family: var(--sans);
-  font-size:   0.72rem;
+  font-size:   0.9rem;
   letter-spacing: 0.08em;
   color:       var(--text-soft);
   transition:  color 0.2s, gap 0.25s;
