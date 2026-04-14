@@ -1459,7 +1459,7 @@ footer {
     color: #dbeafe !important;
     -webkit-text-fill-color: #dbeafe !important;
   }
-  .hero-sub { font-size: 0.95rem; max-width: 100%; margin-top: 20px; }
+  .hero-sub { font-size: 0.95rem; max-width: 100%; margin-top: 20px; margin-bottom: 3px; }
   .hero-pronunciation { font-size: 0.8rem; }
   .hero-story-link { position: static !important; margin-top: 32px; }
 
