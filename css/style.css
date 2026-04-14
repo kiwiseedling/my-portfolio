@@ -1043,6 +1043,12 @@ body.loaded #loader {
   letter-spacing: 0.04em;
   color:          var(--text-soft);
 }
+.exp-desc {
+  font-size:   0.88rem;
+  color:       rgba(255,255,255,0.7);
+  margin-top:  6px;
+  line-height: 1.5;
+}
 .exp-img-wrap {
   width:  68px;
   height: 52px;

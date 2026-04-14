@@ -26,7 +26,11 @@
       "Bash(ls /mnt/c/Users/elena/my-portfolio/*.png)",
       "WebFetch(domain:ellencovey.com)",
       "Bash(python3 -m ensurepip --upgrade)",
-      "Bash(python3 -m pip install Pillow -q)"
+      "Bash(python3 -m pip install Pillow -q)",
+      "Bash(sed -n '281,285p' /mnt/c/Users/elena/my-portfolio/crossfill.html)",
+      "Bash(sed -n '79,88p' /mnt/c/Users/elena/my-portfolio/greekclean.html)",
+      "Bash(sed -n '69,77p' /mnt/c/Users/elena/my-portfolio/plantment.html)",
+      "Bash(sed -n '802,806p' /mnt/c/Users/elena/my-portfolio/plantment.html)"
     ]
   }
 }
