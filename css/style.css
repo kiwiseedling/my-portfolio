@@ -1425,10 +1425,10 @@ footer {
   /* Loader */
   .loader-cat-img { width: clamp(100px, 45vw, 160px); }
 
-  /* Hero */
+  /* Hero — taller on mobile, text positions unchanged */
   .hero {
-    padding:    100px 20px 24px;
-    min-height: unset;
+    padding:    100px 20px 80px;
+    min-height: 110vh;
   }
   .hero-greeting,
   .hero-name {
@@ -1496,6 +1496,18 @@ footer {
   .cs-desc    { font-size: 0.85rem; }
   .cs-cta     { font-size: 0.65rem; padding: 11px 22px; }
 
+  /* Hide all desktop-only overlay / hover images on mobile */
+  .cs-chart,
+  .gc-greek2,
+  .gc-cattrash,
+  .gc-greek2-mobile { display: none; }
+
+  /* gc-cta-row: reset absolute positioning context */
+  .gc-cta-row { position: static; }
+
+  /* Plant stats: wrap + reset top offset */
+  .plant-stats { flex-wrap: wrap; top: 0; }
+
   /* Oldies */
   .oldies { padding: 48px 16px; }
   .oldie-card { border-radius: 12px; }
@@ -1512,6 +1524,4 @@ footer {
   .footer-links { flex-wrap: wrap; justify-content: center; gap: 16px; }
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
 
-  /* Plant stats: wrap on mobile */
-  .plant-stats { flex-wrap: wrap; }
 }
