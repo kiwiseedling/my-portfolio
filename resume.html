@@ -31,7 +31,7 @@
       font-family: var(--sans);
       font-size: 0.72rem;
       letter-spacing: 0.12em;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.65);
       margin-bottom: 14px;
     }
 
@@ -72,12 +72,12 @@
     /* ghost — outline button */
     .resume-btn--ghost {
       background: transparent;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.80);
       border: 1px solid rgba(255,255,255,0.12);
     }
     .resume-btn--ghost:hover {
       color: rgba(255,255,255,0.9);
-      border-color: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.58);
     }
     .resume-btn--ghost .btn-arrow {
       display: inline-block;
@@ -139,12 +139,12 @@
       font-family: var(--sans);
       font-size: 0.72rem;
       letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.72);
     }
 
     .resume-viewer-tab__chevron {
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.58);
       transition: transform 0.3s ease;
     }
     .resume-viewer-tab__chevron.open { transform: rotate(180deg); }
@@ -171,7 +171,7 @@
       font-family: var(--sans);
       font-size: 0.68rem;
       letter-spacing: 0.14em;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.58);
       margin-bottom: 8px;
     }
     .resume-readmore__heading {
@@ -221,7 +221,7 @@
       font-family: var(--sans);
       font-size: 0.62rem;
       letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.62);
       display: block;
       margin-bottom: 8px;
     }
@@ -237,7 +237,7 @@
       font-family: var(--sans);
       font-size: 0.74rem;
       line-height: 1.6;
-      color: rgba(255,255,255,0.38);
+      color: rgba(255,255,255,0.72);
     }
     .resume-rm-card__link {
       display: inline-flex;
@@ -247,7 +247,7 @@
       font-family: var(--sans);
       font-size: 0.68rem;
       letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.65);
       transition: color 0.2s;
     }
     .resume-rm-card:hover .resume-rm-card__link { color: var(--text); }
@@ -282,6 +282,34 @@
   </style>
 </head>
 <body>
+  <div class="bear-follower" aria-hidden="true">
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
+            stroke="url(#cursor-grad)" stroke-width="1.5" fill="none"/>
+      <defs>
+        <linearGradient id="cursor-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <script>
+    (function() {
+      var el = document.querySelector('.bear-follower');
+      if (!el || ('ontouchstart' in window)) return;
+      var x = 0, y = 0, cx = 0, cy = 0;
+      document.addEventListener('mousemove', function(e) { cx = e.clientX; cy = e.clientY; });
+      el.style.opacity = '0';
+      var started = false;
+      document.addEventListener('mousemove', function() { if (!started) { started = true; el.style.opacity = '1'; } }, { once: true });
+      (function loop() {
+        x += (cx - x) * 0.15; y += (cy - y) * 0.15;
+        el.style.transform = 'translate(' + (x - 20) + 'px,' + (y - 20) + 'px)';
+        requestAnimationFrame(loop);
+      })();
+    })();
+  </script>
 
   <nav id="nav">
     <div class="nav-pill">

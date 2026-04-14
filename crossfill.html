@@ -54,7 +54,7 @@
       font-family: 'Montserrat', system-ui, sans-serif;
       font-size: 0.7rem;
       letter-spacing: 0.14em;
-      color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.65);
       margin-bottom: 8px;
     }
     .gate-title {
@@ -104,7 +104,7 @@
       letter-spacing: 0.04em;
       padding: 8px 0;
     }
-    .gate-input::placeholder { color: rgba(255,255,255,0.2); }
+    .gate-input::placeholder { color: rgba(255,255,255,0.45); }
     .gate-submit {
       background: #f0ede8;
       color: #0a0a0a;
@@ -139,11 +139,39 @@
     .gate-hint-sub {
       font-size: 0.6rem;
       font-style: italic;
-      color: rgba(255,255,255,0.42);
+      color: rgba(255,255,255,0.75);
     }
   </style>
 </head>
 <body class="loaded cs-page">
+  <div class="bear-follower" aria-hidden="true">
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
+            stroke="url(#cursor-grad)" stroke-width="1.5" fill="none"/>
+      <defs>
+        <linearGradient id="cursor-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <script>
+    (function() {
+      var el = document.querySelector('.bear-follower');
+      if (!el || ('ontouchstart' in window)) return;
+      var x = 0, y = 0, cx = 0, cy = 0;
+      document.addEventListener('mousemove', function(e) { cx = e.clientX; cy = e.clientY; });
+      el.style.opacity = '0';
+      var started = false;
+      document.addEventListener('mousemove', function() { if (!started) { started = true; el.style.opacity = '1'; } }, { once: true });
+      (function loop() {
+        x += (cx - x) * 0.15; y += (cy - y) * 0.15;
+        el.style.transform = 'translate(' + (x - 20) + 'px,' + (y - 20) + 'px)';
+        requestAnimationFrame(loop);
+      })();
+    })();
+  </script>
 
   <!-- ══════════════════════════════
        PASSWORD GATE
@@ -910,7 +938,7 @@
       font-family: var(--sans);
       font-size: 0.8rem;
       letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.4);
+      color: rgba(255,255,255,0.72);
       background: none;
       border: none;
       border-bottom: 2px solid transparent;
@@ -955,7 +983,7 @@
     .flow2-lbl {
       font-family: var(--sans);
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.65);
       white-space: nowrap;
       transition: color 0.2s;
     }
@@ -1372,7 +1400,7 @@
     .cs-editor-transition__sub {
       font-family: var(--sans);
       font-size: 0.95rem;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.78);
       line-height: 1.7;
     }
 
@@ -1457,7 +1485,7 @@
       font-family: var(--sans);
       font-size: 0.68rem;
       letter-spacing: 0.14em;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.60);
       margin-bottom: 8px;
     }
     .more-work__heading {
@@ -1506,7 +1534,7 @@
       font-family: var(--sans);
       font-size: 0.62rem;
       letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.28);
+      color: rgba(255,255,255,0.65);
       display: block;
       margin-bottom: 8px;
     }
@@ -1522,7 +1550,7 @@
       font-family: var(--sans);
       font-size: 0.74rem;
       line-height: 1.6;
-      color: rgba(255,255,255,0.38);
+      color: rgba(255,255,255,0.75);
     }
     .more-work-card__link {
       display: inline-flex;
@@ -1532,7 +1560,7 @@
       font-family: var(--sans);
       font-size: 0.68rem;
       letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.68);
       transition: color 0.2s;
     }
     .more-work-card:hover .more-work-card__link { color: var(--text); }

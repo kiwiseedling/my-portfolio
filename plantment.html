@@ -74,7 +74,7 @@
       transition: color 0.2s, gap 0.2s;
     }
     .pm-nav-back:hover { color: var(--txt); gap: 16px; }
-    .pm-nav-id { font-size: 0.55rem; letter-spacing: 0.22em; color: rgba(255,255,255,0.18); }
+    .pm-nav-id { font-size: 0.55rem; letter-spacing: 0.22em; color: rgba(255,255,255,0.50); }
 
     /* side nav */
     .pm-sidenav {
@@ -678,17 +678,17 @@
 
     /* more work */
     .more-work { max-width: 1000px; margin: 0 auto; padding: 96px 52px 80px; }
-    .more-work__eyebrow { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.14em; color: rgba(255,255,255,0.25); margin-bottom: 8px; }
+    .more-work__eyebrow { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.14em; color: rgba(255,255,255,0.58); margin-bottom: 8px; }
     .more-work__heading { font-family: var(--serif); font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 400; font-style: italic; color: var(--text); margin-bottom: 32px; letter-spacing: -0.02em; }
     .more-work__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .more-work-card { display: block; text-decoration: none; border-radius: 16px; border: 1px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); overflow: hidden; transition: border-color 0.25s, background 0.25s, transform 0.3s; }
     .more-work-card:hover { border-color: rgba(255,255,255,0.14); background: rgba(255,255,255,0.04); transform: translateY(-4px); }
     .more-work-card__img { width: 100%; aspect-ratio: 16/9; object-fit: contain; object-position: center; display: block; background: #111116; padding: 20px 12px; box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.06); }
     .more-work-card__body { padding: 20px 22px 22px; }
-    .more-work-card__tag { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.28); display: block; margin-bottom: 8px; }
+    .more-work-card__tag { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.1em; color: rgba(255,255,255,0.60); display: block; margin-bottom: 8px; }
     .more-work-card__title { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; color: var(--text); margin-bottom: 8px; letter-spacing: -0.01em; }
-    .more-work-card__desc { font-family: var(--sans); font-size: 0.74rem; line-height: 1.6; color: rgba(255,255,255,0.38); }
-    .more-work-card__link { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.06em; color: rgba(255,255,255,0.3); transition: color 0.2s; }
+    .more-work-card__desc { font-family: var(--sans); font-size: 0.74rem; line-height: 1.6; color: rgba(255,255,255,0.72); }
+    .more-work-card__link { display: inline-flex; align-items: center; gap: 5px; margin-top: 14px; font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.06em; color: rgba(255,255,255,0.65); transition: color 0.2s; }
     .more-work-card:hover .more-work-card__link { color: var(--text); }
     @media (max-width: 640px) { .more-work { padding: 72px 24px 60px; } .more-work__grid { grid-template-columns: 1fr; } }
 
@@ -730,6 +730,34 @@
   </style>
 </head>
 <body>
+  <div class="bear-follower" aria-hidden="true">
+    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
+            stroke="url(#cursor-grad)" stroke-width="1.5" fill="none"/>
+      <defs>
+        <linearGradient id="cursor-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <script>
+    (function() {
+      var el = document.querySelector('.bear-follower');
+      if (!el || ('ontouchstart' in window)) return;
+      var x = 0, y = 0, cx = 0, cy = 0;
+      document.addEventListener('mousemove', function(e) { cx = e.clientX; cy = e.clientY; });
+      el.style.opacity = '0';
+      var started = false;
+      document.addEventListener('mousemove', function() { if (!started) { started = true; el.style.opacity = '1'; } }, { once: true });
+      (function loop() {
+        x += (cx - x) * 0.15; y += (cy - y) * 0.15;
+        el.style.transform = 'translate(' + (x - 20) + 'px,' + (y - 20) + 'px)';
+        requestAnimationFrame(loop);
+      })();
+    })();
+  </script>
 
   <div id="pm-bar"></div>
 

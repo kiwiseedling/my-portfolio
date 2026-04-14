@@ -37,11 +37,11 @@
   <div class="bear-follower" aria-hidden="true">
     <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
-            fill="url(#cursor-grad)"/>
+            stroke="url(#cursor-grad)" stroke-width="1.5" fill="none"/>
       <defs>
         <linearGradient id="cursor-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#38bdf8"/>
-          <stop offset="100%" stop-color="#1d4ed8"/>
+          <stop offset="0%" stop-color="#a78bfa"/>
+          <stop offset="100%" stop-color="#60a5fa"/>
         </linearGradient>
       </defs>
     </svg>
@@ -53,19 +53,25 @@
   <section class="hero">
 
     <!-- sketch behind the name, anchored to hero -->
-    <img src="images/sketch.png" alt="" class="hero-sketch" aria-hidden="true" />
+    <img src="images/finalcat.png" alt="" class="hero-sketch" aria-hidden="true" />
 
-    <!-- top-left greeting -->
-    <h1 class="hero-greeting">hi!<svg class="hero-greeting-star" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 0 Q22.5 17.5 40 20 Q22.5 22.5 20 40 Q17.5 22.5 0 20 Q17.5 17.5 20 0Z"
-            stroke="url(#sg-m)" stroke-width="1.5" fill="none"/>
-      <defs>
-        <linearGradient id="sg-m" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#a78bfa"/>
-          <stop offset="100%" stop-color="#60a5fa"/>
-        </linearGradient>
-      </defs>
-    </svg></h1>
+
+    <!-- candy: free-floating, no mouse parallax -->
+    <div class="hero-deco-candy" aria-hidden="true">
+      <img src="images/finalcandy.png" alt="" class="hero-deco-img hero-deco-img--candy" />
+    </div>
+    <!-- bigbubble: no mouse parallax -->
+    <div class="hero-deco-bubble hero-deco-bigbubble" aria-hidden="true">
+      <div>
+        <img src="images/bbig.png" alt="" class="hero-deco-img hero-deco-img--bigbubble" />
+      </div>
+    </div>
+    <!-- smallbubble: centering wrapper + parallax inner, different depth -->
+    <div class="hero-deco-bubble hero-deco-smallbubble" aria-hidden="true">
+      <div class="illus-parallax" data-depth="0.35">
+        <img src="images/bsmall.png" alt="" class="hero-deco-img hero-deco-img--smallbubble" />
+      </div>
+    </div>
 
     <!-- centered name + pronunciation + sub -->
     <div class="hero-center">
@@ -75,7 +81,7 @@
       <p class="hero-pronunciation"># ee-lay-nuh or /ɛˈleɪnə/</p>
       <p class="hero-sub">
         <strong>product designer</strong> in the <strong>bay area</strong> focused on making ai<br>
-        feel human
+        <span class="feel-strike">feel</span> human
       </p>
     </div>
 
@@ -147,65 +153,84 @@
   <!-- ═══════════════════════════════
        FEATURED WORK
   ═══════════════════════════════ -->
-  <section class="work" id="work" style="padding-bottom:48px;">
+  <section class="work" id="work">
 
-    <!-- Crossfill — real laptop frame image -->
-    <a href="crossfill.html" class="project-card project-card--ghost" style="--glow: rgba(149, 4, 96, 0.45); --glow2: rgba(236, 48, 77, 0.25)">
-      <div class="laptop-mockup">
-        <img src="images/crossfill.png" alt="Crossfill app" class="laptop-mockup__img" />
-      </div>
-      <div class="project-info">
-        <div class="project-meta">
-          <span class="project-tag">associate product designer</span>
-          <span class="project-year">2025–2026</span>
+    <!-- 01 — Crossfill -->
+    <a href="crossfill.html" class="project-card project-card--ghost cs-card" style="--glow: rgba(149, 4, 96, 0.5)">
+      <div class="cs-layout">
+        <div class="cs-left">
+          <span class="cs-num">01</span>
+          <h2 class="cs-title">crossfill</h2>
+          <img src="images/crossfill.png" alt="Crossfill" class="cs-img" />
         </div>
-        <h2 class="project-title">crossfill</h2>
-        <div class="project-swap">
-          <div class="project-pills">
-            <span class="project-pill">product strategy</span>
-            <span class="project-pill">interaction design</span>
+        <div class="cs-right">
+          <img src="images/adminshipped.png" alt="" class="cs-chart" aria-hidden="true" />
+          <div class="cs-detail">
+            <p class="cs-desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</p>
+            <p class="cs-cats">product strategy · interaction design · 2025–2026</p>
           </div>
-          <p class="project-desc">an ai visibility platform that analyzes search and llm data and guides clients through improving their brand</p>
+          <span class="cs-cta">read case study →</span>
         </div>
       </div>
     </a>
 
-    <a href="greekclean.html" class="project-card project-card--ghost" style="--glow: rgba(220, 220, 225, 0.35)">
-      <div class="laptop-mockup">
-        <img src="images/greekclean.png" alt="Greek Clean app" class="laptop-mockup__img" />
-      </div>
-      <div class="project-info">
-        <div class="project-meta">
-          <span class="project-tag">independent student project</span>
-          <span class="project-year">2024</span>
+    <!-- 02 — Greek Clean -->
+    <a href="greekclean.html" class="project-card project-card--ghost cs-card" style="--glow: rgba(180, 210, 220, 0.45)">
+      <div class="cs-layout">
+        <div class="cs-left">
+          <span class="cs-num">02</span>
+          <h2 class="cs-title">greek clean</h2>
+          <img src="images/greekclean.png" alt="Greek Clean" class="cs-img" />
         </div>
-        <h2 class="project-title">greek clean</h2>
-        <div class="project-swap">
-          <div class="project-pills">
-            <span class="project-pill">user research</span>
-            <span class="project-pill">service design</span>
+        <div class="cs-right">
+          <div class="cs-detail">
+            <p class="cs-desc">designing a simple way to manage campus waste more responsibly</p>
+            <p class="cs-cats">user research · service design · 2024</p>
+            <img src="images/trashcat.png" alt="" class="gc-cattrash" aria-hidden="true" />
           </div>
-          <p class="project-desc">designing a simple way to manage campus waste more responsibly</p>
+          <div class="gc-cta-row">
+            <span class="cs-cta">read case study →</span>
+            <img src="images/greek2.png" alt="" class="gc-greek2" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </a>
 
-    <a href="plantment.html" class="project-card project-card--ghost" style="--glow: rgba(80, 180, 120, 0.45)">
-      <div class="laptop-mockup">
-        <img src="images/plantment.png" alt="Plantment app" class="laptop-mockup__img" />
-      </div>
-      <div class="project-info">
-        <div class="project-meta">
-          <span class="project-tag">final project</span>
-          <span class="project-year">2024</span>
+    <!-- 03 — Plantment -->
+    <a href="plantment.html" class="project-card project-card--ghost cs-card" style="--glow: rgba(80, 180, 120, 0.5)">
+      <div class="cs-layout">
+        <div class="cs-left">
+          <span class="cs-num">03</span>
+          <h2 class="cs-title">plantment</h2>
+          <img src="images/plantment.png" alt="Plantment" class="cs-img" />
         </div>
-        <h2 class="project-title">plantment</h2>
-        <div class="project-swap">
-          <div class="project-pills">
-            <span class="project-pill">usability testing</span>
-            <span class="project-pill">gamification</span>
+        <div class="cs-right">
+
+          <!-- Project stats widget -->
+          <div class="plant-stats">
+            <div class="plant-stat-pill">
+              <span class="plant-pill-dot"></span>
+              <span class="plant-pill-label">final project</span>
+            </div>
+            <div class="plant-stat-pill">
+              <span class="plant-pill-dot"></span>
+              <span class="plant-pill-label">bootcamp</span>
+            </div>
+            <div class="plant-stat-pill">
+              <span class="plant-pill-dot"></span>
+              <span class="plant-pill-label">2 weeks</span>
+            </div>
+            <div class="plant-stat-pill">
+              <span class="plant-pill-dot"></span>
+              <span class="plant-pill-label">team of 4</span>
+            </div>
           </div>
-          <p class="project-desc">a gamified ai-assisted plant care platform — webkinz inspired</p>
+
+          <div class="cs-detail">
+            <p class="cs-desc">a gamified ai-assisted plant care platform — webkinz inspired</p>
+            <p class="cs-cats">usability testing · gamification · 2024</p>
+          </div>
+          <span class="cs-cta">read case study →</span>
         </div>
       </div>
     </a>
@@ -369,7 +394,7 @@
        FOOTER
   ═══════════════════════════════ -->
   <footer>
-    <img src="images/coloredcat.png" alt="" class="footer-cat-bg" aria-hidden="true">
+    <img src="images/footerr.png" alt="" class="footer-cat-bg" aria-hidden="true">
     <div class="footer-top">
       <h2 class="footer-heading">hi again! lets grab boba</h2>
     </div>

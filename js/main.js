@@ -3,6 +3,7 @@
    GSAP + ScrollTrigger animations
    ═══════════════════════════════════════════════ */
 
+
 /* ─────────────────────────────────────────────
    GREETING STAR — follow mouse with parallax
 ───────────────────────────────────────────── */
@@ -89,20 +90,28 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ── Hero entrance ── */
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
-    tl.to('.hero-greeting',      { opacity: 1, y: 0, duration: 1.0 })
+    tl.to('.hero-greeting',      { opacity: 1, xPercent: -50, yPercent: -50, duration: 1.0 })
       .to('.hero-name',          { opacity: 1, y: 0, duration: 1.0 }, '-=0.75')
       .to('.hero-pronunciation', { opacity: 1,        duration: 0.6 }, '-=0.5')
       .to('.hero-sub',           { opacity: 1, y: 0, duration: 0.8 }, '-=0.4');
 
 
     /* ── Scroll reveal: project cards ── */
-    document.querySelectorAll('.project-card').forEach((el, i) => {
-      el.classList.add('sr');
+    const enterConfigs = [
+      { x: '-18px', rot: '-1.2deg' },
+      { x:   '0px', rot:  '0.5deg' },
+      { x:  '18px', rot: '-0.8deg' },
+    ];
+    document.querySelectorAll('.project-card--ghost').forEach((el, i) => {
+      const cfg = enterConfigs[i] || { x: '0px', rot: '0deg' };
+      el.style.setProperty('--enter-x', cfg.x);
+      el.style.setProperty('--enter-rot', cfg.rot);
+      el.classList.add('pc-enter');
       ScrollTrigger.create({
         trigger: el,
-        start:   'top 88%',
+        start:   'top 86%',
         once:    true,
-        onEnter: () => setTimeout(() => el.classList.add('visible'), i * 100),
+        onEnter: () => setTimeout(() => el.classList.add('pc-visible'), i * 140),
       });
     });
 
@@ -125,6 +134,30 @@ document.addEventListener('DOMContentLoaded', () => {
         start:   'top 90%',
         once:    true,
         onEnter: () => setTimeout(() => el.classList.add('visible'), i * 80),
+      });
+    });
+
+    /* ── Plantment: animate stat pills on scroll enter ── */
+    const plantStats = document.querySelector('.plant-stats');
+    if (plantStats) {
+      ScrollTrigger.create({
+        trigger: plantStats,
+        start:   'top 88%',
+        once:    true,
+        onEnter: () => plantStats.classList.add('animated'),
+      });
+    }
+
+    /* ── Scroll reveal: chart overlay (fades in + out) ── */
+    document.querySelectorAll('.cs-chart').forEach(el => {
+      ScrollTrigger.create({
+        trigger:      el,
+        start:        'top 92%',
+        end:          'bottom 8%',
+        onEnter:      () => el.classList.add('visible'),
+        onLeave:      () => el.classList.remove('visible'),
+        onEnterBack:  () => el.classList.add('visible'),
+        onLeaveBack:  () => el.classList.remove('visible'),
       });
     });
 
@@ -156,6 +189,77 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+
+    /* ── CTA border: SVG stroke-dashoffset drawing animation ── */
+    const NS = 'http://www.w3.org/2000/svg';
+
+    document.querySelectorAll('.cs-cta').forEach((btn, i) => {
+      const b   = btn.getBoundingClientRect();
+      const W   = Math.round(b.width);
+      const H   = Math.round(b.height);
+      const rx  = 3;
+      // perimeter of rounded rect (straight sides + quarter-circle corners)
+      const peri = 2 * (W + H) - 8 * rx + 2 * Math.PI * rx;
+      const gid  = 'cta-g' + i;
+
+      // Build SVG
+      const svg = document.createElementNS(NS, 'svg');
+      svg.classList.add('cta-border-svg');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('width',   W + 4);
+      svg.setAttribute('height',  H + 4);
+      svg.setAttribute('viewBox', `0 0 ${W + 4} ${H + 4}`);
+
+      // Gradient — userSpaceOnUse so we can animate it in pixel coords
+      const defs = document.createElementNS(NS, 'defs');
+      const grad = document.createElementNS(NS, 'linearGradient');
+      grad.setAttribute('id', gid);
+      grad.setAttribute('gradientUnits', 'userSpaceOnUse');
+      grad.setAttribute('x1', '0');   grad.setAttribute('y1', '0');
+      grad.setAttribute('x2', String(W)); grad.setAttribute('y2', '0');
+
+      // purple → blue → purple so the loop is seamless
+      [['0%','#a78bfa'], ['40%','#60a5fa'], ['70%','#c4b5fd'], ['100%','#a78bfa']].forEach(([o, c]) => {
+        const s = document.createElementNS(NS, 'stop');
+        s.setAttribute('offset', o);
+        s.setAttribute('stop-color', c);
+        grad.appendChild(s);
+      });
+
+      // SMIL: continuously translate the gradient across the button width
+      const anim = document.createElementNS(NS, 'animateTransform');
+      anim.setAttribute('attributeName', 'gradientTransform');
+      anim.setAttribute('type',          'translate');
+      anim.setAttribute('from',          `0 0`);
+      anim.setAttribute('to',            `${W} 0`);
+      anim.setAttribute('dur',           '2s');
+      anim.setAttribute('repeatCount',   'indefinite');
+      grad.appendChild(anim);
+
+      defs.appendChild(grad);
+      svg.appendChild(defs);
+
+      // Rect stroke
+      const rect = document.createElementNS(NS, 'rect');
+      rect.setAttribute('x', '2'); rect.setAttribute('y', '2');
+      rect.setAttribute('width',  W); rect.setAttribute('height', H);
+      rect.setAttribute('rx', rx);   rect.setAttribute('ry', rx);
+      rect.setAttribute('fill', 'none');
+      rect.setAttribute('stroke', `url(#${gid})`);
+      rect.setAttribute('stroke-width', '2');
+      rect.setAttribute('stroke-linecap', 'round');
+      rect.setAttribute('stroke-dasharray',  peri);
+      rect.setAttribute('stroke-dashoffset', peri);
+      rect.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+      svg.appendChild(rect);
+      btn.appendChild(svg);
+
+      // Trigger on parent card hover
+      const card = btn.closest('.cs-card');
+      if (!card) return;
+      card.addEventListener('mouseenter', () => { rect.style.strokeDashoffset = '0'; });
+      card.addEventListener('mouseleave', () => { rect.style.strokeDashoffset = peri; });
+    });
 
 
   } // end initAnimations
@@ -241,7 +345,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   /* ─────────────────────────────────────────────
-     5. SMOOTH ANCHOR SCROLL
+     5. PROJECT CARD IMAGE TILT ON HOVER
+     Pivots on the vertical axis (rotateY) based
+     on mouse X relative to the image center.
+     Only activates within PROXIMITY px of the
+     image — fades in smoothly with distance.
+  ───────────────────────────────────────────── */
+  const CS_PROXIMITY = 160; // px from image edge to start tilting
+
+  document.querySelectorAll('.cs-card').forEach(card => {
+    const img = card.querySelector('.cs-img');
+    if (!img) return;
+
+    card.addEventListener('mousemove', e => {
+      const r = img.getBoundingClientRect();
+
+      // Distance from mouse to nearest point on the image rect
+      const nearX = Math.max(r.left, Math.min(e.clientX, r.right));
+      const nearY = Math.max(r.top,  Math.min(e.clientY, r.bottom));
+      const dist  = Math.hypot(e.clientX - nearX, e.clientY - nearY);
+
+      if (dist > CS_PROXIMITY) {
+        img.style.transition = 'transform 0.4s ease';
+        img.style.transform  = 'rotateY(0deg)';
+        return;
+      }
+
+      // Strength 0 (edge of proximity) → 1 (on the image)
+      const strength = 1 - dist / CS_PROXIMITY;
+
+      // Horizontal: -1 (left of image) → 0 (center) → 1 (right)
+      const dx   = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+      const tilt = dx * 10 * strength; // max ±10 degrees
+
+      img.style.transition = 'transform 0.12s ease';
+      img.style.transform  = `rotateY(${tilt}deg)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      img.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      img.style.transform  = 'rotateY(0deg)';
+    });
+  });
+
+
+  /* ─────────────────────────────────────────────
+     6. SMOOTH ANCHOR SCROLL
   ───────────────────────────────────────────── */
   document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', e => {
