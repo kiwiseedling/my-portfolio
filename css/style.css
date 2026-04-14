@@ -1496,6 +1496,9 @@ footer {
   .cs-desc    { font-size: 0.85rem; }
   .cs-cta     { font-size: 0.65rem; padding: 11px 22px; }
 
+  /* Greek Clean: reset desktop padding-top on mobile */
+  .cs-card:nth-child(2) .cs-right { padding-top: 0; }
+
   /* Hide all desktop-only overlay / hover images on mobile */
   .cs-chart,
   .gc-greek2,
