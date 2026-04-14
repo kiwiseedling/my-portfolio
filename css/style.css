@@ -1425,10 +1425,10 @@ footer {
   /* Loader */
   .loader-cat-img { width: clamp(100px, 45vw, 160px); }
 
-  /* Hero — taller on mobile, text positions unchanged */
+  /* Hero — mobile height */
   .hero {
-    padding:    100px 20px 80px;
-    min-height: 110vh;
+    padding:    100px 20px 40px;
+    min-height: 105vh;
   }
   .hero-greeting,
   .hero-name {
