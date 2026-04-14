@@ -226,7 +226,7 @@ body.loaded #loader {
   display:        block;
 }
 
-.hero-name-accent { color: #60a5fa; }
+.hero-name-accent { color: #dbeafe; }
 
 /* Sketch image floating behind the name */
 @keyframes sketchFloat {
@@ -1427,7 +1427,7 @@ footer {
 
   /* Hero — mobile height */
   .hero {
-    padding:    100px 20px 16px;
+    padding:    100px 20px 5px;
     min-height: 105vh;
   }
   .hero-greeting,
@@ -1456,8 +1456,8 @@ footer {
 
   /* Force accent colour to match desktop */
   .hero-name-accent {
-    color: #60a5fa !important;
-    -webkit-text-fill-color: #60a5fa !important;
+    color: #dbeafe !important;
+    -webkit-text-fill-color: #dbeafe !important;
   }
   .hero-sub { font-size: 0.95rem; max-width: 100%; margin-top: 20px; }
   .hero-pronunciation { font-size: 0.8rem; }
