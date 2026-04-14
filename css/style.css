@@ -1427,7 +1427,7 @@ footer {
 
   /* Hero — mobile height */
   .hero {
-    padding:    100px 20px 40px;
+    padding:    100px 20px 16px;
     min-height: 105vh;
   }
   .hero-greeting,
