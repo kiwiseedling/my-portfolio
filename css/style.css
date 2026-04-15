@@ -1500,6 +1500,7 @@ footer {
   }
 
   /* Marquee */
+  .marquee-wrap { margin-top: 60px; }
   .marquee-track { gap: 18px; }
   .marquee-track span { font-size: 0.72rem; }
 
