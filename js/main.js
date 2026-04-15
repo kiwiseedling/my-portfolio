@@ -265,11 +265,66 @@ document.addEventListener('DOMContentLoaded', () => {
       svg.appendChild(rect);
       btn.appendChild(svg);
 
-      // Trigger on parent card hover
+      // Trigger on parent card hover AND scroll into view
       const card = btn.closest('.cs-card');
       if (!card) return;
       card.addEventListener('mouseenter', () => { rect.style.strokeDashoffset = '0'; });
-      card.addEventListener('mouseleave', () => { rect.style.strokeDashoffset = peri; });
+      card.addEventListener('mouseleave', () => {
+        if (!card.classList.contains('cs-in-view')) rect.style.strokeDashoffset = peri;
+      });
+      const ENTER_DELAY  = 400;   /* ms before animating in */
+      const SLOW_OUT     = '1.6s ease';
+      const FAST_IN      = '1.2s cubic-bezier(0.4,0,0.2,1)';
+      let borderTimer = null;
+
+      function borderEnter() {
+        clearTimeout(borderTimer);
+        borderTimer = setTimeout(() => {
+          rect.style.transition = `stroke-dashoffset ${FAST_IN}`;
+          rect.style.strokeDashoffset = '0';
+        }, ENTER_DELAY);
+      }
+      function borderLeave() {
+        clearTimeout(borderTimer);
+        rect.style.transition = `stroke-dashoffset ${SLOW_OUT}`;
+        rect.style.strokeDashoffset = peri;
+      }
+
+      ScrollTrigger.create({
+        trigger:     card,
+        start:       'top 25%',
+        end:         'top -10%',
+        onEnter:     borderEnter,
+        onLeave:     borderLeave,
+        onEnterBack: borderEnter,
+        onLeaveBack: borderLeave,
+      });
+    });
+
+    /* ── cs-card scroll-in-view class for hover animations ── */
+    document.querySelectorAll('.cs-card').forEach(card => {
+      let enterTimer = null;
+
+      function cardEnter() {
+        clearTimeout(enterTimer);
+        card.classList.remove('cs-leaving-view');
+        enterTimer = setTimeout(() => card.classList.add('cs-in-view'), 400);
+      }
+      function cardLeave() {
+        clearTimeout(enterTimer);
+        card.classList.add('cs-leaving-view');
+        card.classList.remove('cs-in-view');
+      }
+
+      ScrollTrigger.create({
+        trigger:     card,
+        start:       'top 25%',
+        end:         'top -10%',
+        onEnter:     cardEnter,
+        onLeave:     cardLeave,
+        onEnterBack: cardEnter,
+        onLeaveBack: cardLeave,
+      });
     });
 
 
@@ -368,13 +423,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const img = card.querySelector('.cs-img');
     if (!img) return;
 
-    card.addEventListener('mousemove', e => {
+    function applyTilt(clientX, clientY) {
       const r = img.getBoundingClientRect();
 
-      // Distance from mouse to nearest point on the image rect
-      const nearX = Math.max(r.left, Math.min(e.clientX, r.right));
-      const nearY = Math.max(r.top,  Math.min(e.clientY, r.bottom));
-      const dist  = Math.hypot(e.clientX - nearX, e.clientY - nearY);
+      const nearX = Math.max(r.left, Math.min(clientX, r.right));
+      const nearY = Math.max(r.top,  Math.min(clientY, r.bottom));
+      const dist  = Math.hypot(clientX - nearX, clientY - nearY);
 
       if (dist > CS_PROXIMITY) {
         img.style.transition = 'transform 0.4s ease';
@@ -382,16 +436,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Strength 0 (edge of proximity) → 1 (on the image)
       const strength = 1 - dist / CS_PROXIMITY;
-
-      // Horizontal: -1 (left of image) → 0 (center) → 1 (right)
-      const dx   = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
-      const tilt = dx * 10 * strength; // max ±10 degrees
+      const dx   = (clientX - (r.left + r.width / 2)) / (r.width / 2);
+      const tilt = dx * 10 * strength;
 
       img.style.transition = 'transform 0.12s ease';
       img.style.transform  = `rotateY(${tilt}deg)`;
-    });
+    }
+
+    card.addEventListener('mousemove', e => applyTilt(e.clientX, e.clientY));
 
     card.addEventListener('mouseleave', () => {
       img.style.transition = 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';

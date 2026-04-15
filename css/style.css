@@ -160,7 +160,7 @@ body.loaded #loader {
   align-items:    flex-start;
   padding:        140px 72px 80px;
   position:       relative;
-  overflow:       hidden;
+  overflow:       visible;
 }
 
 /* Diamond star inline with hi! — all screen sizes */
@@ -241,13 +241,13 @@ body.loaded #loader {
 }
 .hero-sketch {
   position:   absolute;
-  top:        calc(80px - 9vh);
-  bottom:     28%;
+  top:        calc(20px - 14vh);
+  bottom:     auto;
   left:       50%;
   transform:  translateX(-50%);
   width:      auto;
   height:     auto;
-  min-width:  clamp(540px, 72vw, 990px);
+  min-width:  clamp(400px, 54vw, 750px);
   opacity:    0.22;
   z-index:    0;
   pointer-events: none;
@@ -283,7 +283,7 @@ body.loaded #loader {
 .hero-deco-candy,
 .hero-deco-bubble {
   position:       absolute;
-  top:            20px;
+  top:            -50px;
   left:           50%;
   transform:      translateX(-50%);
   pointer-events: none;
@@ -312,11 +312,11 @@ body.loaded #loader {
 }
 .hero-deco-bigbubble {
   left: -30%;
-  top: -30vh;
+  top: -48vh;
 }
 .hero-deco-smallbubble {
   left:      15%;
-  top:       -40vh;
+  top:       -58vh;
   transform: translateX(-50%);
 }
 .hero-deco-img--bigbubble {
@@ -515,12 +515,14 @@ body.loaded #loader {
    MARQUEE TICKER
 ═══════════════════════════════ */
 .marquee-wrap {
-  border-top:    1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  border-top:    1px solid rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   background:    transparent;
-  padding:       13px 0;
+  padding:       14px 0;
   overflow:      hidden;
   white-space:   nowrap;
+  position: relative;
+  margin-top:    120px;
 }
 .marquee-track {
   display:     inline-flex;
@@ -532,7 +534,7 @@ body.loaded #loader {
 .marquee-track span {
   font-size:      0.78rem;
   letter-spacing: 0.08em;
-  color:          var(--text-soft);
+  color:          rgba(255,255,255,0.7);
   flex-shrink:    0;
 }
 .marquee-track .star {
@@ -641,7 +643,8 @@ body.loaded #loader {
   transform:  translateY(-50%);
   transition: opacity 0.9s ease, transform 0.9s ease;
 }
-.cs-card:hover .cs-chart {
+.cs-card:hover .cs-chart,
+.cs-card.cs-in-view .cs-chart {
   opacity: 0.82;
   transition: opacity 0.4s ease, transform 0.9s ease;
 }
@@ -669,7 +672,8 @@ body.loaded #loader {
   pointer-events: none;
 }
 
-.cs-card:hover .aiplant-img {
+.cs-card:hover .aiplant-img,
+.cs-card.cs-in-view .aiplant-img {
   opacity: 0.82;
   filter: drop-shadow(0 0 40px rgba(50, 120, 80, 0.75));
 }
@@ -792,7 +796,8 @@ body.loaded #loader {
   transform:       translateY(-20%);
   transition:      opacity 0.5s ease;
 }
-.cs-card:hover .gc-greek2 {
+.cs-card:hover .gc-greek2,
+.cs-card.cs-in-view .gc-greek2 {
   opacity: 0.9;
 }
 
@@ -815,7 +820,15 @@ body.loaded #loader {
   pointer-events: none;
   z-index:    -1;
 }
-.cs-card:hover .cs-left::before { opacity: 1; }
+.cs-card:hover .cs-left::before,
+.cs-card.cs-in-view .cs-left::before { opacity: 1; }
+
+/* Slow fade-out when card leaves view */
+.cs-card.cs-leaving-view .cs-left::before { transition: opacity 1.6s ease; }
+.cs-card.cs-leaving-view .cs-chart        { transition: opacity 1.6s ease; }
+.cs-card.cs-leaving-view .aiplant-img     { transition: opacity 1.6s ease; }
+.cs-card.cs-leaving-view .gc-greek2       { transition: opacity 1.6s ease, transform 1.6s ease; }
+.cs-card.cs-leaving-view .cs-cta          { transition: transform 1.6s ease; }
 
 /* Large faded counter behind the title */
 .cs-num {
@@ -888,7 +901,8 @@ body.loaded #loader {
   pointer-events: none;
   overflow:       visible;
 }
-.cs-card:hover .cs-cta { transform: translateX(6px); }
+.cs-card:hover .cs-cta,
+.cs-card.cs-in-view .cs-cta { transform: translateX(6px); }
 
 /* ── RIGHT: description + CTA, bottom-aligned beside image ── */
 .cs-right {
@@ -1502,8 +1516,9 @@ footer {
   .cs-desc    { font-size: 0.85rem; }
   .cs-cta     { font-size: 0.65rem; padding: 11px 22px; }
 
-  /* Greek Clean: reset desktop padding-top on mobile */
+  /* Greek Clean: reset desktop overrides on mobile */
   .cs-card:nth-child(2) .cs-right { padding-top: 0; }
+  .cs-card:nth-child(2) .cs-layout { gap: 20px; }
 
   /* Hide all desktop-only overlay / hover images on mobile */
   .cs-chart,

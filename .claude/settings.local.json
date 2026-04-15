@@ -30,7 +30,9 @@
       "Bash(sed -n '281,285p' /mnt/c/Users/elena/my-portfolio/crossfill.html)",
       "Bash(sed -n '79,88p' /mnt/c/Users/elena/my-portfolio/greekclean.html)",
       "Bash(sed -n '69,77p' /mnt/c/Users/elena/my-portfolio/plantment.html)",
-      "Bash(sed -n '802,806p' /mnt/c/Users/elena/my-portfolio/plantment.html)"
+      "Bash(sed -n '802,806p' /mnt/c/Users/elena/my-portfolio/plantment.html)",
+      "Bash(sed -n '800,820p' /mnt/c/Users/elena/my-portfolio/css/style.css)",
+      "Bash(sed -n '903,920p' /mnt/c/Users/elena/my-portfolio/css/style.css)"
     ]
   }
 }
